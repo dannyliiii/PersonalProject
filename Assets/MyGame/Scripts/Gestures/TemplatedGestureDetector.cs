@@ -5,11 +5,14 @@ using System;
 using System.Linq;
 using MyMath;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace TemplateGesture{
 	public class TemplatedGestureDetector {
 
 //		RecordedPath path;
+		
+		public Text scoreText;
 
 		public int MinimalPeriodBetweenGestures { get; set; }
 		
@@ -25,8 +28,9 @@ namespace TemplateGesture{
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
 		readonly LearningMachine learningMachine;
+		private readonly float minScore = 0.5f;
 
-		public TemplatedGestureDetector(int windowSize = 200){
+		public TemplatedGestureDetector(int windowSize = 150){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
 			
@@ -76,9 +80,13 @@ namespace TemplateGesture{
 			if (!resList.IsEmpty) {
 				string gesName = resList.Name;
 				double gesScore = resList.Score;
-				if(gesScore > 0.4){
+				if(gesName == "z"){
+					scoreText.text = gesScore.ToString();
+				}
+				if(gesScore > minScore){
+					Debug.Log("======");
 					Debug.Log(gesName);
-					Debug.Log(gesScore);
+					Debug.Log("======");
 					RaiseGestureDetected(gesName);
 				}
 			}

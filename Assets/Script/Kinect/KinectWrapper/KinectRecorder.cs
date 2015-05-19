@@ -22,7 +22,7 @@ public class KinectRecorder : MonoBehaviour {
 	public InputField nameField;
 	public Canvas inputCanvas;
 	
-	private bool isRecording = false;
+	private static bool isRecording = false;
 	private ArrayList currentData = new ArrayList();
 	private List<JointPosition> points;
 	
@@ -69,7 +69,15 @@ public class KinectRecorder : MonoBehaviour {
 			}
 		}
 	}
-	
+
+	public static bool IsRecording{
+		get{
+			return isRecording;
+
+		}
+
+	}
+
 	void StartRecord() {
 		isRecording = true;
 		points.Clear ();

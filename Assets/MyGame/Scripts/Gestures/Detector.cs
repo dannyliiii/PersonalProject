@@ -28,7 +28,8 @@ public class Detector : MonoBehaviour {
 	}
 
 	void Update () {
-		ProcessFrame ();
+		if(!KinectRecorder.IsRecording)
+			ProcessFrame ();
 	}
 
 	void LoadTemplateGestureDetector()
@@ -40,10 +41,7 @@ public class Detector : MonoBehaviour {
 
 	void OnGestureDetected(string gesture)
 	{
-		//TODO: opts on gesture detected
 		Shoot ();
-
-
 	}
 
 	void ProcessFrame()

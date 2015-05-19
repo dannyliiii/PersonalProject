@@ -46,6 +46,12 @@ namespace TemplateGesture{
 		{
 			foreach (RecordedPath p in paths) {
 				float score = p.Match(entries, threshold, minimalScore, minSize);
+				//print score of z for testing
+				if(p.gestureName == "z" && score > 0){
+					//UnityEngine.Debug.Log(p.gestureName);
+					UnityEngine.Debug.Log(score);
+				}
+
 				if(score >= 0)
 					rl.AddResult(p.gestureName, score);
 			}
