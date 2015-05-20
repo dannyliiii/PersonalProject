@@ -15,8 +15,6 @@ public class Detector : MonoBehaviour {
 	public Text scoreText;
 	public Image dataImage;
 //	public RawImage dataImage;
-	float planeWidth;
-//	float planeHeight;
 
 	public int player = 0;
 	TemplatedGestureDetector templateGestureDetector;
@@ -34,9 +32,6 @@ public class Detector : MonoBehaviour {
 		upForce = new UnityEngine.Vector3 (0.0f, 150.0f, 0.0f);
 
 		LoadTemplateGestureDetector ();
-
-		planeWidth = dataImagePlane.GetComponent<Renderer>().bounds.size.x;
-//		planeHeight = dataImagePlane.GetComponent<Renderer> ().bounds.size.y;
 
 		paths = templateGestureDetector.LearningMachine.Paths;
 
@@ -98,27 +93,19 @@ public class Detector : MonoBehaviour {
 		texture.wrapMode = TextureWrapMode.Clamp;
 		material.SetTexture(0, texture);
 	
-		//texture.DrawLine(new UnityEngine.Vector2(120, 60), new UnityEngine.Vector2(256, 256), Color.black);
+		//texture.DrawLine(new UnityEngine.Vector2(0, 0), new UnityEngine.Vector2(512, 256), Color.black);
 
 		for (int i = 0; i < path.SampleCount - 1; i ++) {
 
-			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]) * planeWidth;
-			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]) * planeWidth;
+			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]);
+			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]);
 
-			Debug.Log(start.x);
-			Debug.Log(start.y);
-			Debug.Log("======");
-			texture.DrawLine(new UnityEngine.Vector2(start.x, start.y), new UnityEngine.Vector2(end.x, end.y), Color.black);
+			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
+			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
+			                 Color.black);
 
 		}
 		
-//        texture.DrawFilledRectangle(new Rect(0, 0, 120, 120), Color.green);
-//        texture.DrawRectangle(new Rect(0, 0, 120, 60), Color.red);
-//        texture.DrawCircle(256, 256, 100, Color.cyan);
-//        texture.DrawFilledCircle(256, 256, 50, Color.grey);
-//        texture.DrawCircle(0, 0, 512, Color.red);
-		
-
 		texture.Apply();
 
 	}

@@ -25,12 +25,14 @@ public class KinectRecorder : MonoBehaviour {
 	private static bool isRecording = false;
 	private ArrayList currentData = new ArrayList();
 	private List<JointPosition> points;
+	private List<MyMath.Vector2> jointPos;
 	
 	// Use this for initialization
 	void Awake () {
 		inputCanvas.gameObject.SetActive (false);
 		kinect = devOrEmu.getKinect();
 		points = new List<JointPosition> (256);
+		jointPos = new List<MyMath.Vector2> (256);
 	}
 	
 	// Update is called once per frame
@@ -61,6 +63,7 @@ public class KinectRecorder : MonoBehaviour {
 						Vector4 rightHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
 						long unixTimeStamp = (long)(System.DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
 						points.Add(new JointPosition(rightHand.x, rightHand.y, rightHand.z, unixTimeStamp));
+						jointPos.Add(new MyMath.Vector2(rightHand.x , rightHand.y));
 						break;
 
 					}
@@ -92,11 +95,14 @@ public class KinectRecorder : MonoBehaviour {
 		string gestureName = nameField.text;
 		string filePath = outputFile + gestureName + suffix;
 
-		SaveGesture (filePath, gestureName, points);
+		SaveGesture (filePath, gestureName);
 		Debug.Log("stop recording");
 	}
 
-	public bool SaveGesture(string filePath, string gestureName, List<JointPosition> points){
+	public bool SaveGesture(string filePath, string gestureName){
+
+		List<MyMath.Vector2> locals = GoldenSection.Pack(jointPos, jointPos.Count);
+		
 		//do xml writing
 		bool success = true;
 		XmlTextWriter writer = null;
@@ -117,13 +123,22 @@ public class KinectRecorder : MonoBehaviour {
 			writer.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
 			writer.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
 			
+//			// write out the raw individual points
+//			foreach (JointPosition p in points)
+//			{
+//				writer.WriteStartElement("Point");
+//				writer.WriteAttributeString("X", XmlConvert.ToString(p.x));
+//				writer.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+//				writer.WriteAttributeString("T", XmlConvert.ToString(p.time));
+//				writer.WriteEndElement(); // <Point />
+//			}
+
 			// write out the raw individual points
-			foreach (JointPosition p in points)
+			foreach (MyMath.Vector2 p in jointPos)
 			{
 				writer.WriteStartElement("Point");
 				writer.WriteAttributeString("X", XmlConvert.ToString(p.x));
 				writer.WriteAttributeString("Y", XmlConvert.ToString(p.y));
-				writer.WriteAttributeString("T", XmlConvert.ToString(p.time));
 				writer.WriteEndElement(); // <Point />
 			}
 			
