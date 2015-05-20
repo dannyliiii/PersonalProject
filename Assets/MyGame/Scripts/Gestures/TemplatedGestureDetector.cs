@@ -11,8 +11,6 @@ namespace TemplateGesture{
 	public class TemplatedGestureDetector {
 
 //		RecordedPath path;
-		
-		public Text scoreText;
 
 		public int MinimalPeriodBetweenGestures { get; set; }
 		
@@ -29,6 +27,12 @@ namespace TemplateGesture{
 		public float MinimalSize { get; set; }
 		readonly LearningMachine learningMachine;
 		private readonly float minScore = 0.5f;
+
+		public LearningMachine LearningMachine{
+			get{
+				return learningMachine;
+			}
+		}
 
 		public TemplatedGestureDetector(int windowSize = 150){
 			this.windowSize = windowSize;
@@ -81,7 +85,7 @@ namespace TemplateGesture{
 				string gesName = resList.Name;
 				double gesScore = resList.Score;
 				if(gesName == "z"){
-					scoreText.text = gesScore.ToString();
+					// for tesing
 				}
 				if(gesScore > minScore){
 					Debug.Log("======");

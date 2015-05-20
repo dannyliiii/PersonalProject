@@ -11,7 +11,13 @@ namespace TemplateGesture{
 		public string gestureName;
 		List<MyMath.Vector2> points;
 		readonly int samplesCount;
-		
+	
+		public int SampleCount{
+			get{
+				return samplesCount;
+			}
+		}
+
 		public List<MyMath.Vector2> Points
 		{
 			get { return points; }

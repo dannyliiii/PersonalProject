@@ -20,6 +20,12 @@ namespace TemplateGesture{
 		private string folderPath = "Assets/MyGame/Recordings/";
 		private ResultList rl = new ResultList();
 
+
+		public List<RecordedPath> Paths{
+			get{
+				return paths;
+			}
+		}
 		public LearningMachine()
 		{
 			paths = new List<RecordedPath>();
@@ -37,11 +43,6 @@ namespace TemplateGesture{
 			}
 		} 
 
-		public List<RecordedPath> Paths
-		{
-			get { return paths; }
-		}
-		
 		public ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
 		{
 			foreach (RecordedPath p in paths) {
@@ -58,13 +59,6 @@ namespace TemplateGesture{
 			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));
 			return rl;
 		}
-		
-//		public void Persist(Stream kbStream)
-//		{
-//			BinaryFormatter formatter = new BinaryFormatter();
-//			
-//			formatter.Serialize(kbStream, Paths);
-//		}
 		
 		public void AddPath(RecordedPath path)
 		{
@@ -121,6 +115,7 @@ namespace TemplateGesture{
 			}
 			return success;
 		}
+
 	}
 }
 

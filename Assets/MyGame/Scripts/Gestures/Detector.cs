@@ -6,8 +6,17 @@ using KinectWrapper;
 using Kinect;
 using MyMath;
 using System.Collections.Generic;
+using UnityEngine.UI;
+using Drawing;
 
 public class Detector : MonoBehaviour {
+
+	public GameObject dataImagePlane;
+	public Text scoreText;
+	public Image dataImage;
+//	public RawImage dataImage;
+	float planeWidth;
+//	float planeHeight;
 
 	public int player = 0;
 	TemplatedGestureDetector templateGestureDetector;
@@ -18,16 +27,26 @@ public class Detector : MonoBehaviour {
 	private UnityEngine.Vector3 upForce;
 	private readonly int speed = 50;
 	private List<GameObject> projList;
-
+	private List<RecordedPath> paths;
 
 	void Awake () {
 		projList = new List<GameObject> ();
 		upForce = new UnityEngine.Vector3 (0.0f, 150.0f, 0.0f);
 
 		LoadTemplateGestureDetector ();
+
+		planeWidth = dataImagePlane.GetComponent<Renderer>().bounds.size.x;
+//		planeHeight = dataImagePlane.GetComponent<Renderer> ().bounds.size.y;
+
+		paths = templateGestureDetector.LearningMachine.Paths;
+
+		DrawData (paths[0]);
 	}
 
 	void Update () {
+
+
+
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
 	}
@@ -71,5 +90,38 @@ public class Detector : MonoBehaviour {
 		projList.Add (proj);
 	}
 
+	void DrawData(RecordedPath path){
+		
+//		Material material = dataImage.material;
+		Material material = dataImagePlane.GetComponent<Renderer>().material;
+		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
+		texture.wrapMode = TextureWrapMode.Clamp;
+		material.SetTexture(0, texture);
+	
+		//texture.DrawLine(new UnityEngine.Vector2(120, 60), new UnityEngine.Vector2(256, 256), Color.black);
+
+		for (int i = 0; i < path.SampleCount - 1; i ++) {
+
+			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]) * planeWidth;
+			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]) * planeWidth;
+
+			Debug.Log(start.x);
+			Debug.Log(start.y);
+			Debug.Log("======");
+			texture.DrawLine(new UnityEngine.Vector2(start.x, start.y), new UnityEngine.Vector2(end.x, end.y), Color.black);
+
+		}
+		
+//        texture.DrawFilledRectangle(new Rect(0, 0, 120, 120), Color.green);
+//        texture.DrawRectangle(new Rect(0, 0, 120, 60), Color.red);
+//        texture.DrawCircle(256, 256, 100, Color.cyan);
+//        texture.DrawFilledCircle(256, 256, 50, Color.grey);
+//        texture.DrawCircle(0, 0, 512, Color.red);
+		
+
+		texture.Apply();
+
+	}
+	
 }
 
