@@ -100,6 +100,28 @@ namespace TemplateGesture{
 			}
 		}
 
+		public double GetScore(int pos){
+			if (arrList.Count > pos)
+			{
+				BestResult r = (BestResult) arrList[pos];
+				return r.Score;
+			}
+			return -1.0;
+		}
+
+		public string GetName(int pos){
+			if (arrList.Count > pos)
+			{
+				BestResult r = (BestResult) arrList[pos];
+				return r.Name;
+			}
+			return "";
+		}
+
+		public int Size(){
+			return arrList.Count;
+		}
+
 		public void ClearList(){
 			arrList.Clear ();
 		}

@@ -12,8 +12,6 @@ using Drawing;
 public class Detector : MonoBehaviour {
 
 	public GameObject dataImagePlane;
-	public Text scoreText;
-	public Image dataImage;
 //	public RawImage dataImage;
 
 	public int player = 0;
@@ -29,6 +27,10 @@ public class Detector : MonoBehaviour {
 	private List<RecordedPath> rawData;
 	private int currentData = 0;
 
+	//for test
+	private int[] testList;
+	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
+
 	void Awake () {
 		projList = new List<GameObject> ();
 		upForce = new UnityEngine.Vector3 (0.0f, 150.0f, 0.0f);
@@ -39,13 +41,17 @@ public class Detector : MonoBehaviour {
 
 		rawData = templateGestureDetector.LearningMachine.RawData;
 
+		testList = new int[10];
+		for(int i = 0 ; i < 10; i ++){
+			testList[i] = i;
+		}
 		//DrawData (paths[0]);
 	}
 
 	void Update () {
 
-		if(rawData.Count > 0)
-			DrawDataPerFrame (rawData[0]);
+//		if(rawData.Count > 0)
+//			DrawDataPerFrame (rawData[0]);
 
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
@@ -143,6 +149,30 @@ public class Detector : MonoBehaviour {
 
 		texture.Apply();
 		currentData ++;
+	}
+
+	void OnGUI() {
+
+		scrollPosition = GUI.BeginScrollView(new Rect(20, 20, 100, 200), 
+		                    scrollPosition , new Rect(25, 20, 80, 10 * 40),
+		                    false, true);
+
+		for (int i = 0; i < rawData.Count; i ++) {
+			if (GUI.Button(new Rect(25, 20 + i * 40, 80, 30), rawData[i].gestureName)){
+				currentData = 0;
+				DrawDataPerFrame (rawData[i]);
+			}
+		}
+
+		GUI.EndScrollView();
+	
+		for(int j = 0; j < templateGestureDetector.LearningMachine.ResultList.Size(); j ++){
+			GUI.Label(new Rect(800, 20 + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetName(j));
+			GUI.Label(new Rect(900, 20 + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetScore(j).ToString());
+	
+		}
+
+		
 	}
 	
 }

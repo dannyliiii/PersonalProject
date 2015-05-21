@@ -20,6 +20,11 @@ namespace TemplateGesture{
 		private string folderPath = "Assets/MyGame/Recordings/";
 		private ResultList rl = new ResultList();
 
+		public ResultList ResultList{
+			get{
+				return rl;
+			}
+		}
 		public List<RecordedPath> RawData{
 			get{
 				return rawData;
@@ -42,12 +47,6 @@ namespace TemplateGesture{
 			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
 				LoadRawData (file);
 		}
-
-		public ResultList ResultList{
-			get{
-				return rl;
-			}
-		} 
 
 		public ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
 		{
