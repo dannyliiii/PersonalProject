@@ -26,7 +26,7 @@ namespace TemplateGesture{
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
 		readonly LearningMachine learningMachine;
-		private readonly float minScore = 0.5f;
+		private readonly float minScore = 0.7f;
 
 		public LearningMachine LearningMachine{
 			get{
@@ -34,7 +34,7 @@ namespace TemplateGesture{
 			}
 		}
 
-		public TemplatedGestureDetector(int windowSize = 150){
+		public TemplatedGestureDetector(int windowSize = 200){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
 			

@@ -26,6 +26,8 @@ public class Detector : MonoBehaviour {
 	private readonly int speed = 50;
 	private List<GameObject> projList;
 	private List<RecordedPath> paths;
+	private List<RecordedPath> rawData;
+	private int currentData = 0;
 
 	void Awake () {
 		projList = new List<GameObject> ();
@@ -35,12 +37,15 @@ public class Detector : MonoBehaviour {
 
 		paths = templateGestureDetector.LearningMachine.Paths;
 
-		DrawData (paths[0]);
+		rawData = templateGestureDetector.LearningMachine.RawData;
+
+		//DrawData (paths[0]);
 	}
 
 	void Update () {
 
-
+		if(rawData.Count > 0)
+			DrawDataPerFrame (rawData[0]);
 
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
@@ -55,7 +60,7 @@ public class Detector : MonoBehaviour {
 
 	void OnGestureDetected(string gesture)
 	{
-		Shoot ();
+		//Shoot ();
 	}
 
 	void ProcessFrame()
@@ -87,7 +92,6 @@ public class Detector : MonoBehaviour {
 
 	void DrawData(RecordedPath path){
 		
-//		Material material = dataImage.material;
 		Material material = dataImagePlane.GetComponent<Renderer>().material;
 		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
 		texture.wrapMode = TextureWrapMode.Clamp;
@@ -97,8 +101,11 @@ public class Detector : MonoBehaviour {
 
 		for (int i = 0; i < path.SampleCount - 1; i ++) {
 
-			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]);
-			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]);
+//			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]);
+//			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]);
+
+			MyMath.Vector2 start = path.Points[i];
+			MyMath.Vector2 end = path.Points[i + 1];
 
 			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
 			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
@@ -108,6 +115,34 @@ public class Detector : MonoBehaviour {
 		
 		texture.Apply();
 
+	}
+
+	void DrawDataPerFrame(RecordedPath path){
+
+		if (currentData >= path.SampleCount - 1)
+			currentData = 0;
+
+		Material material = dataImagePlane.GetComponent<Renderer>().material;
+		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
+		texture.wrapMode = TextureWrapMode.Clamp;
+		material.SetTexture(0, texture);
+		
+
+		for (int i = 0; i < currentData; i ++) {
+//			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]);
+//			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]);
+
+			MyMath.Vector2 start = path.Points[i];
+			MyMath.Vector2 end = path.Points[i + 1];
+			
+			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
+			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
+			                 Color.black);
+
+		}
+
+		texture.Apply();
+		currentData ++;
 	}
 	
 }

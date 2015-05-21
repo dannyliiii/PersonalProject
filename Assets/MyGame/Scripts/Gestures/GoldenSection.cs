@@ -117,5 +117,18 @@ namespace TemplateGesture{
 			
 			return locals;
 		}
+
+		public static List<Vector2> Scale(List<Vector2> positions, int samplesCount){
+			List<Vector2> locals = positions;
+
+			for (int i = 0; i < locals.Count; i ++) {
+				locals[i].x = -locals[i].x;
+			}
+
+			GoldenSectionExtension.ScaleToReferenceWorld (locals);
+			GoldenSectionExtension.CenterToOrigin (locals);
+
+			return locals;
+		}
 	}
 }

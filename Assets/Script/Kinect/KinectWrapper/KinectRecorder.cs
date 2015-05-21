@@ -19,6 +19,8 @@ public class KinectRecorder : MonoBehaviour {
 	
 	private string outputFile = "Assets/MyGame/Recordings/";
 	public string suffix = ".xml";
+	public string playbackSuffix = ".data";
+	public string rawSuffix = ".raw";
 	public InputField nameField;
 	public Canvas inputCanvas;
 	
@@ -52,6 +54,8 @@ public class KinectRecorder : MonoBehaviour {
 				nameField.ActivateInputField ();
 			}
 			if (kinect.pollSkeleton()){
+
+				//playback data
 				currentData.Add(kinect.getSkeleton());
 
 				// to record the first tracked player's right hand positon;
@@ -93,23 +97,87 @@ public class KinectRecorder : MonoBehaviour {
 		isRecording = false;
 
 		string gestureName = nameField.text;
-		string filePath = outputFile + gestureName + suffix;
-
+		string filePath = outputFile + gestureName;
+		
 		SaveGesture (filePath, gestureName);
+		SavePlayback (filePath, gestureName);
+		SaveRawDate (filePath, gestureName);
 		Debug.Log("stop recording");
 	}
 
-	public bool SaveGesture(string filePath, string gestureName){
-
-		List<MyMath.Vector2> locals = GoldenSection.Pack(jointPos, jointPos.Count);
+	public bool SaveRawDate(string path, string gestureName){
 		
-		//do xml writing
-		bool success = true;
-		XmlTextWriter writer = null;
 		if (points.Count <= 0) {
 			Debug.Log("No points.");
 			return false;
 		}
+		
+		string filePath = path + rawSuffix;
+		List<MyMath.Vector2> rawData = GoldenSection.Scale (jointPos, jointPos.Count);
+		
+		//do xml writing
+		bool success = true;
+		XmlTextWriter writer = null;
+		
+		try
+		{
+			// save the gesture data as an Xml file
+			writer = new XmlTextWriter(filePath, Encoding.UTF8);
+			writer.Formatting = Formatting.Indented;
+			writer.WriteStartDocument(true);
+			writer.WriteStartElement("RawData");
+			writer.WriteAttributeString("GesName", gestureName);
+			writer.WriteAttributeString("NumPts", XmlConvert.ToString(points.Count));
+			writer.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
+			writer.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
+			writer.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
+
+			foreach (MyMath.Vector2 p in rawData)
+			{
+				writer.WriteStartElement("Point");
+				writer.WriteAttributeString("X", XmlConvert.ToString(p.x));
+				writer.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+				writer.WriteEndElement(); // <Point />
+			}
+			
+			writer.WriteEndDocument(); // </RawData>
+		}
+		catch (XmlException xex)
+		{
+			Debug.Log(xex.Message);
+			success = false;
+		}
+		catch (Exception ex)
+		{
+			Debug.Log(ex.Message);
+			success = false;
+		}
+		finally
+		{
+			Debug.Log (gestureName);
+			if (writer != null)
+				writer.Close();
+		}
+		return success; // Xml file successfully written (or not)
+	
+	}
+
+	public bool SaveGesture(string path, string gestureName){
+
+
+		if (points.Count <= 0) {
+			Debug.Log("No points.");
+			return false;
+		}
+
+		string filePath = path + suffix;
+
+		List<MyMath.Vector2> locals = GoldenSection.Pack(jointPos, jointPos.Count );
+
+		//do xml writing
+		bool success = true;
+		XmlTextWriter writer = null;
+
 		try
 		{
 			// save the gesture data as an Xml file
@@ -134,14 +202,14 @@ public class KinectRecorder : MonoBehaviour {
 //			}
 
 			// write out the raw individual points
-			foreach (MyMath.Vector2 p in jointPos)
+			foreach (MyMath.Vector2 p in locals)
 			{
 				writer.WriteStartElement("Point");
 				writer.WriteAttributeString("X", XmlConvert.ToString(p.x));
 				writer.WriteAttributeString("Y", XmlConvert.ToString(p.y));
 				writer.WriteEndElement(); // <Point />
 			}
-			
+
 			writer.WriteEndDocument(); // </Gesture>
 		}
 		catch (XmlException xex)
@@ -162,5 +230,29 @@ public class KinectRecorder : MonoBehaviour {
 		}
 		return success; // Xml file successfully written (or not)
 
+	}
+
+	public bool SavePlayback(string path, string gestureName){
+
+		bool success = true;
+		string filePath = (path + playbackSuffix).ToString ();
+		FileStream output = new FileStream (filePath, FileMode.Create);
+		try{
+			BinaryFormatter bf = new BinaryFormatter ();
+
+			SerialSkeletonFrame[] data = new SerialSkeletonFrame[currentData.Count];
+			for (int i = 0; i < currentData.Count; i ++) {
+				data[i] = new SerialSkeletonFrame((NuiSkeletonFrame)currentData[i]);
+			}
+			bf.Serialize (output, data);
+		}
+		catch(Exception ex){
+			Debug.Log(ex.Message);
+			success = false;
+		}
+		finally{
+			output.Close ();
+		}
+		return success;
 	}
 }
