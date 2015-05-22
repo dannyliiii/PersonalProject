@@ -154,9 +154,10 @@ public class KinectRecorder : MonoBehaviour {
 		}
 		finally
 		{
-			Debug.Log (gestureName);
+			//Debug.Log (gestureName);
 			if (writer != null)
 				writer.Close();
+			LearningMachine.LoadRawData(filePath);
 		}
 		return success; // Xml file successfully written (or not)
 	
@@ -174,7 +175,7 @@ public class KinectRecorder : MonoBehaviour {
 
 		List<MyMath.Vector2> locals = GoldenSection.Pack(jointPos, jointPos.Count );
 
-		//do xml writing
+		//do xml writingSortDescending
 		bool success = true;
 		XmlTextWriter writer = null;
 
@@ -224,9 +225,11 @@ public class KinectRecorder : MonoBehaviour {
 		}
 		finally
 		{
-			Debug.Log (gestureName);
+
+			//Debug.Log (gestureName);
 			if (writer != null)
 				writer.Close();
+			LearningMachine.LoadGesture(filePath);
 		}
 		return success; // Xml file successfully written (or not)
 

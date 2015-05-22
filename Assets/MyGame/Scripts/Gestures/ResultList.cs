@@ -11,7 +11,10 @@ namespace TemplateGesture{
 			
 			private string name;
 			private double score;
-			
+
+			public void SetScore(double s){
+				score = s;
+			}
 			// constructor
 			public BestResult(string n, double s)
 			{
@@ -50,10 +53,10 @@ namespace TemplateGesture{
 		}
 
 
-		private ArrayList arrList;
+		private List<BestResult> arrList;
 
 		public ResultList(){
-			arrList = new ArrayList ();
+			arrList = new List<BestResult> ();
 		}
 
 		public bool IsEmpty
@@ -69,6 +72,16 @@ namespace TemplateGesture{
 			BestResult r = new BestResult(name, score);
 			arrList.Add(r);
 		}
+
+		public void UpdateResult(string name, double score){
+			for (int i = 0; i < arrList.Count; i ++) {
+				if(arrList[i].Name == name){
+//					if(arrList[i].Score < score){
+						arrList[i].SetScore(score);
+//					}
+				}
+			}
+		}
 		
 		public void SortDescending()
 		{
@@ -81,8 +94,16 @@ namespace TemplateGesture{
 			{
 				if (arrList.Count > 0)
 				{
-					BestResult r = (BestResult) arrList[0];
-					return r.Name;
+//					BestResult r;
+					double score = 0;
+					string name = "";
+					for(int i = 0; i < arrList.Count; i++){
+						if(arrList[i].Score > score){
+							score = arrList[i].Score;
+							name = arrList[i].Name;
+						}
+					}
+					return name;
 				}
 				return String.Empty;
 			}
@@ -93,8 +114,14 @@ namespace TemplateGesture{
 			{
 				if (arrList.Count > 0)
 				{
-					BestResult r = (BestResult) arrList[0];
-					return r.Score;
+//					BestResult r;
+					double score = 0;
+					for(int i = 0; i < arrList.Count; i++){
+						if(arrList[i].Score > score){
+							score = arrList[i].Score;
+						}
+					}
+					return score;
 				}
 				return -1.0;
 			}

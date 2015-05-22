@@ -25,14 +25,14 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		readonly LearningMachine learningMachine;
+		//readonly LearningMachine learningMachine;
 		private readonly float minScore = 0.7f;
 
-		public LearningMachine LearningMachine{
-			get{
-				return learningMachine;
-			}
-		}
+//		public LearningMachine LearningMachine{
+//			get{
+//				return learningMachine;
+//			}
+//		}
 
 		public TemplatedGestureDetector(int windowSize = 200){
 			this.windowSize = windowSize;
@@ -41,7 +41,8 @@ namespace TemplateGesture{
 			Epsilon = 0.035f;
 			MinimalScore = 0.80f;
 			MinimalSize = 0.1f;
-			learningMachine = new LearningMachine();
+			LearningMachine.Initialize ();
+			//learningMachine = new LearningMachine();
 		}
 
 		protected List<Entry> Entries
@@ -79,8 +80,8 @@ namespace TemplateGesture{
 
 		private void LookForGesture()
 		{
-			ResultList resList = learningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
-			resList.SortDescending ();
+			ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
+			//resList.SortDescending ();
 			if (!resList.IsEmpty) {
 				string gesName = resList.Name;
 				double gesScore = resList.Score;
@@ -88,9 +89,6 @@ namespace TemplateGesture{
 					// for tesing
 				}
 				if(gesScore > minScore){
-					Debug.Log("======");
-					Debug.Log(gesName);
-					Debug.Log("======");
 					RaiseGestureDetected(gesName);
 				}
 			}
@@ -110,7 +108,7 @@ namespace TemplateGesture{
 
 			//clear the point list
 			Entries.Clear();
-			learningMachine.ResultList.ClearList ();
+			LearningMachine.ResultList.ClearList ();
 			//Debug.Log (Entries.Count ());
 		}
 		

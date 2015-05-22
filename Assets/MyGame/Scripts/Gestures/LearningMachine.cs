@@ -13,30 +13,37 @@ using System;
 namespace TemplateGesture{
 	public class LearningMachine
 	{
-		private NuiSkeletonFrame[] skeletonFrame;
+		private static LearningMachine instance = new LearningMachine ();
 
-		private List<RecordedPath> paths;
-		private List<RecordedPath> rawData;
-		private string folderPath = "Assets/MyGame/Recordings/";
-		private ResultList rl = new ResultList();
+		private static NuiSkeletonFrame[] skeletonFrame;
 
-		public ResultList ResultList{
+		private static List<RecordedPath> paths;
+		private static List<RecordedPath> rawData;
+		private static string folderPath = "Assets/MyGame/Recordings/";
+		private static ResultList rl = new ResultList();
+
+		public static LearningMachine Instance{
+			get{
+				return instance;
+			}
+		}
+
+		public static ResultList ResultList{
 			get{
 				return rl;
 			}
 		}
-		public List<RecordedPath> RawData{
+		public static List<RecordedPath> RawData{
 			get{
 				return rawData;
 			}
 		}
-		public List<RecordedPath> Paths{
+		public static List<RecordedPath> Paths{
 			get{
 				return paths;
 			}
 		}
-		public LearningMachine()
-		{
+		public static void Initialize(){
 			paths = new List<RecordedPath>();
 			rawData = new List<RecordedPath>();
 
@@ -47,8 +54,20 @@ namespace TemplateGesture{
 			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
 				LoadRawData (file);
 		}
+//		public LearningMachine()
+//		{
+//			paths = new List<RecordedPath>();
+//			rawData = new List<RecordedPath>();
+//
+//			foreach (string file in Directory.GetFiles(folderPath, "*.xml"))
+//			{
+//				LoadGesture(file);
+//			}
+//			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
+//				LoadRawData (file);
+//		}
 
-		public ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
+		public static ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
 		{
 			foreach (RecordedPath p in paths) {
 				float score = p.Match(entries, threshold, minimalScore, minSize);
@@ -59,25 +78,26 @@ namespace TemplateGesture{
 				}
 
 				if(score >= 0)
-					rl.AddResult(p.gestureName, score);
+					rl.UpdateResult(p.gestureName, score);
+//					rl.AddResult(p.gestureName, score);
 			}
 			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));
 			return rl;
 		}
 		
-		public void AddPath(RecordedPath path)
+		public static void AddPath(RecordedPath path)
 		{
 			path.CloseAndPrepare();
 			Paths.Add(path);
 		}
 
-		public void AddRawData(RecordedPath rawData)
+		public static void AddRawData(RecordedPath rawData)
 		{
 			rawData.CloseAndPrepare();
 			Paths.Add(rawData);
 		}
 
-		public bool LoadGesture(string filePath)
+		public static bool LoadGesture(string filePath)
 		{
 			bool success = true;
 			XmlTextReader reader = null;
@@ -106,6 +126,7 @@ namespace TemplateGesture{
 					reader.ReadStartElement("Point");
 				}
 				paths.Add(rp);
+				rl.AddResult(gesName, -1);
 
 			}
 			catch (XmlException xex)
@@ -126,7 +147,7 @@ namespace TemplateGesture{
 			return success;
 		}
 
-		public bool LoadRawData(string filePath)
+		public static bool LoadRawData(string filePath)
 		{
 			bool success = true;
 			XmlTextReader reader = null;

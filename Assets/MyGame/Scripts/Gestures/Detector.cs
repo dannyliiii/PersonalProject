@@ -18,18 +18,25 @@ public class Detector : MonoBehaviour {
 	TemplatedGestureDetector templateGestureDetector;
 	public SkeletonWrapper sw;
 
-	// for shooting projectile
-	public GameObject projectile;
 	private UnityEngine.Vector3 upForce;
 	private readonly int speed = 50;
 	private List<GameObject> projList;
-	private List<RecordedPath> paths;
-	private List<RecordedPath> rawData;
+//	private List<RecordedPath> paths;
+//	private List<RecordedPath> rawData;
 	private int currentData = 0;
+	private string gesText = "";
+	private int screenHeight = Screen.height;
+	private int screenWidth = Screen.width;
+	private GUIStyle gs;
+	private int gesCount = 5;
+	private int num = -1;
 
-	//for test
-	private int[] testList;
+	// shooting projectile
+	public GameObject projectile;
+
+	//gui scroll view
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
+	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
 
 	void Awake () {
 		projList = new List<GameObject> ();
@@ -37,21 +44,19 @@ public class Detector : MonoBehaviour {
 
 		LoadTemplateGestureDetector ();
 
-		paths = templateGestureDetector.LearningMachine.Paths;
+		//paths = templateGestureDetector.LearningMachine.Paths;
 
-		rawData = templateGestureDetector.LearningMachine.RawData;
+		//rawData = templateGestureDetector.LearningMachine.RawData;
 
-		testList = new int[10];
-		for(int i = 0 ; i < 10; i ++){
-			testList[i] = i;
-		}
+		gs = new GUIStyle ();
+		gs.fontSize = 40;
 		//DrawData (paths[0]);
 	}
 
 	void Update () {
 
-//		if(rawData.Count > 0)
-//			DrawDataPerFrame (rawData[0]);
+		if(num != -1)
+			DrawDataPerFrame (num);
 
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
@@ -66,6 +71,7 @@ public class Detector : MonoBehaviour {
 
 	void OnGestureDetected(string gesture)
 	{
+		gesText = gesture;
 		//Shoot ();
 	}
 
@@ -123,7 +129,9 @@ public class Detector : MonoBehaviour {
 
 	}
 
-	void DrawDataPerFrame(RecordedPath path){
+	void DrawDataPerFrame(int num){
+
+		RecordedPath path = LearningMachine.RawData [num];
 
 		if (currentData >= path.SampleCount - 1)
 			currentData = 0;
@@ -153,24 +161,46 @@ public class Detector : MonoBehaviour {
 
 	void OnGUI() {
 
-		scrollPosition = GUI.BeginScrollView(new Rect(20, 20, 100, 200), 
-		                    scrollPosition , new Rect(25, 20, 80, 10 * 40),
-		                    false, true);
+		if (gesCount < LearningMachine.RawData.Count) {
+			gesCount = LearningMachine.RawData.Count;
+		}
+		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.05f , 100, 200), 
+		                                     scrollPosition , 
+		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
+		                    				 false, 
+		                                     true);
 
-		for (int i = 0; i < rawData.Count; i ++) {
-			if (GUI.Button(new Rect(25, 20 + i * 40, 80, 30), rawData[i].gestureName)){
+		for (int i = 0; i < LearningMachine.RawData.Count; i ++) {
+			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.RawData[i].gestureName)){
 				currentData = 0;
-				DrawDataPerFrame (rawData[i]);
+				num = i;
 			}
 		}
 
 		GUI.EndScrollView();
 	
-		for(int j = 0; j < templateGestureDetector.LearningMachine.ResultList.Size(); j ++){
-			GUI.Label(new Rect(800, 20 + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetName(j));
-			GUI.Label(new Rect(900, 20 + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetScore(j).ToString());
+
+		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.2f  , screenWidth * 0.1f, 200), 
+		                                         scrollPositionText , 
+		                                         new Rect(screenWidth * 0.7f, screenHeight * 0.2f, screenWidth * 0.08f, gesCount * 40),
+		                                         false, 
+		                                         true);
+
+		for(int j = 0; j < LearningMachine.ResultList.Size(); j ++){
+//			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetName(j));
+//			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetScore(j).ToString());
+			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.2f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
+			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.2f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
 	
 		}
+
+		GUI.EndScrollView ();
+
+		string str = "Detected gesture shows here.";
+		if(gesText != "")
+			str = gesText + " detected";
+
+		GUI.Label(new Rect(screenWidth * 0.5f , screenHeight * 0.05f , 200, 40), str, gs);
 
 		
 	}
