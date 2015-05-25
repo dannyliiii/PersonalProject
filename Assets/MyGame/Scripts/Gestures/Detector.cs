@@ -30,7 +30,6 @@ public class Detector : MonoBehaviour {
 	private GUIStyle gs;
 	private int gesCount = 5;
 	private int num = -1;
-
 	// shooting projectile
 	public GameObject projectile;
 
@@ -50,6 +49,7 @@ public class Detector : MonoBehaviour {
 
 		gs = new GUIStyle ();
 		gs.fontSize = 40;
+
 		//DrawData (paths[0]);
 	}
 
@@ -78,14 +78,27 @@ public class Detector : MonoBehaviour {
 	void ProcessFrame()
 	{
 		if (sw.pollSkeleton ()) {
-			for (int i = 0; i < (int)Kinect.NuiSkeletonPositionIndex.Count; i++) {
 
+			for (int i = 0; i < (int)Kinect.NuiSkeletonPositionIndex.Count; i++) {
+				
 				if (i == (int)NuiSkeletonPositionIndex.HandRight) {
+
 					MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
 					                                         ,sw.bonePos[player, i].y
 					                                         ,sw.bonePos[player, i].z);
 					templateGestureDetector.Add (pos);
-					
+
+					templateGestureDetector.LookForGesture();
+//					if(KinectSensor.Instance.getIsRightHandGrip()){
+//						//Debug.Log("Right hand grips.");
+//						MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
+//						                                         ,sw.bonePos[player, i].y
+//						                                         ,sw.bonePos[player, i].z);
+//						templateGestureDetector.Add (pos);
+//					}else{
+//						//Debug.Log("Right hand releases.");
+//						templateGestureDetector.LookForGesture();
+//					}
 				}
 			}
 		}

@@ -7,7 +7,7 @@ namespace TemplateGesture{
 
 		public class BestResult : IComparable
 		{
-			public static BestResult Empty = new BestResult(String.Empty, -1);
+			public static BestResult Empty = new BestResult(String.Empty, 0);
 			
 			private string name;
 			private double score;
@@ -150,7 +150,10 @@ namespace TemplateGesture{
 		}
 
 		public void ClearList(){
-			arrList.Clear ();
+			for (int i = 0; i < arrList.Count; i ++) {
+				arrList[i].SetScore (0);
+			}
+//			arrList.Clear ();
 		}
 
 	}

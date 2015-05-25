@@ -68,18 +68,19 @@ namespace TemplateGesture{
 			}
 			
 			// Look for gestures
-			LookForGesture();
+			//LookForGesture();
 
 //			if (path != null)
 //			{
 //				path.Points.Add(MyMath.Vector3.ToVector2(position));
 //			}
-
-			
 		}
 
-		private void LookForGesture()
+		public void LookForGesture()
 		{
+			if (Entries.Count <= 0)
+				return;
+
 			ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
 			//resList.SortDescending ();
 			if (!resList.IsEmpty) {
@@ -91,6 +92,7 @@ namespace TemplateGesture{
 				if(gesScore > minScore){
 					RaiseGestureDetected(gesName);
 				}
+				//Entries.Clear();
 			}
 
 		}
