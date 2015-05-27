@@ -34,7 +34,7 @@ namespace TemplateGesture{
 //			}
 //		}
 
-		public TemplatedGestureDetector(int windowSize = 200){
+		public TemplatedGestureDetector(int windowSize = 150){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
 			

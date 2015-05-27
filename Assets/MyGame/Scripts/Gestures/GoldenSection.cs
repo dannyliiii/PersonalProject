@@ -105,6 +105,19 @@ namespace TemplateGesture{
 		}
 		
 		// Resample to required length then rotate to get first point at 0 radians, scale to 1x1 and finally center the path to (0,0)
+		public static List<Vector2> Pack(List<Vector3> positions, int samplesCount)
+		{
+			List<Vector2> locals = ProjectListToDefinedCount(ToLV2(positions), samplesCount);
+			
+			float angle = GetAngleBetween(GoldenSectionExtension.Center(locals), Vector3.ToVector2(positions[0]));
+			locals = GoldenSectionExtension.Rotate(locals, -angle);
+			
+			GoldenSectionExtension.ScaleToReferenceWorld(locals);
+			GoldenSectionExtension.CenterToOrigin(locals);
+			
+			return locals;
+		}
+
 		public static List<Vector2> Pack(List<Vector2> positions, int samplesCount)
 		{
 			List<Vector2> locals = ProjectListToDefinedCount(positions, samplesCount);
@@ -118,8 +131,19 @@ namespace TemplateGesture{
 			return locals;
 		}
 
-		public static List<Vector2> Scale(List<Vector2> positions, int samplesCount){
-			List<Vector2> locals = positions;
+		private static List<Vector2> ToLV2(List<Vector3> pos){
+			List<Vector2> res = new List<Vector2>(256);
+
+			for (int i = 0; i < pos.Count; i ++) {
+				Vector2 v2 = new Vector2(pos[i].x, pos[i].y);
+				res.Add(v2);
+			}
+
+			return res;
+		}
+
+		public static List<Vector2> Scale(List<Vector3> positions, int samplesCount){
+			List<Vector2> locals = ToLV2(positions);
 
 			for (int i = 0; i < locals.Count; i ++) {
 				locals[i].x = -locals[i].x;

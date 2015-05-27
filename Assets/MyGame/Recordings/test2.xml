@@ -1,0 +1,290 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Gesture GesName="test2" NumPts="142" Date="Wednesday, May 27, 2015" TimeOfDay="2:47:32 PM">
+  <RawData>
+    <LeftHandPoints X="0.28262043" Y="-0.2726251" Z="1.02742362" />
+    <LeftHandPoints X="0.282334924" Y="-0.283492953" Z="1.02142644" />
+    <LeftHandPoints X="0.282443941" Y="-0.29859972" Z="1.01590753" />
+    <LeftHandPoints X="0.2820326" Y="-0.305476665" Z="1.01347208" />
+    <LeftHandPoints X="0.281501442" Y="-0.309505671" Z="1.01232171" />
+    <LeftHandPoints X="0.2809294" Y="-0.312108" Z="1.01190138" />
+    <LeftHandPoints X="0.27759105" Y="-0.305716544" Z="1.01700163" />
+    <LeftHandPoints X="0.274512023" Y="-0.2984432" Z="1.02267468" />
+    <LeftHandPoints X="0.270483971" Y="-0.294005662" Z="1.02964461" />
+    <LeftHandPoints X="0.267636478" Y="-0.2912387" Z="1.03444147" />
+    <LeftHandPoints X="0.265639782" Y="-0.289505064" Z="1.03772676" />
+    <LeftHandPoints X="0.264249742" Y="-0.288397342" Z="1.03992188" />
+    <LeftHandPoints X="0.263441384" Y="-0.28764078" Z="1.04119778" />
+    <LeftHandPoints X="0.2628189" Y="-0.2926709" Z="1.03849041" />
+    <LeftHandPoints X="0.262908578" Y="-0.2965657" Z="1.03537583" />
+    <LeftHandPoints X="0.265615553" Y="-0.30871588" Z="1.03160143" />
+    <LeftHandPoints X="0.2666376" Y="-0.312087357" Z="1.0275228" />
+    <LeftHandPoints X="0.268078625" Y="-0.3135934" Z="1.02335334" />
+    <LeftHandPoints X="0.269344926" Y="-0.314196467" Z="1.0196768" />
+    <LeftHandPoints X="0.270654917" Y="-0.313970029" Z="1.01612675" />
+    <LeftHandPoints X="0.294107765" Y="-0.309092581" Z="1.01125062" />
+    <LeftHandPoints X="0.316015929" Y="-0.292675227" Z="1.00442135" />
+    <LeftHandPoints X="0.328395545" Y="-0.281438351" Z="0.999022543" />
+    <LeftHandPoints X="0.3358899" Y="-0.2726197" Z="0.9939334" />
+    <LeftHandPoints X="0.3408739" Y="-0.267671466" Z="0.9911114" />
+    <LeftHandPoints X="0.328456461" Y="-0.2716482" Z="0.9878474" />
+    <LeftHandPoints X="0.318549454" Y="-0.275123566" Z="0.985089242" />
+    <LeftHandPoints X="0.310991853" Y="-0.277686656" Z="0.9825264" />
+    <LeftHandPoints X="0.30610618" Y="-0.2786065" Z="0.9799065" />
+    <LeftHandPoints X="0.302655131" Y="-0.278723717" Z="0.9776801" />
+    <LeftHandPoints X="0.300183445" Y="-0.2787609" Z="0.9758938" />
+    <LeftHandPoints X="0.298288673" Y="-0.279118657" Z="0.9739159" />
+    <LeftHandPoints X="0.296899259" Y="-0.279636323" Z="0.9718536" />
+    <LeftHandPoints X="0.295941532" Y="-0.2801778" Z="0.9698854" />
+    <LeftHandPoints X="0.295322359" Y="-0.2807068" Z="0.9681119" />
+    <LeftHandPoints X="0.2949462" Y="-0.28113848" Z="0.966611445" />
+    <LeftHandPoints X="0.2947463" Y="-0.281525671" Z="0.9653398" />
+    <LeftHandPoints X="0.2947387" Y="-0.281683832" Z="0.96404475" />
+    <LeftHandPoints X="0.294805557" Y="-0.281765223" Z="0.962886631" />
+    <LeftHandPoints X="0.294910371" Y="-0.281769276" Z="0.96184814" />
+    <LeftHandPoints X="0.29504925" Y="-0.281659931" Z="0.960831165" />
+    <LeftHandPoints X="0.295181781" Y="-0.2814065" Z="0.959739566" />
+    <LeftHandPoints X="0.295268446" Y="-0.280914277" Z="0.958448052" />
+    <LeftHandPoints X="0.295301318" Y="-0.280099571" Z="0.9568738" />
+    <LeftHandPoints X="0.29539603" Y="-0.278118759" Z="0.9538234" />
+    <LeftHandPoints X="0.296335" Y="-0.275671184" Z="0.9489438" />
+    <LeftHandPoints X="0.297345459" Y="-0.271678954" Z="0.9445039" />
+    <LeftHandPoints X="0.295357257" Y="-0.2685084" Z="0.9409208" />
+    <LeftHandPoints X="0.2172036" Y="-0.298167676" Z="0.8676189" />
+    <LeftHandPoints X="0.220720425" Y="-0.311129838" Z="0.851644635" />
+    <LeftHandPoints X="0.224072486" Y="-0.282155156" Z="0.8488359" />
+    <LeftHandPoints X="0.226362929" Y="-0.267406017" Z="0.8458868" />
+    <LeftHandPoints X="0.2371876" Y="-0.231976315" Z="0.8548591" />
+    <LeftHandPoints X="0.244589627" Y="-0.179041341" Z="0.866447031" />
+    <LeftHandPoints X="0.246028021" Y="-0.147484317" Z="0.866768658" />
+    <LeftHandPoints X="0.2464576" Y="-0.100095361" Z="0.8790291" />
+    <LeftHandPoints X="0.246054828" Y="-0.08224533" Z="0.882104754" />
+    <LeftHandPoints X="0.2394106" Y="-0.07212357" Z="0.875949264" />
+    <LeftHandPoints X="0.231190473" Y="-0.07108878" Z="0.865706444" />
+    <LeftHandPoints X="0.213294178" Y="0.011742197" Z="0.8785561" />
+    <LeftHandPoints X="0.191525638" Y="0.08915275" Z="0.8843158" />
+    <LeftHandPoints X="0.147530124" Y="0.06582915" Z="0.6786169" />
+    <LeftHandPoints X="0.130224049" Y="0.08317722" Z="0.6414872" />
+    <LeftHandPoints X="0.114678733" Y="0.09659839" Z="0.608903348" />
+    <LeftHandPoints X="0.113311112" Y="0.09535171" Z="0.608626366" />
+    <LeftHandPoints X="0.111760318" Y="0.0944980159" Z="0.608892739" />
+    <LeftHandPoints X="0.111929424" Y="0.08854182" Z="0.6135115" />
+    <LeftHandPoints X="0.115016177" Y="0.08300979" Z="0.6275989" />
+    <LeftHandPoints X="0.116842493" Y="0.07882036" Z="0.6378522" />
+    <LeftHandPoints X="0.143705279" Y="0.1456487" Z="0.8770443" />
+    <LeftHandPoints X="0.113901123" Y="0.1539455" Z="0.6776668" />
+    <RightHandPoints X="-0.113944791" Y="-0.271784067" Z="0.865532637" />
+    <RightHandPoints X="-0.116268657" Y="-0.23617968" Z="0.844834447" />
+    <RightHandPoints X="-0.107392386" Y="-0.2359426" Z="0.833372831" />
+    <RightHandPoints X="-0.106242225" Y="-0.248286992" Z="0.8247068" />
+    <RightHandPoints X="-0.11286179" Y="-0.257111043" Z="0.8248582" />
+    <RightHandPoints X="-0.12224555" Y="-0.258571863" Z="0.832914531" />
+    <RightHandPoints X="-0.131467447" Y="-0.256459624" Z="0.844266534" />
+    <RightHandPoints X="-0.14914313" Y="-0.2558021" Z="0.859805346" />
+    <RightHandPoints X="-0.158716857" Y="-0.2579933" Z="0.8733396" />
+    <RightHandPoints X="-0.163567632" Y="-0.2605411" Z="0.8819586" />
+    <RightHandPoints X="-0.163632527" Y="-0.274773479" Z="0.89351517" />
+    <RightHandPoints X="-0.161787108" Y="-0.286840439" Z="0.899086654" />
+    <RightHandPoints X="-0.160337538" Y="-0.292926162" Z="0.9021609" />
+    <RightHandPoints X="-0.1591444" Y="-0.296324968" Z="0.904082239" />
+    <RightHandPoints X="-0.1574206" Y="-0.298572242" Z="0.904787" />
+    <RightHandPoints X="-0.15538682" Y="-0.299517244" Z="0.9045571" />
+    <RightHandPoints X="-0.153159976" Y="-0.299660772" Z="0.9035073" />
+    <RightHandPoints X="-0.151069537" Y="-0.2994025" Z="0.9021439" />
+    <RightHandPoints X="-0.149193853" Y="-0.298966885" Z="0.900685251" />
+    <RightHandPoints X="-0.147584453" Y="-0.298367023" Z="0.8992585" />
+    <RightHandPoints X="-0.146269649" Y="-0.297704369" Z="0.8979629" />
+    <RightHandPoints X="-0.145146683" Y="-0.297039926" Z="0.8968188" />
+    <RightHandPoints X="-0.150131315" Y="-0.304332465" Z="0.8885757" />
+    <RightHandPoints X="-0.149146527" Y="-0.3041601" Z="0.8872202" />
+    <RightHandPoints X="-0.147814542" Y="-0.303430438" Z="0.8864727" />
+    <RightHandPoints X="-0.146361262" Y="-0.302397937" Z="0.886140764" />
+    <RightHandPoints X="-0.144984722" Y="-0.3012923" Z="0.8860627" />
+    <RightHandPoints X="-0.143769354" Y="-0.300203532" Z="0.8861099" />
+    <RightHandPoints X="-0.1476575" Y="-0.276170373" Z="0.8809985" />
+    <RightHandPoints X="-0.14941518" Y="-0.265384763" Z="0.878906667" />
+    <RightHandPoints X="-0.143709674" Y="-0.281151921" Z="0.873010635" />
+    <RightHandPoints X="-0.09847808" Y="-0.306659043" Z="0.8605631" />
+    <RightHandPoints X="-0.06959473" Y="-0.3189492" Z="0.8539337" />
+    <RightHandPoints X="-0.0586285181" Y="-0.319232" Z="0.853631139" />
+    <RightHandPoints X="-0.0533874929" Y="-0.3222395" Z="0.854911447" />
+    <RightHandPoints X="-0.06789977" Y="-0.3386625" Z="0.8879782" />
+    <RightHandPoints X="-0.0854029655" Y="-0.3467422" Z="0.905838549" />
+    <RightHandPoints X="-0.09505362" Y="-0.349342644" Z="0.9119891" />
+    <RightHandPoints X="-0.14020355" Y="-0.324000061" Z="0.903807938" />
+    <RightHandPoints X="-0.172212914" Y="-0.2674533" Z="0.91243434" />
+    <RightHandPoints X="-0.1889765" Y="-0.234875336" Z="0.914711356" />
+    <RightHandPoints X="-0.196835339" Y="-0.223937616" Z="0.915192246" />
+    <RightHandPoints X="-0.201337054" Y="-0.218170747" Z="0.9057427" />
+    <RightHandPoints X="-0.179571509" Y="-0.235311583" Z="0.8825667" />
+    <RightHandPoints X="-0.156186223" Y="-0.261781037" Z="0.843752146" />
+    <RightHandPoints X="-0.137181789" Y="-0.247905612" Z="0.8178329" />
+    <RightHandPoints X="-0.128124923" Y="-0.233250454" Z="0.807339" />
+    <RightHandPoints X="-0.123509035" Y="-0.229889214" Z="0.800047457" />
+    <RightHandPoints X="-0.119753413" Y="-0.2261437" Z="0.7906342" />
+    <RightHandPoints X="-0.1418324" Y="-0.203944489" Z="0.775382042" />
+    <RightHandPoints X="-0.1962163" Y="-0.149439916" Z="0.747692466" />
+    <RightHandPoints X="-0.216118127" Y="0.005286332" Z="0.6467148" />
+    <RightHandPoints X="-0.07991654" Y="0.174958289" Z="0.665409" />
+    <RightHandPoints X="-0.242482588" Y="-0.0139339305" Z="0.8003149" />
+    <RightHandPoints X="-0.2768561" Y="0.02380884" Z="0.801283062" />
+    <RightHandPoints X="-0.17841886" Y="0.176533908" Z="0.8770058" />
+    <RightHandPoints X="0.0477431156" Y="0.31771332" Z="0.902446747" />
+    <RightHandPoints X="0.127372667" Y="0.301586419" Z="0.881848752" />
+    <RightHandPoints X="0.282087445" Y="0.377252579" Z="0.977867961" />
+    <RightHandPoints X="0.139709383" Y="0.166136444" Z="0.6597372" />
+    <RightHandPoints X="0.327321917" Y="0.2132348" Z="0.915562451" />
+    <RightHandPoints X="0.170626611" Y="0.0964250341" Z="0.6549086" />
+    <RightHandPoints X="0.05765837" Y="0.2246063" Z="0.604694366" />
+    <RightHandPoints X="-0.008490302" Y="0.2303573" Z="0.548236" />
+    <RightHandPoints X="-0.0557150133" Y="0.2574029" Z="0.5336313" />
+    <RightHandPoints X="-0.0684985146" Y="0.271653473" Z="0.5404099" />
+    <RightHandPoints X="-0.07467205" Y="0.288003951" Z="0.543070734" />
+    <RightHandPoints X="-0.07289453" Y="0.293582529" Z="0.555844367" />
+    <RightHandPoints X="-0.06519247" Y="0.304420441" Z="0.5646157" />
+    <RightHandPoints X="-0.05547984" Y="0.306937069" Z="0.574403465" />
+    <RightHandPoints X="-0.0476165973" Y="0.306874961" Z="0.581748545" />
+  </RawData>
+</Gesture><ProccessedData>
+  <LeftHandPoints X="0.317173779" Y="2.38418579E-07" />
+  <LeftHandPoints X="0.3434408" Y="0.0422529" />
+  <LeftHandPoints X="0.3698671" Y="0.08279711" />
+  <LeftHandPoints X="0.385426074" Y="0.128611267" />
+  <LeftHandPoints X="0.3574284" Y="0.140035331" />
+  <LeftHandPoints X="0.331919342" Y="0.188886285" />
+  <LeftHandPoints X="0.358337879" Y="0.224451721" />
+  <LeftHandPoints X="0.385551155" Y="0.222537458" />
+  <LeftHandPoints X="0.390474677" Y="0.1108188" />
+  <LeftHandPoints X="0.392773449" Y="-0.00137925148" />
+  <LeftHandPoints X="0.3848908" Y="-0.110967159" />
+  <LeftHandPoints X="0.376458257" Y="-0.2197963" />
+  <LeftHandPoints X="0.365972161" Y="-0.3257451" />
+  <LeftHandPoints X="0.352704167" Y="-0.4264425" />
+  <LeftHandPoints X="0.348253429" Y="-0.377460957" />
+  <LeftHandPoints X="0.347412825" Y="-0.263408542" />
+  <LeftHandPoints X="0.344233274" Y="-0.150560737" />
+  <LeftHandPoints X="0.33834067" Y="-0.07843995" />
+  <LeftHandPoints X="0.318479478" Y="-0.0874291658" />
+  <LeftHandPoints X="0.3185385" Y="0.0266808271" />
+  <LeftHandPoints X="0.3185975" Y="0.140790761" />
+  <LeftHandPoints X="0.3186565" Y="0.2549007" />
+  <LeftHandPoints X="0.3187155" Y="0.369010746" />
+  <LeftHandPoints X="0.318774521" Y="0.483120739" />
+  <LeftHandPoints X="0.3252771" Y="0.5735575" />
+  <LeftHandPoints X="0.338921458" Y="0.5672636" />
+  <LeftHandPoints X="0.313782454" Y="0.514995456" />
+  <LeftHandPoints X="0.288744658" Y="0.4619717" />
+  <LeftHandPoints X="0.264417231" Y="0.40404278" />
+  <LeftHandPoints X="0.242026672" Y="0.3343379" />
+  <LeftHandPoints X="0.219636083" Y="0.264633" />
+  <LeftHandPoints X="0.1960538" Y="0.202293992" />
+  <LeftHandPoints X="0.171229631" Y="0.147631288" />
+  <LeftHandPoints X="0.146405429" Y="0.09296858" />
+  <LeftHandPoints X="0.121581227" Y="0.03830588" />
+  <LeftHandPoints X="0.09597102" Y="-0.0098387" />
+  <LeftHandPoints X="0.06999174" Y="-0.0549231768" />
+  <LeftHandPoints X="0.04384491" Y="-0.0983535051" />
+  <LeftHandPoints X="0.0174753666" Y="-0.1395843" />
+  <LeftHandPoints X="-0.008894175" Y="-0.1808151" />
+  <LeftHandPoints X="-0.03527981" Y="-0.2218703" />
+  <LeftHandPoints X="-0.0619592369" Y="-0.259716034" />
+  <LeftHandPoints X="-0.08935383" Y="-0.2486291" />
+  <LeftHandPoints X="-0.108575851" Y="-0.192453861" />
+  <LeftHandPoints X="-0.136547476" Y="-0.209262133" />
+  <LeftHandPoints X="-0.164519161" Y="-0.226070285" />
+  <LeftHandPoints X="-0.192490846" Y="-0.242878318" />
+  <LeftHandPoints X="-0.220462531" Y="-0.2596866" />
+  <LeftHandPoints X="-0.248434216" Y="-0.276494622" />
+  <LeftHandPoints X="-0.276464015" Y="-0.291308522" />
+  <LeftHandPoints X="-0.304638535" Y="-0.301166058" />
+  <LeftHandPoints X="-0.332812935" Y="-0.311023474" />
+  <LeftHandPoints X="-0.360987335" Y="-0.320881" />
+  <LeftHandPoints X="-0.3891618" Y="-0.330738425" />
+  <LeftHandPoints X="-0.4173362" Y="-0.340595841" />
+  <LeftHandPoints X="-0.4278495" Y="-0.282009482" />
+  <LeftHandPoints X="-0.424271971" Y="-0.16881597" />
+  <LeftHandPoints X="-0.420694441" Y="-0.05562246" />
+  <LeftHandPoints X="-0.4173371" Y="0.05707389" />
+  <LeftHandPoints X="-0.443118125" Y="0.10397464" />
+  <LeftHandPoints X="-0.468654841" Y="0.152861238" />
+  <LeftHandPoints X="-0.493500382" Y="0.207365811" />
+  <LeftHandPoints X="-0.48207894" Y="0.2604999" />
+  <LeftHandPoints X="-0.470500559" Y="0.226883352" />
+  <LeftHandPoints X="-0.491330653" Y="0.149702609" />
+  <LeftHandPoints X="-0.5121608" Y="0.0725218058" />
+  <LeftHandPoints X="-0.5329908" Y="-0.00465905666" />
+  <LeftHandPoints X="-0.553820968" Y="-0.08183992" />
+  <LeftHandPoints X="-0.5738071" Y="-0.12436378" />
+  <LeftHandPoints X="-0.5905168" Y="-0.0323028564" />
+  <LeftHandPoints X="-0.6072265" Y="0.0597583055" />
+  <RightHandPoints X="0.4398322" Y="5.21540642E-08" />
+  <RightHandPoints X="0.3944246" Y="0.00486519933" />
+  <RightHandPoints X="0.4276494" Y="0.04750754" />
+  <RightHandPoints X="0.461812735" Y="0.09030919" />
+  <RightHandPoints X="0.4914772" Y="0.0510081053" />
+  <RightHandPoints X="0.446421772" Y="0.06657256" />
+  <RightHandPoints X="0.47120595" Y="-0.00772194564" />
+  <RightHandPoints X="0.482425272" Y="-0.09386854" />
+  <RightHandPoints X="0.507237136" Y="-0.119500414" />
+  <RightHandPoints X="0.5242825" Y="-0.0438098758" />
+  <RightHandPoints X="0.5041039" Y="0.0363443643" />
+  <RightHandPoints X="0.462666929" Y="0.0977103" />
+  <RightHandPoints X="0.420007318" Y="0.157089561" />
+  <RightHandPoints X="0.413784355" Y="0.149283767" />
+  <RightHandPoints X="0.435823232" Y="0.07753721" />
+  <RightHandPoints X="0.386513323" Y="0.0343930721" />
+  <RightHandPoints X="0.356787473" Y="0.107590586" />
+  <RightHandPoints X="0.327575743" Y="0.183504015" />
+  <RightHandPoints X="0.283990234" Y="0.234152436" />
+  <RightHandPoints X="0.230383039" Y="0.267185569" />
+  <RightHandPoints X="0.176775828" Y="0.300218672" />
+  <RightHandPoints X="0.123284057" Y="0.323019058" />
+  <RightHandPoints X="0.07045342" Y="0.287209749" />
+  <RightHandPoints X="0.01762278" Y="0.251400381" />
+  <RightHandPoints X="-0.03520785" Y="0.215591073" />
+  <RightHandPoints X="-0.08803848" Y="0.1797817" />
+  <RightHandPoints X="-0.1041749" Y="0.169997752" />
+  <RightHandPoints X="-0.0521810576" Y="0.2085351" />
+  <RightHandPoints X="-0.000187210739" Y="0.247072458" />
+  <RightHandPoints X="0.0518066324" Y="0.285609782" />
+  <RightHandPoints X="0.103800476" Y="0.324147135" />
+  <RightHandPoints X="0.155794322" Y="0.3626845" />
+  <RightHandPoints X="0.1365479" Y="0.4313344" />
+  <RightHandPoints X="0.0879653245" Y="0.431566149" />
+  <RightHandPoints X="0.0329775847" Y="0.404279977" />
+  <RightHandPoints X="-0.02201017" Y="0.3769938" />
+  <RightHandPoints X="-0.07699792" Y="0.349707633" />
+  <RightHandPoints X="-0.122699395" Y="0.298624724" />
+  <RightHandPoints X="-0.164797857" Y="0.238308847" />
+  <RightHandPoints X="-0.20689632" Y="0.177993" />
+  <RightHandPoints X="-0.2489948" Y="0.117677107" />
+  <RightHandPoints X="-0.29109326" Y="0.0573612452" />
+  <RightHandPoints X="-0.333191752" Y="-0.00295462459" />
+  <RightHandPoints X="-0.342690825" Y="-0.08637811" />
+  <RightHandPoints X="-0.3476769" Y="-0.173156947" />
+  <RightHandPoints X="-0.3854657" Y="-0.239745885" />
+  <RightHandPoints X="-0.42325443" Y="-0.306334823" />
+  <RightHandPoints X="-0.4610432" Y="-0.372923762" />
+  <RightHandPoints X="-0.475717485" Y="-0.415593028" />
+  <RightHandPoints X="-0.42111516" Y="-0.38657245" />
+  <RightHandPoints X="-0.366512746" Y="-0.357551873" />
+  <RightHandPoints X="-0.311910421" Y="-0.328531265" />
+  <RightHandPoints X="-0.257308066" Y="-0.299510658" />
+  <RightHandPoints X="-0.202705711" Y="-0.2704901" />
+  <RightHandPoints X="-0.200414121" Y="-0.308740973" />
+  <RightHandPoints X="-0.228299439" Y="-0.38579914" />
+  <RightHandPoints X="-0.256184757" Y="-0.462857366" />
+  <RightHandPoints X="-0.284070075" Y="-0.539915562" />
+  <RightHandPoints X="-0.285048485" Y="-0.568433762" />
+  <RightHandPoints X="-0.2398232" Y="-0.5136007" />
+  <RightHandPoints X="-0.19459793" Y="-0.458767653" />
+  <RightHandPoints X="-0.149372682" Y="-0.4039346" />
+  <RightHandPoints X="-0.108608857" Y="-0.348054141" />
+  <RightHandPoints X="-0.140852585" Y="-0.275033563" />
+  <RightHandPoints X="-0.173096359" Y="-0.202013046" />
+  <RightHandPoints X="-0.205340117" Y="-0.128992468" />
+  <RightHandPoints X="-0.225415468" Y="-0.0520189553" />
+  <RightHandPoints X="-0.215608731" Y="0.034661904" />
+  <RightHandPoints X="-0.226298764" Y="0.119897932" />
+  <RightHandPoints X="-0.254924119" Y="0.1931023" />
+  <RightHandPoints X="-0.295605123" Y="0.160976827" />
+</ProccessedData>

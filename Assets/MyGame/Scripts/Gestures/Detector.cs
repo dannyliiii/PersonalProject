@@ -55,7 +55,8 @@ public class Detector : MonoBehaviour {
 
 	void Update () {
 
-		if(num != -1)
+		if (num != -1)
+			//DrawData (LearningMachine.RawData [num]);
 			DrawDataPerFrame (num);
 
 		if(!KinectRecorder.IsRecording)
@@ -144,6 +145,8 @@ public class Detector : MonoBehaviour {
 
 	void DrawDataPerFrame(int num){
 
+		if (LearningMachine.RawData.Count <= 0)
+			return;
 		RecordedPath path = LearningMachine.RawData [num];
 
 		if (currentData >= path.SampleCount - 1)
@@ -173,10 +176,13 @@ public class Detector : MonoBehaviour {
 	}
 
 	void OnGUI() {
+		if (LearningMachine.RawData.Count <= 0)
+			return;
 
 		if (gesCount < LearningMachine.RawData.Count) {
 			gesCount = LearningMachine.RawData.Count;
 		}
+
 		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.05f , 100, 200), 
 		                                     scrollPosition , 
 		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),

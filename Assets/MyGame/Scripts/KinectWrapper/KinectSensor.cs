@@ -119,9 +119,9 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 			// However, calling NuiShutdown before starting prevents the image streams from being read, so if you want to use image data
 			// (either depth or RGB), comment this line out.
 			//NuiShutdown();
-			handEvent = new byte[2];
-
-			NativeMethods.qfKinectSetEnableKinectInteractive(true);
+//			handEvent = new byte[2];
+//
+//			NativeMethods.qfKinectSetEnableKinectInteractive(true);
 
 			//Debug.Log(NativeMethods.qfKinectGetEnableKinectInteractive());
 
@@ -204,21 +204,21 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 
 			if (handEvent != null)
 			{
-				//handEvent
-				for (int i=0; i<handEvent.Length; ++i)
-				{
-					handEvent[i] = 0;
-				}
-				
-				try {
-					NativeMethods.qfKinectCopyHandEventReslut(handEvent);
-				} catch (Exception ex) {
-					Debug.Log(ex);
-				}
-
-				m_isLeftHandGrip = handEvent[0] == 1;
-				m_isRightHandGrip = handEvent[1] == 1;
-				//Debug.Log (m_isRightHandGrip);
+//				//handEvent
+//				for (int i=0; i<handEvent.Length; ++i)
+//				{
+//					handEvent[i] = 0;
+//				}
+//				
+//				try {
+//					NativeMethods.qfKinectCopyHandEventReslut(handEvent);
+//				} catch (Exception ex) {
+//					Debug.Log(ex);
+//				}
+//
+//				m_isLeftHandGrip = handEvent[0] == 1;
+//				m_isRightHandGrip = handEvent[1] == 1;
+//				//Debug.Log (m_isRightHandGrip);
 			}
 		}
 		return newSkeleton;

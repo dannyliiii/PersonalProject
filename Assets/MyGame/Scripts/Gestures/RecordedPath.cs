@@ -38,8 +38,8 @@ namespace TemplateGesture{
 		
 		public float Match(List<MyMath.Vector2> positions, float threshold, float minimalScore, float minSize)
 		{
-			if (positions.Count < samplesCount)
-				return -1;
+//			if (positions.Count < samplesCount)
+//				return -1;
 			
 			if (!GoldenSectionExtension.IsLargeEnough(positions, minSize))
 				return -2;
