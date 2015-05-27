@@ -19,6 +19,10 @@ namespace TemplateGesture{
 
 		private static List<RecordedPath> paths;
 		private static List<RecordedPath> rawData;
+
+		private static List<RecordedData> pos;
+		private static List<RecordedData> rawPos;
+
 		private static string folderPath = "Assets/MyGame/Recordings/";
 		private static ResultList rl = new ResultList();
 
@@ -43,9 +47,23 @@ namespace TemplateGesture{
 				return paths;
 			}
 		}
+		public static List<RecordedData> RawPos{
+			get{
+				return rawPos;
+			}
+		}
+		public static List<RecordedData> Pos{
+			get{
+				return pos;
+			}
+		}
+
 		public static void Initialize(){
 			paths = new List<RecordedPath>();
 			rawData = new List<RecordedPath>();
+
+			pos = new List<RecordedData> ();
+			rawPos = new List<RecordedData> ();
 
 			foreach (string file in Directory.GetFiles(folderPath, "*.xml"))
 			{
@@ -113,6 +131,8 @@ namespace TemplateGesture{
 				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				RecordedPath rp = new RecordedPath(numPts, gesName);
+
+				RecordedData rd = new RecordedData(gesName);
 	
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
@@ -120,11 +140,13 @@ namespace TemplateGesture{
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						rp.Points.Add(p);
+						rd.LPoints.Add(p);
 					}else if(reader.LocalName == "RightHandPoints"){
 						MyMath.Vector2 p = MyMath.Vector2.Zero;
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						rp.Points.Add(p);
+						rd.RPoints.Add(p);
 					}
 				}
 
@@ -150,6 +172,7 @@ namespace TemplateGesture{
 //				}
 
 				paths.Add(rp);
+				pos.Add(rd);
 				rl.AddResult(gesName, 0);
 
 			}
@@ -187,6 +210,7 @@ namespace TemplateGesture{
 				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				RecordedPath rp = new RecordedPath(numPts, gesName);
+				RecordedData rd = new RecordedData(gesName);
 
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
@@ -194,11 +218,13 @@ namespace TemplateGesture{
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						rp.Points.Add(p);
+						rd.LPoints.Add(p);
 					}else if(reader.LocalName == "RightHandPoints"){
 						MyMath.Vector2 p = MyMath.Vector2.Zero;
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						rp.Points.Add(p);
+						rd.RPoints.Add(p);
 					}
 				}
 
@@ -229,7 +255,10 @@ namespace TemplateGesture{
 //				}
 
 				rawData.Add(rp);
-				
+				rd.RSampleCount = rd.RPoints.Count;
+				rd.LSampleCount = rd.LPoints.Count;
+				rawPos.Add(rd);
+
 			}
 			catch (XmlException xex)
 			{

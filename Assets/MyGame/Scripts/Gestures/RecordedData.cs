@@ -11,18 +11,24 @@ namespace TemplateGesture{
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
-		readonly int lSamplesCount;
-		readonly int rSamplesCount;
+		int lSamplesCount;
+		int rSamplesCount;
 
 		public int LSampleCount{
 			get{
 				return lSamplesCount;
+			}
+			set{
+				lSamplesCount = value;
 			}
 		}
 
 		public int RSampleCount{
 			get{
 				return rSamplesCount;
+			}
+			set{
+				rSamplesCount = value;
 			}
 		}
 		
@@ -38,10 +44,10 @@ namespace TemplateGesture{
 			set { rPoints = value; }
 		}
 		
-		public RecordedData(int lsc, int rsc, string name)
+		public RecordedData(string name)
 		{
-			this.lSamplesCount = lsc;
-			this.rSamplesCount = rsc;
+//			this.lSamplesCount = lsc;
+//			this.rSamplesCount = rsc;
 			
 			this.gestureName = name;
 			lPoints = new List<MyMath.Vector2> ();
@@ -50,8 +56,8 @@ namespace TemplateGesture{
 		
 		public void CloseAndPrepare()
 		{
-			lPoints = GoldenSection.Pack(lPoints, lSamplesCount);
-			rPoints = GoldenSection.Pack(rPoints, rSamplesCount);
+			lPoints = GoldenSection.Pack(lPoints, lPoints.Count);
+			rPoints = GoldenSection.Pack(rPoints, rPoints.Count);
 		}
 		
 		public float Match(List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minimalScore, float minSize)
