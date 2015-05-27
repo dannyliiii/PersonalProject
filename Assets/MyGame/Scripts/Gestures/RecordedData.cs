@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace TemplateGesture{
 	[Serializable]
-	public class RecordedPath {
+	public class RecordedData {
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
@@ -38,10 +38,10 @@ namespace TemplateGesture{
 			set { rPoints = value; }
 		}
 		
-		public RecordedPath(int lsc, int rsc, string name)
+		public RecordedData(int lsc, int rsc, string name)
 		{
-			this.LSampleCount = lsc;
-			this.RSampleCount = rsc;
+			this.lSamplesCount = lsc;
+			this.rSamplesCount = rsc;
 			
 			this.gestureName = name;
 			lPoints = new List<MyMath.Vector2> ();
@@ -62,16 +62,17 @@ namespace TemplateGesture{
 			if (!GoldenSectionExtension.IsLargeEnough(lPositions, minSize)|| !GoldenSectionExtension.IsLargeEnough(rPositions, minSize))
 				return -2;
 			
-			//List<MyMath.Vector2> locals = GoldenSection.Pack(positions, samplesCount);
+			List<MyMath.Vector2> lLocals = GoldenSection.Pack(lPositions, lPositions.Count);
+			List<MyMath.Vector2> rLocals = GoldenSection.Pack(rPositions, rPositions.Count);
 			
-			//float score = GoldenSection.Search(locals, points, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+			
+			float lScore = GoldenSection.Search(lLocals, lPositions, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+
+			float rScore = GoldenSection.Search(rLocals, rPositions, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
 			
 			//UnityEngine.Debug.Log(score);
 			
-//			return score;
-
-
-			return 0;
+			return (lScore + rScore) * 0.5f;
 		}
 		
 	}

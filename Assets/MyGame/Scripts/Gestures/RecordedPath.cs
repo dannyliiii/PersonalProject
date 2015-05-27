@@ -24,9 +24,9 @@ namespace TemplateGesture{
 			set { points = value; }
 		}
 		
-		public RecordedPath(int samplesCount, string name)
+		public RecordedPath(int sc, string name)
 		{
-			this.samplesCount = samplesCount;
+			this.samplesCount = sc;
 			this.gestureName = name;
 			points = new List<MyMath.Vector2>();
 		}
