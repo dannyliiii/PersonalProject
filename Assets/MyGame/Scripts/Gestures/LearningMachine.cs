@@ -107,26 +107,50 @@ namespace TemplateGesture{
 				reader.WhitespaceHandling = WhitespaceHandling.None;
 				reader.MoveToContent();
 
-				System.Diagnostics.Debug.Assert(reader.LocalName == "Gesture");
+				System.Diagnostics.Debug.Assert(reader.LocalName == "ProcessedData");
 //				string name = reader.GetAttribute("Name");
 
 				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				RecordedPath rp = new RecordedPath(numPts, gesName);
 	
-				reader.Read(); // advance to the first Point
-				System.Diagnostics.Debug.Assert(reader.LocalName == "Point");
-				
-				while (reader.NodeType != XmlNodeType.EndElement)
-				{
-					MyMath.Vector2 p = MyMath.Vector2.Zero;
-					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-					rp.Points.Add(p);
-					reader.ReadStartElement("Point");
+				while(reader.Read()){
+					if(reader.LocalName == "LeftHandPoints"){
+						MyMath.Vector2 p = MyMath.Vector2.Zero;
+						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rp.Points.Add(p);
+					}else if(reader.LocalName == "RightHandPoints"){
+						MyMath.Vector2 p = MyMath.Vector2.Zero;
+						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rp.Points.Add(p);
+					}
 				}
+
+//				reader.Read(); // advance to the first Point
+//				System.Diagnostics.Debug.Assert(reader.LocalName == "LeftHandPoints");
+//				
+//				while (reader.NodeType != XmlNodeType.EndElement)
+//				{
+//
+//					reader.ReadStartElement("LeftHandPoints");
+//				}
+//
+//				System.Diagnostics.Debug.Assert(reader.LocalName == "RightHandPoints");
+//				
+//				while (reader.NodeType != XmlNodeType.EndElement)
+//				{
+//					MyMath.Vector2 p = MyMath.Vector2.Zero;
+//					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+//					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+//					rp.Points.Add(p);
+//					reader.ReadStartElement("RightHandPoints");
+//					
+//				}
+
 				paths.Add(rp);
-				rl.AddResult(gesName, -1);
+				rl.AddResult(gesName, 0);
 
 			}
 			catch (XmlException xex)
@@ -163,18 +187,47 @@ namespace TemplateGesture{
 				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				RecordedPath rp = new RecordedPath(numPts, gesName);
-				
-				reader.Read(); // advance to the first Point
-				System.Diagnostics.Debug.Assert(reader.LocalName == "Point");
-				
-				while (reader.NodeType != XmlNodeType.EndElement)
-				{
-					MyMath.Vector2 p = MyMath.Vector2.Zero;
-					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-					rp.Points.Add(p);
-					reader.ReadStartElement("Point");
+
+				while(reader.Read()){
+					if(reader.LocalName == "LeftHandPoints"){
+						MyMath.Vector2 p = MyMath.Vector2.Zero;
+						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rp.Points.Add(p);
+					}else if(reader.LocalName == "RightHandPoints"){
+						MyMath.Vector2 p = MyMath.Vector2.Zero;
+						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rp.Points.Add(p);
+					}
 				}
+
+//				reader.Read(); // advance to the first Point
+//
+//				System.Diagnostics.Debug.Assert(reader.LocalName == "LeftHandPoints");
+//				
+//				while (reader.NodeType != XmlNodeType.EndElement)
+//				{
+//					MyMath.Vector2 p = MyMath.Vector2.Zero;
+//					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+//					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+//					rp.Points.Add(p);
+//					reader.ReadStartElement("LeftHandPoints");
+//
+//				}
+//
+//				System.Diagnostics.Debug.Assert(reader.LocalName == "RightHandPoints");
+//				
+//				while (reader.NodeType != XmlNodeType.EndElement)
+//				{
+//					MyMath.Vector2 p = MyMath.Vector2.Zero;
+//					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+//					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+//					rp.Points.Add(p);
+//					reader.ReadStartElement("RightHandPoints");
+//					
+//				}
+
 				rawData.Add(rp);
 				
 			}
