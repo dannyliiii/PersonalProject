@@ -34,7 +34,7 @@ namespace TemplateGesture{
 //			}
 //		}
 
-		public TemplatedGestureDetector(int windowSize = 150){
+		public TemplatedGestureDetector(int windowSize = 100){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
 			
@@ -42,6 +42,7 @@ namespace TemplateGesture{
 			MinimalScore = 0.80f;
 			MinimalSize = 0.1f;
 			LearningMachine.Initialize ();
+
 			//learningMachine = new LearningMachine();
 		}
 
@@ -55,9 +56,10 @@ namespace TemplateGesture{
 			get { return windowSize; }
 		}
 		
-		public void Add(MyMath.Vector3 position){
+		public void Add(MyMath.Vector3 posL, MyMath.Vector3 posR){
+			//1. left, 2. right
 
-			Entry newEntry = new Entry {Position = position, Time = DateTime.Now};
+			Entry newEntry = new Entry {PositionRight = posR, PositionLeft = posL, Time = DateTime.Now};
 			Entries.Add(newEntry);
 
 			// Remove too old positions
@@ -66,8 +68,8 @@ namespace TemplateGesture{
 				Entry entryToRemove = Entries[0];
 				Entries.Remove(entryToRemove);
 			}
-			
-			// Look for gestures
+
+				// Look for gestures
 			//LookForGesture();
 
 //			if (path != null)
@@ -81,7 +83,12 @@ namespace TemplateGesture{
 			if (Entries.Count <= 0)
 				return;
 
-			ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
+			//ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
+
+			ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),
+			                                            Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList(),
+			                                            Epsilon, MinimalScore, MinimalSize);
+			
 			//resList.SortDescending ();
 			if (!resList.IsEmpty) {
 				string gesName = resList.Name;

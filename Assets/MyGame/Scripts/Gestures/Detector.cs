@@ -12,6 +12,7 @@ using Drawing;
 public class Detector : MonoBehaviour {
 
 	public GameObject dataImagePlane;
+	public GameObject dataImagePlane2;
 //	public RawImage dataImage;
 
 	public int player = 0;
@@ -81,15 +82,18 @@ public class Detector : MonoBehaviour {
 		if (sw.pollSkeleton ()) {
 
 			for (int i = 0; i < (int)Kinect.NuiSkeletonPositionIndex.Count; i++) {
-				
+				bool flag = false;
+				MyMath.Vector3 posL = MyMath.Vector3.Zero;
+				MyMath.Vector3 posR = MyMath.Vector3.Zero;
 				if (i == (int)NuiSkeletonPositionIndex.HandRight) {
 
-					MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
+					posL = new MyMath.Vector3 (sw.bonePos[player, i].x
 					                                         ,sw.bonePos[player, i].y
 					                                         ,sw.bonePos[player, i].z);
-					templateGestureDetector.Add (pos);
+//					templateGestureDetector.Add (pos);
+					flag = true;
+//					templateGestureDetector.LookForGesture();
 
-					templateGestureDetector.LookForGesture();
 //					if(KinectSensor.Instance.getIsRightHandGrip()){
 //						//Debug.Log("Right hand grips.");
 //						MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
@@ -100,6 +104,19 @@ public class Detector : MonoBehaviour {
 //						//Debug.Log("Right hand releases.");
 //						templateGestureDetector.LookForGesture();
 //					}
+				}
+				if (i == (int)NuiSkeletonPositionIndex.HandLeft) {
+					
+					posR = new MyMath.Vector3 (sw.bonePos[player, i].x
+					                                         ,sw.bonePos[player, i].y
+					                                         ,sw.bonePos[player, i].z);
+//					templateGestureDetector.Add (pos);
+					flag = true;
+
+				}
+				if(flag){
+					templateGestureDetector.Add (posL, posR);
+					templateGestureDetector.LookForGesture();
 				}
 			}
 		}
@@ -147,30 +164,63 @@ public class Detector : MonoBehaviour {
 
 		if (LearningMachine.RawData.Count <= 0)
 			return;
-		RecordedPath path = LearningMachine.RawData [num];
+//		RecordedPath path = LearningMachine.RawData [num];
 
-		if (currentData >= path.SampleCount - 1)
+		RecordedData data = LearningMachine.RawPos [num];
+
+//		if (currentData >= path.SampleCount - 1)
+//			currentData = 0;
+
+		if (currentData >= Mathf.Max (data.LSampleCount, data.RSampleCount))
 			currentData = 0;
 
 		Material material = dataImagePlane.GetComponent<Renderer>().material;
 		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
 		texture.wrapMode = TextureWrapMode.Clamp;
 		material.SetTexture(0, texture);
-		
+
+		Material material2 = dataImagePlane2.GetComponent<Renderer>().material;
+		Texture2D texture2 = new Texture2D(512,512, TextureFormat.RGB24, false);
+		texture2.wrapMode = TextureWrapMode.Clamp;
+		material2.SetTexture(0, texture2);
 
 		for (int i = 0; i < currentData; i ++) {
-//			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]);
-//			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]);
 
-			MyMath.Vector2 start = path.Points[i];
-			MyMath.Vector2 end = path.Points[i + 1];
-			
-			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
-			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
-			                 Color.black);
+//			MyMath.Vector2 start = path.Points[i];
+//			MyMath.Vector2 end = path.Points[i + 1];
+			MyMath.Vector2 lStart = MyMath.Vector2.Zero;
+			MyMath.Vector2 lEnd = MyMath.Vector2.Zero; 
+			MyMath.Vector2 rStart = MyMath.Vector2.Zero;
+			MyMath.Vector2 rEnd = MyMath.Vector2.Zero;;
 
+			if(i < data.LSampleCount){
+				lStart = data.LPoints[i];
+				lEnd = data.LPoints[i+1];
+			}else{
+				lStart = data.LPoints[data.LSampleCount - 2];
+				lEnd = data.LPoints[data.LSampleCount - 1];
+			}
+
+			if(i < data.RSampleCount){
+				rStart = data.RPoints[i];
+				rEnd = data.RPoints[i+1];
+			}else{
+				rStart = data.RPoints[data.LSampleCount -2];
+				rEnd = data.RPoints[data.LSampleCount - 1];
+			}
+		
+//			if(lStart != MyMath.Vector2.Zero)
+				texture.DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
+				                 new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
+			                 Color.blue);
+
+//			if(rStart != MyMath.Vector2.Zero)
+			texture2.DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
+			                  new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
+			                 Color.red);
 		}
 
+		texture2.Apply ();
 		texture.Apply();
 		currentData ++;
 	}
@@ -199,17 +249,17 @@ public class Detector : MonoBehaviour {
 		GUI.EndScrollView();
 	
 
-		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.2f  , screenWidth * 0.1f, 200), 
+		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
 		                                         scrollPositionText , 
-		                                         new Rect(screenWidth * 0.7f, screenHeight * 0.2f, screenWidth * 0.08f, gesCount * 40),
+		                                         new Rect(screenWidth * 0.7f, screenHeight * 0.05f, screenWidth * 0.08f, gesCount * 40),
 		                                         false, 
 		                                         true);
 
 		for(int j = 0; j < LearningMachine.ResultList.Size(); j ++){
 //			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetName(j));
 //			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetScore(j).ToString());
-			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.2f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
-			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.2f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
+			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
+			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
 	
 		}
 
@@ -219,7 +269,7 @@ public class Detector : MonoBehaviour {
 		if(gesText != "")
 			str = gesText + " detected";
 
-		GUI.Label(new Rect(screenWidth * 0.5f , screenHeight * 0.05f , 200, 40), str, gs);
+		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);
 
 		
 	}

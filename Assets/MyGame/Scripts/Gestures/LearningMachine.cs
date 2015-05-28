@@ -85,15 +85,28 @@ namespace TemplateGesture{
 //				LoadRawData (file);
 //		}
 
-		public static ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
+//		public static ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
+//		{
+//			foreach (RecordedPath p in paths) {
+//				float score = p.Match(entries, threshold, minimalScore, minSize);
+//				//print score of z for testing
+//				if(p.gestureName == "a" && score > 0){
+//					//UnityEngine.Debug.Log(p.gestureName);
+//					//UnityEngine.Debug.Log(score);
+//				}
+//
+//				if(score >= 0)
+//					rl.UpdateResult(p.gestureName, score);
+////					rl.AddResult(p.gestureName, score);
+//			}
+//			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));
+//			return rl;
+//		}
+
+		public static ResultList Match(List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold, float minimalScore, float minSize)
 		{
-			foreach (RecordedPath p in paths) {
-				float score = p.Match(entries, threshold, minimalScore, minSize);
-				//print score of z for testing
-				if(p.gestureName == "a" && score > 0){
-					//UnityEngine.Debug.Log(p.gestureName);
-					//UnityEngine.Debug.Log(score);
-				}
+			foreach (RecordedData p in pos) {
+				float score = p.Match(entriesL, entriesR, p, threshold, minimalScore, minSize);
 
 				if(score >= 0)
 					rl.UpdateResult(p.gestureName, score);

@@ -60,7 +60,7 @@ namespace TemplateGesture{
 			rPoints = GoldenSection.Pack(rPoints, rPoints.Count);
 		}
 		
-		public float Match(List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minimalScore, float minSize)
+		public float Match(List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, RecordedData p, float threshold, float minimalScore, float minSize)
 		{
 			//			if (positions.Count < samplesCount)
 			//				return -1;
@@ -72,13 +72,13 @@ namespace TemplateGesture{
 			List<MyMath.Vector2> rLocals = GoldenSection.Pack(rPositions, rPositions.Count);
 			
 			
-			float lScore = GoldenSection.Search(lLocals, lPositions, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+			float lScore = GoldenSection.Search(lLocals, p.LPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
 
-			float rScore = GoldenSection.Search(rLocals, rPositions, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
-			
+			float rScore = GoldenSection.Search(rLocals, p.rPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+
 			//UnityEngine.Debug.Log(score);
 			
-			return (lScore + rScore) * 0.5f;
+			return Mathf.Max(lScore, rScore);
 		}
 		
 	}

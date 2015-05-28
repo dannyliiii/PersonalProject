@@ -141,7 +141,7 @@ public class KinectRecorder : MonoBehaviour {
 		try
 		{
 			// save the gesture data as an Xml file
-			writer = new XmlTextWriter(filePath, Encoding.UTF8);
+			writer = new XmlTextWriter(rFilePath, Encoding.UTF8);
 			writer.Formatting = Formatting.Indented;
 			writer.WriteStartDocument(true);
 
@@ -173,7 +173,7 @@ public class KinectRecorder : MonoBehaviour {
 
 
 			//save processed data
-			rWriter = new XmlTextWriter(rFilePath, Encoding.UTF8);
+			rWriter = new XmlTextWriter(filePath, Encoding.UTF8);
 			rWriter.Formatting = Formatting.Indented;
 			rWriter.WriteStartDocument(true);
 			
