@@ -13,6 +13,9 @@ public class Detector : MonoBehaviour {
 
 	public GameObject dataImagePlane;
 	public GameObject dataImagePlane2;
+
+	public GameObject dataImagePlaneRL;
+	public GameObject dataImagePlaneRR;
 //	public RawImage dataImage;
 
 	public int player = 0;
@@ -62,6 +65,8 @@ public class Detector : MonoBehaviour {
 
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
+
+		//DrawRealTimeHandsTracks ();
 	}
 
 	void LoadTemplateGestureDetector()
@@ -133,6 +138,47 @@ public class Detector : MonoBehaviour {
 		projList.Add (proj);
 	}
 
+	void DrawRealTimeHandsTracks(){
+		Material material = dataImagePlaneRL.GetComponent<Renderer>().material;
+		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
+		texture.wrapMode = TextureWrapMode.Clamp;
+		material.SetTexture(0, texture);
+		
+		Material material2 = dataImagePlaneRR.GetComponent<Renderer>().material;
+		Texture2D texture2 = new Texture2D(512,512, TextureFormat.RGB24, false);
+		texture2.wrapMode = TextureWrapMode.Clamp;
+		material2.SetTexture(0, texture2);
+
+
+		List<Entry> entryList = templateGestureDetector.Entries;
+
+		for (int i = 0; i < entryList.Count - 1; i ++) {
+
+			float x = Mathf.Round((-entryList[i].PositionLeft.x + 1) * 256);
+			float y = Mathf.Round((entryList[i].PositionLeft.y  + 1) * 256);
+			
+			texture2.DrawFilledCircle( (int)x, (int)y, 3, Color.green);
+
+
+			float xe = Mathf.Round((-entryList[i].PositionRight.x + 1) * 256);
+			float ye = Mathf.Round((entryList[i].PositionRight.y  + 1) * 256);
+
+			texture.DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
+
+//			texture2.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionLeft.x + 1) * 256, (entryList[i].PositionLeft.y  + 1) * 256),
+//			                 new UnityEngine.Vector2(( -entryList[i+1].PositionLeft.x + 1) * 256, (entryList[i+1].PositionLeft.y  + 1) * 256),
+//			                 Color.red);
+
+//			texture.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionRight.x + 1) * 256, (entryList[i].PositionRight.y  + 1) * 256),
+//			                  new UnityEngine.Vector2(( -entryList[i+1].PositionRight.x + 1) * 256, (entryList[i+1].PositionRight.y  + 1) * 256),
+//			                 Color.blue);
+		}
+		texture.Apply ();
+		texture2.Apply ();
+
+	} 
+
+
 	void DrawData(RecordedPath path){
 		
 		Material material = dataImagePlane.GetComponent<Renderer>().material;
@@ -170,8 +216,9 @@ public class Detector : MonoBehaviour {
 
 //		if (currentData >= path.SampleCount - 1)
 //			currentData = 0;
+		
 
-		if (currentData >= Mathf.Max (data.LSampleCount, data.RSampleCount))
+		if (currentData >= data.Size)
 			currentData = 0;
 
 		Material material = dataImagePlane.GetComponent<Renderer>().material;
@@ -188,29 +235,30 @@ public class Detector : MonoBehaviour {
 
 //			MyMath.Vector2 start = path.Points[i];
 //			MyMath.Vector2 end = path.Points[i + 1];
-			MyMath.Vector2 lStart = MyMath.Vector2.Zero;
-			MyMath.Vector2 lEnd = MyMath.Vector2.Zero; 
-			MyMath.Vector2 rStart = MyMath.Vector2.Zero;
-			MyMath.Vector2 rEnd = MyMath.Vector2.Zero;;
+			MyMath.Vector2 lStart = data.LPoints[i];
+			MyMath.Vector2 lEnd = data.LPoints[i+1]; 
+			MyMath.Vector2 rStart = data.RPoints[i];
+			MyMath.Vector2 rEnd = data.RPoints[i+1];
+	
 
-			if(i < data.LSampleCount){
-				lStart = data.LPoints[i];
-				lEnd = data.LPoints[i+1];
-			}else{
-				lStart = data.LPoints[data.LSampleCount - 2];
-				lEnd = data.LPoints[data.LSampleCount - 1];
-			}
-
-			if(i < data.RSampleCount){
-				rStart = data.RPoints[i];
-				rEnd = data.RPoints[i+1];
-			}else{
-				rStart = data.RPoints[data.LSampleCount -2];
-				rEnd = data.RPoints[data.LSampleCount - 1];
-			}
+//			if(i < data.LSampleCount){
+//				lStart = data.LPoints[i];
+//				lEnd = data.LPoints[i+1];
+//			}else{
+//				lStart = data.LPoints[data.LSampleCount - 2];
+//				lEnd = data.LPoints[data.LSampleCount - 1];
+//			}
+//
+//			if(i < data.RSampleCount){
+//				rStart = data.RPoints[i];
+//				rEnd = data.RPoints[i+1];
+//			}else{
+//				rStart = data.RPoints[data.LSampleCount -2];
+//				rEnd = data.RPoints[data.LSampleCount - 1];
+//			}
 		
 //			if(lStart != MyMath.Vector2.Zero)
-				texture.DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
+			texture.DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
 				                 new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
 			                 Color.blue);
 

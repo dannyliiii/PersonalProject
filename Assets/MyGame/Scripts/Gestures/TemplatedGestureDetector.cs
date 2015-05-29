@@ -45,8 +45,7 @@ namespace TemplateGesture{
 
 			//learningMachine = new LearningMachine();
 		}
-
-		protected List<Entry> Entries
+		public List<Entry> Entries
 		{
 			get { return entries; }
 		}

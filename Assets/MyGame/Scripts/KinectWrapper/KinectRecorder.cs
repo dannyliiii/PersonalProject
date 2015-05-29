@@ -130,8 +130,9 @@ public class KinectRecorder : MonoBehaviour {
 		string filePath = path + suffix;
 		string rFilePath = path + rawSuffix;
 
-		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, lhPos.Count);
-		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, rhPos.Count);
+		// 100: window size,  temp use
+		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, 100);
+		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, 100);
 
 		//do xml writing
 		bool success = true;

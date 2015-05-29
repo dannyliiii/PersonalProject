@@ -145,7 +145,8 @@ namespace TemplateGesture{
 				string gesName = reader.GetAttribute("GesName");
 				RecordedPath rp = new RecordedPath(numPts, gesName);
 
-				RecordedData rd = new RecordedData(gesName);
+				//100: window size, for temp use
+				RecordedData rd = new RecordedData(gesName, 100);
 	
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
@@ -223,7 +224,9 @@ namespace TemplateGesture{
 				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				RecordedPath rp = new RecordedPath(numPts, gesName);
-				RecordedData rd = new RecordedData(gesName);
+
+				// 100:window size  for temp use
+				RecordedData rd = new RecordedData(gesName, 100);
 
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
@@ -268,8 +271,8 @@ namespace TemplateGesture{
 //				}
 
 				rawData.Add(rp);
-				rd.RSampleCount = rd.RPoints.Count;
-				rd.LSampleCount = rd.LPoints.Count;
+//				rd.RSampleCount = rd.RPoints.Count;
+//				rd.LSampleCount = rd.LPoints.Count;
 				rawPos.Add(rd);
 
 			}
