@@ -108,11 +108,12 @@ namespace TemplateGesture{
 			int i = 0;
 			foreach (RecordedData p in pos) {
 				float score = p.Match(entriesL, entriesR, threshold, minSize);
-
+				//				UnityEngine.Debug.Log(i);
+				//				UnityEngine.Debug.Log(score);
 				//if(score >= 0)
 					rl.UpdateResult(i++, p.gestureName, score);
 //					rl.AddResult(p.gestureName, score);
-//				UnityEngine.Debug.Log(i);
+
 			}
 //			UnityEngine.Debug.Log("========");
 			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));

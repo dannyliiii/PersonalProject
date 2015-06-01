@@ -151,7 +151,7 @@ namespace TemplateGesture{
 		}
 
 		public double GetScore(int pos){
-			if (arrList.Count > pos && pos > 0)
+			if (arrList.Count > pos && pos >= 0)
 			{
 //				Debug.Log(arrList.Count);
 //				Debug.Log(pos);
