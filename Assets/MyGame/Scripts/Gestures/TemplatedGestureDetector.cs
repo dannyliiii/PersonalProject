@@ -26,7 +26,7 @@ namespace TemplateGesture{
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
 		//readonly LearningMachine learningMachine;
-		private readonly float minScore = 0.7f;
+		private readonly float minScore = 0.72f;
 
 //		public LearningMachine LearningMachine{
 //			get{
@@ -34,7 +34,7 @@ namespace TemplateGesture{
 //			}
 //		}
 
-		public TemplatedGestureDetector(int windowSize = 100){
+		public TemplatedGestureDetector(int windowSize = 80){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
 			
@@ -90,13 +90,12 @@ namespace TemplateGesture{
 			
 			//resList.SortDescending ();
 			if (!resList.IsEmpty) {
-				string gesName = resList.Name;
-				double gesScore = resList.Score;
-				if(gesName == "z"){
-					// for tesing
-				}
-				if(gesScore > minScore){
-					RaiseGestureDetected(gesName);
+//				string gesName = resList.Name;
+//				double gesScore = resList.Score;
+				int index = resList.Index;
+		
+				if(resList.GetScore(index) > minScore){
+					RaiseGestureDetected(resList.GetName(index));
 				}
 				//Entries.Clear();
 			}
@@ -114,9 +113,10 @@ namespace TemplateGesture{
 				lastGestureDate = DateTime.Now;
 			}
 
+			LearningMachine.ResultList.ResetList ();
 			//clear the point list
 			Entries.Clear();
-			LearningMachine.ResultList.ClearList ();
+
 			//Debug.Log (Entries.Count ());
 		}
 		

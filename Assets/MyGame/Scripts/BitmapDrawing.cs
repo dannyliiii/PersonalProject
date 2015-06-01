@@ -362,7 +362,6 @@ namespace Drawing
             }
         }
 
-
         /// <summary>
         /// Swap two ints by reference.
         /// </summary>
@@ -386,7 +385,7 @@ namespace Drawing
         {
             return height - (int)y;
         }
-
+		
     }
 
 

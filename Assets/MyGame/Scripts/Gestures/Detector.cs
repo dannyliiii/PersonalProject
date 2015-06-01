@@ -8,8 +8,12 @@ using MyMath;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using Drawing;
+using System.Linq;
 
 public class Detector : MonoBehaviour {
+
+	public DeviceOrEmulator devOrEmu;
+	private KinectInterface kinect;
 
 	public GameObject dataImagePlane;
 	public GameObject dataImagePlane2;
@@ -42,6 +46,9 @@ public class Detector : MonoBehaviour {
 	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
 
 	void Awake () {
+
+		kinect = devOrEmu.getKinect();
+
 		projList = new List<GameObject> ();
 		upForce = new UnityEngine.Vector3 (0.0f, 150.0f, 0.0f);
 
@@ -66,7 +73,7 @@ public class Detector : MonoBehaviour {
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
 
-		//DrawRealTimeHandsTracks ();
+		DrawRealTimeHandsTracks ();
 	}
 
 	void LoadTemplateGestureDetector()
@@ -84,47 +91,74 @@ public class Detector : MonoBehaviour {
 
 	void ProcessFrame()
 	{
-		if (sw.pollSkeleton ()) {
+		if (kinect == null)
+			return;
 
-			for (int i = 0; i < (int)Kinect.NuiSkeletonPositionIndex.Count; i++) {
-				bool flag = false;
-				MyMath.Vector3 posL = MyMath.Vector3.Zero;
-				MyMath.Vector3 posR = MyMath.Vector3.Zero;
-				if (i == (int)NuiSkeletonPositionIndex.HandRight) {
+		if (kinect.pollSkeleton()){
 
-					posL = new MyMath.Vector3 (sw.bonePos[player, i].x
-					                                         ,sw.bonePos[player, i].y
-					                                         ,sw.bonePos[player, i].z);
-//					templateGestureDetector.Add (pos);
-					flag = true;
-//					templateGestureDetector.LookForGesture();
-
-//					if(KinectSensor.Instance.getIsRightHandGrip()){
-//						//Debug.Log("Right hand grips.");
-//						MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
-//						                                         ,sw.bonePos[player, i].y
-//						                                         ,sw.bonePos[player, i].z);
-//						templateGestureDetector.Add (pos);
-//					}else{
-//						//Debug.Log("Right hand releases.");
-//						templateGestureDetector.LookForGesture();
-//					}
-				}
-				if (i == (int)NuiSkeletonPositionIndex.HandLeft) {
+			
+			// to record the first tracked player's right hand positon;
+			for (int ii = 0; ii < Kinect.Constants.NuiSkeletonCount; ii++)
+			{
+				if (kinect.getSkeleton().SkeletonData[ii].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
+				{
 					
-					posR = new MyMath.Vector3 (sw.bonePos[player, i].x
-					                                         ,sw.bonePos[player, i].y
-					                                         ,sw.bonePos[player, i].z);
-//					templateGestureDetector.Add (pos);
-					flag = true;
+					Vector4 rightHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
+					Vector4 leftHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
 
-				}
-				if(flag){
-					templateGestureDetector.Add (posL, posR);
+					templateGestureDetector.Add ( new MyMath.Vector3(leftHand.x, leftHand.y, leftHand.z),
+					                             new MyMath.Vector3(rightHand.x, rightHand.y, rightHand.z)
+					                            );
 					templateGestureDetector.LookForGesture();
+					break;
+					
 				}
 			}
+			
 		}
+
+
+//		if (sw.pollSkeleton ()) {
+//
+//			for (int i = 0; i < (int)Kinect.NuiSkeletonPositionIndex.Count; i++) {
+//				bool flag = false;
+//				MyMath.Vector3 posL = MyMath.Vector3.Zero;
+//				MyMath.Vector3 posR = MyMath.Vector3.Zero;
+//				if (i == (int)NuiSkeletonPositionIndex.HandRight) {
+//
+//					posR = new MyMath.Vector3 (sw.bonePos[player, i].x
+//					                                         ,sw.bonePos[player, i].y
+//					                                         ,sw.bonePos[player, i].z);
+////					templateGestureDetector.Add (pos);
+//					flag = true;
+////					templateGestureDetector.LookForGesture();
+//
+////					if(KinectSensor.Instance.getIsRightHandGrip()){
+////						//Debug.Log("Right hand grips.");
+////						MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
+////						                                         ,sw.bonePos[player, i].y
+////						                                         ,sw.bonePos[player, i].z);
+////						templateGestureDetector.Add (pos);
+////					}else{
+////						//Debug.Log("Right hand releases.");
+////						templateGestureDetector.LookForGesture();
+////					}
+//				}
+//				if (i == (int)NuiSkeletonPositionIndex.HandLeft) {
+//					
+//					posL = new MyMath.Vector3 (sw.bonePos[player, i].x
+//					                                         ,sw.bonePos[player, i].y
+//					                                         ,sw.bonePos[player, i].z);
+////					templateGestureDetector.Add (pos);
+//					flag = true;
+//
+//				}
+//				if(flag){
+//					templateGestureDetector.Add (posL, posR);
+//					templateGestureDetector.LookForGesture();
+//				}
+//			}
+//		}
 	}
 
 	void Shoot(){
@@ -149,30 +183,52 @@ public class Detector : MonoBehaviour {
 		texture2.wrapMode = TextureWrapMode.Clamp;
 		material2.SetTexture(0, texture2);
 
+//		List<MyMath.Vector2> l= GoldenSection.Pack(templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),100);
+//		List<MyMath.Vector2> r= GoldenSection.Pack(templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList (),100);
 
-		List<Entry> entryList = templateGestureDetector.Entries;
 
-		for (int i = 0; i < entryList.Count - 1; i ++) {
+		List<MyMath.Vector2> l= templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList ();
+		List<MyMath.Vector2> r= templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList ();
 
-			float x = Mathf.Round((-entryList[i].PositionLeft.x + 1) * 256);
-			float y = Mathf.Round((entryList[i].PositionLeft.y  + 1) * 256);
+//		List<Entry> entryList = templateGestureDetector.Entries;
+
+		for (int i = 0; i < l.Count - 1; i ++) {
 			
-			texture2.DrawFilledCircle( (int)x, (int)y, 3, Color.green);
+			float x = Mathf.Round((-l[i].x + 1) * 256);
+			float y = Mathf.Round((l[i].y  + 1) * 256);
+			
+			texture.DrawFilledCircle( (int)x, (int)y, 3, Color.green);
+			
+			
+			float xe = Mathf.Round((-r[i].x + 1) * 256);
+			float ye = Mathf.Round((r[i].y  + 1) * 256);
+			
+			texture2.DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
 
-
-			float xe = Mathf.Round((-entryList[i].PositionRight.x + 1) * 256);
-			float ye = Mathf.Round((entryList[i].PositionRight.y  + 1) * 256);
-
-			texture.DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
-
-//			texture2.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionLeft.x + 1) * 256, (entryList[i].PositionLeft.y  + 1) * 256),
-//			                 new UnityEngine.Vector2(( -entryList[i+1].PositionLeft.x + 1) * 256, (entryList[i+1].PositionLeft.y  + 1) * 256),
-//			                 Color.red);
-
-//			texture.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionRight.x + 1) * 256, (entryList[i].PositionRight.y  + 1) * 256),
-//			                  new UnityEngine.Vector2(( -entryList[i+1].PositionRight.x + 1) * 256, (entryList[i+1].PositionRight.y  + 1) * 256),
-//			                 Color.blue);
 		}
+
+
+//		for (int i = 0; i < entryList.Count - 1; i ++) {
+//
+//			float x = Mathf.Round((-entryList[i].PositionLeft.x + 1) * 256);
+//			float y = Mathf.Round((entryList[i].PositionLeft.y  + 1) * 256);
+//			
+//			texture2.DrawFilledCircle( (int)x, (int)y, 3, Color.green);
+//
+//
+//			float xe = Mathf.Round((-entryList[i].PositionRight.x + 1) * 256);
+//			float ye = Mathf.Round((entryList[i].PositionRight.y  + 1) * 256);
+//
+//			texture.DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
+//
+////			texture2.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionLeft.x + 1) * 256, (entryList[i].PositionLeft.y  + 1) * 256),
+////			                 new UnityEngine.Vector2(( -entryList[i+1].PositionLeft.x + 1) * 256, (entryList[i+1].PositionLeft.y  + 1) * 256),
+////			                 Color.red);
+//
+////			texture.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionRight.x + 1) * 256, (entryList[i].PositionRight.y  + 1) * 256),
+////			                  new UnityEngine.Vector2(( -entryList[i+1].PositionRight.x + 1) * 256, (entryList[i+1].PositionRight.y  + 1) * 256),
+////			                 Color.blue);
+//		}
 		texture.Apply ();
 		texture2.Apply ();
 
@@ -274,6 +330,7 @@ public class Detector : MonoBehaviour {
 	}
 
 	void OnGUI() {
+
 		if (LearningMachine.RawData.Count <= 0)
 			return;
 

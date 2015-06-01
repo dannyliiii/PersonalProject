@@ -106,7 +106,7 @@ namespace TemplateGesture{
 		public static ResultList Match(List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold, float minimalScore, float minSize)
 		{
 			foreach (RecordedData p in pos) {
-				float score = p.Match(entriesL, entriesR, p, threshold, minimalScore, minSize);
+				float score = p.Match(entriesL, entriesR, threshold, minimalScore, minSize);
 
 				if(score >= 0)
 					rl.UpdateResult(p.gestureName, score);
@@ -141,25 +141,25 @@ namespace TemplateGesture{
 				System.Diagnostics.Debug.Assert(reader.LocalName == "ProcessedData");
 //				string name = reader.GetAttribute("Name");
 
-				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
+				//int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
-				RecordedPath rp = new RecordedPath(numPts, gesName);
+				//RecordedPath rp = new RecordedPath(numPts, gesName);
 
 				//100: window size, for temp use
-				RecordedData rd = new RecordedData(gesName, 100);
+				RecordedData rd = new RecordedData(gesName, 80);
 	
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
 						MyMath.Vector2 p = MyMath.Vector2.Zero;
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						rp.Points.Add(p);
+						//rp.Points.Add(p);
 						rd.LPoints.Add(p);
 					}else if(reader.LocalName == "RightHandPoints"){
 						MyMath.Vector2 p = MyMath.Vector2.Zero;
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						rp.Points.Add(p);
+						//rp.Points.Add(p);
 						rd.RPoints.Add(p);
 					}
 				}
@@ -185,7 +185,7 @@ namespace TemplateGesture{
 //					
 //				}
 
-				paths.Add(rp);
+				//paths.Add(rp);
 				pos.Add(rd);
 				rl.AddResult(gesName, 0);
 
@@ -226,7 +226,7 @@ namespace TemplateGesture{
 				RecordedPath rp = new RecordedPath(numPts, gesName);
 
 				// 100:window size  for temp use
-				RecordedData rd = new RecordedData(gesName, 100);
+				RecordedData rd = new RecordedData(gesName, 80);
 
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){

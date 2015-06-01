@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace TemplateGesture{
 	public class ResultList {
@@ -127,11 +128,29 @@ namespace TemplateGesture{
 			}
 		}
 
+		public int Index{
+			get{
+				int res = -1;
+				if (arrList.Count > 0)
+				{
+					double score = -1;
+					for(int i = 0; i < arrList.Count; i++){
+						if(arrList[i].Score > score){
+							res = i;
+						}
+					}
+				}
+				return res;
+			}
+		}
+
 		public double GetScore(int pos){
 			if (arrList.Count > pos)
 			{
-				BestResult r = (BestResult) arrList[pos];
-				return r.Score;
+//				Debug.Log(arrList.Count);
+//				Debug.Log(pos);
+//				BestResult r = (BestResult) arrList[pos];
+				return arrList[pos].Score;
 			}
 			return -1.0;
 		}
@@ -139,8 +158,8 @@ namespace TemplateGesture{
 		public string GetName(int pos){
 			if (arrList.Count > pos)
 			{
-				BestResult r = (BestResult) arrList[pos];
-				return r.Name;
+//				BestResult r = (BestResult) arrList[pos];
+				return arrList[pos].Name;
 			}
 			return "";
 		}
@@ -149,7 +168,7 @@ namespace TemplateGesture{
 			return arrList.Count;
 		}
 
-		public void ClearList(){
+		public void ResetList(){
 			for (int i = 0; i < arrList.Count; i ++) {
 				arrList[i].SetScore (0);
 			}
