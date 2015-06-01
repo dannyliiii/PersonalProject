@@ -131,8 +131,8 @@ public class KinectRecorder : MonoBehaviour {
 		string rFilePath = path + rawSuffix;
 
 		// 100: window size,  temp use
-		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, 100);
-		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, 100);
+		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, LearningMachine.sampleCount);
+		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, LearningMachine.sampleCount);
 
 		//do xml writing
 		bool success = true;

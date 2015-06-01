@@ -13,6 +13,7 @@ using System;
 namespace TemplateGesture{
 	public class LearningMachine
 	{
+		public readonly static int sampleCount = 80;
 		private static LearningMachine instance = new LearningMachine ();
 
 		private static NuiSkeletonFrame[] skeletonFrame;
@@ -150,7 +151,7 @@ namespace TemplateGesture{
 				//RecordedPath rp = new RecordedPath(numPts, gesName);
 
 				//100: window size, for temp use
-				RecordedData rd = new RecordedData(gesName, 80);
+				RecordedData rd = new RecordedData(gesName, sampleCount);
 	
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
@@ -230,7 +231,7 @@ namespace TemplateGesture{
 				RecordedPath rp = new RecordedPath(numPts, gesName);
 
 				// 100:window size  for temp use
-				RecordedData rd = new RecordedData(gesName, 80);
+				RecordedData rd = new RecordedData(gesName, sampleCount);
 
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){

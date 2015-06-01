@@ -70,11 +70,11 @@ namespace TemplateGesture{
 			rPoints = new List<MyMath.Vector2> ();
 		}
 		
-		public void CloseAndPrepare()
-		{
-			lPoints = GoldenSection.Pack(lPoints, sampleCount);
-			rPoints = GoldenSection.Pack(rPoints, sampleCount);
-		}
+//		public void CloseAndPrepare()
+//		{
+//			lPoints = GoldenSection.Pack(lPoints, sampleCount);
+//			rPoints = GoldenSection.Pack(rPoints, sampleCount);
+//		}
 		
 		public float Match(List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minSize)
 		{

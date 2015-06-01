@@ -33,7 +33,7 @@ public class KinectSensor : MonoBehaviour, KinectInterface {
 	/// what point (relative to kinectCenter) should the sensor look at
 	/// </summary>
 	public Vector4 lookAt;
-	
+
 	/// <summary>
 	/// Variables used to pass to smoothing function. Values are set to default based on Action in Motion's Research
 	/// </summary>

@@ -34,6 +34,7 @@ namespace TemplateGesture{
 //			}
 //		}
 
+		//change window size when change samplecount in learning machine
 		public TemplatedGestureDetector(int windowSize = 80){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
