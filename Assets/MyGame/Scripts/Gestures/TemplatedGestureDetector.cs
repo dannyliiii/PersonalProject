@@ -26,7 +26,7 @@ namespace TemplateGesture{
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
 		//readonly LearningMachine learningMachine;
-		private readonly float minScore = 0.72f;
+		private readonly float minScore = 0.75f;
 
 //		public LearningMachine LearningMachine{
 //			get{
@@ -86,7 +86,7 @@ namespace TemplateGesture{
 
 			ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),
 			                                            Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList(),
-			                                            Epsilon, MinimalScore, MinimalSize);
+			                                            Epsilon, MinimalSize);
 			
 			//resList.SortDescending ();
 			if (!resList.IsEmpty) {

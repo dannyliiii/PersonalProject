@@ -103,15 +103,18 @@ namespace TemplateGesture{
 //			return rl;
 //		}
 
-		public static ResultList Match(List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold, float minimalScore, float minSize)
+		public static ResultList Match(List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold,float minSize)
 		{
+			int i = 0;
 			foreach (RecordedData p in pos) {
-				float score = p.Match(entriesL, entriesR, threshold, minimalScore, minSize);
+				float score = p.Match(entriesL, entriesR, threshold, minSize);
 
-				if(score >= 0)
-					rl.UpdateResult(p.gestureName, score);
+				//if(score >= 0)
+					rl.UpdateResult(i++, p.gestureName, score);
 //					rl.AddResult(p.gestureName, score);
+//				UnityEngine.Debug.Log(i);
 			}
+//			UnityEngine.Debug.Log("========");
 			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));
 			return rl;
 		}
@@ -187,7 +190,7 @@ namespace TemplateGesture{
 
 				//paths.Add(rp);
 				pos.Add(rd);
-				rl.AddResult(gesName, 0);
+				rl.AddResult(gesName, 2);
 
 			}
 			catch (XmlException xex)
