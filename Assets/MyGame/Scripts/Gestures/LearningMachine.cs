@@ -9,11 +9,13 @@ using System.Xml;
 using System.Diagnostics;
 using UnityEngine;
 using System;
+using WobbrockLib;
+
 
 namespace TemplateGesture{
 	public class LearningMachine
 	{
-		public readonly static int sampleCount = 80;
+		public readonly static int sampleCount = 100;
 		private static LearningMachine instance = new LearningMachine ();
 
 		private static NuiSkeletonFrame[] skeletonFrame;
@@ -72,6 +74,9 @@ namespace TemplateGesture{
 			}
 			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
 				LoadRawData (file);
+
+			foreach (string file in Directory.GetFiles(folderPath, "*.data"))
+				LoadGestureNew (file);
 		}
 //		public LearningMachine()
 //		{
@@ -146,12 +151,13 @@ namespace TemplateGesture{
 				System.Diagnostics.Debug.Assert(reader.LocalName == "ProcessedData");
 //				string name = reader.GetAttribute("Name");
 
-				//int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
+				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				//RecordedPath rp = new RecordedPath(numPts, gesName);
 
 				//100: window size, for temp use
 				RecordedData rd = new RecordedData(gesName, sampleCount);
+
 	
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
@@ -298,6 +304,61 @@ namespace TemplateGesture{
 			}
 			return success;
 		}
+
+		public static bool LoadGestureNew(string filePath)
+		{
+			bool success = true;
+			XmlTextReader reader = null;
+			try
+			{
+				reader = new XmlTextReader(filePath);
+				reader.WhitespaceHandling = WhitespaceHandling.None;
+				reader.MoveToContent();
+				
+				System.Diagnostics.Debug.Assert(reader.LocalName == "Gesture");
+				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
+				string gesName = reader.GetAttribute("GesName");
+
+				RecordedData rd = new RecordedData(gesName, sampleCount);
+				
+				
+				while(reader.Read()){
+					if(reader.LocalName == "LeftHandPoints"){
+						TimePointF p = TimePointF.Empty;
+						p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rd.RP.Add(p);
+
+					}else if(reader.LocalName == "RightHandPoints"){
+						TimePointF p = TimePointF.Empty;
+						p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rd.LP.Add(p);
+					}
+				}
+
+				pos.Add(rd);
+				rl.AddResult(gesName, 2);
+				
+			}
+			catch (XmlException xex)
+			{
+				UnityEngine.Debug.Log(xex.Message);
+				success = false;
+			}
+			catch (Exception ex)
+			{
+				UnityEngine.Debug.Log(ex.Message);
+				success = false;
+			}
+			finally
+			{
+				if (reader != null)
+					reader.Close();
+			}
+			return success;
+		}
+
 	}
 }
 

@@ -15,6 +15,10 @@ namespace MyMath{
 		public static float Length(Vector2 v){
 			return Mathf.Sqrt (v.x * v.x + v.y * v.y);
 		}
+
+		public static float Sqrt(float f){
+			return Mathf.Sqrt (f);
+		}
 }
 }
 

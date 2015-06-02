@@ -2,9 +2,16 @@
 using System;
 using System.Collections.Generic;
 using MyMath;
+using WobbrockLib;
+using WobbrockLib.Extensions;
+using System.Drawing;
 
 namespace TemplateGesture{
 	public class GoldenSection {
+
+		private const float DX = 250f;
+		public static readonly SizeF SquareSize = new SizeF(DX, DX);
+		public static readonly PointF Origin = new PointF(0f, 0f);
 
 		static readonly float ReductionFactor = 0.5f * (-1 + (float)Math.Sqrt(5));
 		static readonly float Diagonal = (float)Math.Sqrt(2);
@@ -65,7 +72,7 @@ namespace TemplateGesture{
 				Vector2 pt1 = source[index - 1];
 				Vector2 pt2 = source[index];
 				
-				float distance = (pt1 - pt2).Length;
+				float distance = MathHelper.Sqrt((pt1 - pt2).LengthSqr);
 				// If the distance between the 2 points is greater than average length, we introduce a new point
 				if ((currentDistance + distance) >= averageLength)
 				{
@@ -154,5 +161,20 @@ namespace TemplateGesture{
 
 			return locals;
 		}
+
+		public static List<PointF> DollarOnePack(List<TimePointF> pos, int sampleCount){
+
+//			List<TimePointF> rawPoints = new List<TimePointF> (pos);
+			double I = GeotrigEx.PathLength (pos) / (sampleCount);
+			List<PointF> localPoints = TimePointF.ConvertList (SeriesEx.ResampleInSpace (pos, I));
+			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
+			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
+			localPoints = GeotrigEx.ScaleTo (localPoints, SquareSize);
+			localPoints = GeotrigEx.TranslateTo (localPoints, Origin, true);
+
+
+			return localPoints;
+		}
+		
 	}
 }

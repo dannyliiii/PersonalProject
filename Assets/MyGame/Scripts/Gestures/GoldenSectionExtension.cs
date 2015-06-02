@@ -10,14 +10,14 @@ namespace TemplateGesture{
 		// Get length of path
 		public static float Length(List<Vector2> points)
 		{
-			float length = 0;
+			float lengthSqr = 0;
 			
 			for (int i = 1; i < points.Count; i++)
 			{
-				length += (points[i - 1] - points[i]).Length;
+				lengthSqr += (points[i - 1] - points[i]).LengthSqr;
 			}
 			
-			return length;
+			return MathHelper.Sqrt(lengthSqr);
 		}
 		
 		// Get center of path
@@ -56,7 +56,7 @@ namespace TemplateGesture{
 		// Average distance betweens paths
 		public static float DistanceTo(List<Vector2> path1, List<Vector2> path2)
 		{
-			return path1.Select((t, i) => (t - path2[i]).Length).Average();
+			return path1.Select((t, i) => MathHelper.Sqrt((t - path2[i]).LengthSqr)).Average();
 		}
 		
 		// Compute bounding rectangle

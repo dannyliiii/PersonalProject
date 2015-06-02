@@ -25,17 +25,11 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		//readonly LearningMachine learningMachine;
-		private readonly float minScore = 0.75f;
+		private readonly float minScore = 0.73f;
 
-//		public LearningMachine LearningMachine{
-//			get{
-//				return learningMachine;
-//			}
-//		}
 
 		//change window size when change samplecount in learning machine
-		public TemplatedGestureDetector(int windowSize = 80){
+		public TemplatedGestureDetector(int windowSize = 100){
 			this.windowSize = windowSize;
 			MinimalPeriodBetweenGestures = 0;
 			
@@ -43,8 +37,6 @@ namespace TemplateGesture{
 			MinimalScore = 0.80f;
 			MinimalSize = 0.1f;
 			LearningMachine.Initialize ();
-
-			//learningMachine = new LearningMachine();
 		}
 		public List<Entry> Entries
 		{
@@ -68,14 +60,6 @@ namespace TemplateGesture{
 				Entry entryToRemove = Entries[0];
 				Entries.Remove(entryToRemove);
 			}
-
-				// Look for gestures
-			//LookForGesture();
-
-//			if (path != null)
-//			{
-//				path.Points.Add(MyMath.Vector3.ToVector2(position));
-//			}
 		}
 
 		public void LookForGesture()

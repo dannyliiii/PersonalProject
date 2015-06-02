@@ -73,7 +73,7 @@ public class Detector : MonoBehaviour {
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
 
-		DrawRealTimeHandsTracks ();
+		//DrawRealTimeHandsTracks ();
 	}
 
 	void LoadTemplateGestureDetector()

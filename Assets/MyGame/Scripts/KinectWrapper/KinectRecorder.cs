@@ -11,6 +11,8 @@ using Kinect;
 using MyMath;
 using TemplateGesture;
 using UnityEngine.UI;
+using WobbrockLib;
+using System.Drawing;
 
 public class KinectRecorder : MonoBehaviour {
 	
@@ -29,6 +31,9 @@ public class KinectRecorder : MonoBehaviour {
 	//private List<JointPosition> points;
 	private List<MyMath.Vector3> rhPos;
 	private List<MyMath.Vector3> lhPos;
+
+//	private List<TimePointF> rTimePoints;
+//	private List<TimePointF> lTimePoints;
 	
 	// Use this for initialization
 	void Awake () {
@@ -37,6 +42,9 @@ public class KinectRecorder : MonoBehaviour {
 	//	points = new List<JointPosition> (256);
 		rhPos = new List<MyMath.Vector3> (256);
 		lhPos = new List<MyMath.Vector3> (256);
+
+//		List<TimePointF> rTimePoints = new List<TimePointF>();
+//		List<TimePointF> lTimePoints = new List<TimePointF>();
 	}
 	
 	// Update is called once per frame
@@ -73,6 +81,18 @@ public class KinectRecorder : MonoBehaviour {
 //						points.Add(new JointPosition(rightHand.x, rightHand.y, rightHand.z, unixTimeStamp));
 						rhPos.Add(new MyMath.Vector3(rightHand.x , rightHand.y, rightHand.z));
 						lhPos.Add(new MyMath.Vector3(leftHand.x , leftHand.y, leftHand.z));
+
+//						TimePointF rp = TimePointF.Empty;
+//						TimePointF lp = TimePointF.Empty;
+//						rp.X = rightHand.x;
+//						rp.Y = rightHand.y;
+//						lp.X = leftHand.x;
+//						lp.Y = leftHand.y;
+//						rp.Time = lp.Time = System.DateTime.Now;
+//
+//						rTimePoints.Add(rp);
+//						lTimePoints.Add(lp);
+
 						break;
 
 					}
@@ -129,10 +149,12 @@ public class KinectRecorder : MonoBehaviour {
 	
 		string filePath = path + suffix;
 		string rFilePath = path + rawSuffix;
-
-		// 100: window size,  temp use
+		
 		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, LearningMachine.sampleCount);
 		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, LearningMachine.sampleCount);
+
+//		List<PointF> lp = GoldenSection.DollarOnePack (rTimePoints);
+//		List<PointF> rp = GoldenSection.DollarOnePack (lTimePoints);
 
 		//do xml writing
 		bool success = true;
@@ -194,6 +216,36 @@ public class KinectRecorder : MonoBehaviour {
 			}
 			
 			foreach (MyMath.Vector2 p in r)
+			{
+				rWriter.WriteStartElement("RightHandPoints");
+				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
+				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+				rWriter.WriteEndElement(); 
+			}
+			rWriter.WriteEndDocument();
+
+			//save data new
+			string newFilePath = path + ".data";
+			rWriter = new XmlTextWriter(newFilePath, Encoding.UTF8);
+			rWriter.Formatting = Formatting.Indented;
+			rWriter.WriteStartDocument(true);
+			
+			rWriter.WriteStartElement("Gesture");
+			rWriter.WriteAttributeString("GesName", gestureName);
+			rWriter.WriteAttributeString("NumPts", XmlConvert.ToString(l.Count + r.Count));
+			//rWriter.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
+			rWriter.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
+			rWriter.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
+
+			foreach (var p in lhPos)
+			{
+				rWriter.WriteStartElement("LeftHandPoints");
+				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
+				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+				rWriter.WriteEndElement(); 
+			}
+			
+			foreach (var p in rhPos)
 			{
 				rWriter.WriteStartElement("RightHandPoints");
 				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));

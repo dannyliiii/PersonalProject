@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using MyMath;
 using UnityEngine;
+using WobbrockLib;
 
 namespace TemplateGesture{
 	[Serializable]
@@ -11,6 +12,9 @@ namespace TemplateGesture{
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
+		List<TimePointF> lpf;
+		List<TimePointF> rpf;
+
 		int sampleCount;
 //		int lSamplesCount;
 //		int rSamplesCount;
@@ -58,6 +62,16 @@ namespace TemplateGesture{
 			get { return rPoints; }
 			set { rPoints = value; }
 		}
+
+		public List<TimePointF> LP{
+			get{return lpf;}
+			set{lpf = value;}
+		}
+
+		public List<TimePointF> RP{
+			get{return rpf;}
+			set{rpf = value;}
+		}
 		
 		public RecordedData(string name,int sc)
 		{
@@ -68,6 +82,8 @@ namespace TemplateGesture{
 			this.gestureName = name;
 			lPoints = new List<MyMath.Vector2> ();
 			rPoints = new List<MyMath.Vector2> ();
+			rpf = new List<TimePointF> ();
+			lpf = new List<TimePointF> ();
 		}
 		
 //		public void CloseAndPrepare()

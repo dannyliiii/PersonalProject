@@ -10,9 +10,9 @@ namespace MyMath{
 			x = a;
 			y = b;
 		}
-		public float Length{
+		public float LengthSqr{
 			get{
-				return Mathf.Sqrt(x * x + y * y);
+				return x * x + y * y;
 			}
 		}
 		public static Vector2 operator+(Vector2 v1, Vector2 v2){
