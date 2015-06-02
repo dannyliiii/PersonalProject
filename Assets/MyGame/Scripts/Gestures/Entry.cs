@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System;
 using MyMath;
+using WobbrockLib;
+using System.Drawing;
 
 public class Entry {
 	
 	public DateTime Time { get; set; }
 	public Vector3 PositionRight { get; set; }
 	public Vector3 PositionLeft { get; set;}
+	public TimePointF TpfPosLeft{ get; set;}
+	public TimePointF TpfPosRight{ get; set;}
 
 }

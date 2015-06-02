@@ -68,28 +68,16 @@ namespace TemplateGesture{
 			pos = new List<RecordedData> ();
 			rawPos = new List<RecordedData> ();
 
-			foreach (string file in Directory.GetFiles(folderPath, "*.xml"))
-			{
-				LoadGesture(file);
-			}
+//			foreach (string file in Directory.GetFiles(folderPath, "*.xml"))
+//			{
+//				LoadGesture(file);
+//			}
 			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
 				LoadRawData (file);
 
 			foreach (string file in Directory.GetFiles(folderPath, "*.data"))
 				LoadGestureNew (file);
 		}
-//		public LearningMachine()
-//		{
-//			paths = new List<RecordedPath>();
-//			rawData = new List<RecordedPath>();
-//
-//			foreach (string file in Directory.GetFiles(folderPath, "*.xml"))
-//			{
-//				LoadGesture(file);
-//			}
-//			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
-//				LoadRawData (file);
-//		}
 
 //		public static ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
 //		{
@@ -109,15 +97,15 @@ namespace TemplateGesture{
 //			return rl;
 //		}
 
-		public static ResultList Match(List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold,float minSize)
+		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold,float minSize)
 		{
 			int i = 0;
 			foreach (RecordedData p in pos) {
-				float score = p.Match(entriesL, entriesR, threshold, minSize);
+				double score = p.Match(tpll, tplr, entriesL, entriesR, threshold, minSize);
 				//				UnityEngine.Debug.Log(i);
 				//				UnityEngine.Debug.Log(score);
 				//if(score >= 0)
-					rl.UpdateResult(i++, p.gestureName, score);
+					rl.UpdateResult(i++, p.gestureName, (float)score);
 //					rl.AddResult(p.gestureName, score);
 
 			}
@@ -151,7 +139,7 @@ namespace TemplateGesture{
 				System.Diagnostics.Debug.Assert(reader.LocalName == "ProcessedData");
 //				string name = reader.GetAttribute("Name");
 
-				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
+//				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 				//RecordedPath rp = new RecordedPath(numPts, gesName);
 
@@ -316,27 +304,32 @@ namespace TemplateGesture{
 				reader.MoveToContent();
 				
 				System.Diagnostics.Debug.Assert(reader.LocalName == "Gesture");
-				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
+//				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
 
 				RecordedData rd = new RecordedData(gesName, sampleCount);
 				
-				
+				List<TimePointF> pr = new List<TimePointF>();
+				List<TimePointF> pl = new List<TimePointF>();
+
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
 						TimePointF p = TimePointF.Empty;
 						p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						rd.RP.Add(p);
+						pl.Add(p);
+
 
 					}else if(reader.LocalName == "RightHandPoints"){
 						TimePointF p = TimePointF.Empty;
 						p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						rd.LP.Add(p);
+						pr.Add(p);
 					}
 				}
 
+				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
+				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
 				pos.Add(rd);
 				rl.AddResult(gesName, 2);
 				

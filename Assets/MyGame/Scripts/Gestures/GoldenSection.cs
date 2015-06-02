@@ -9,6 +9,9 @@ using System.Drawing;
 namespace TemplateGesture{
 	public class GoldenSection {
 
+		public static readonly double DiagonalD = Math.Sqrt(DX * DX + DX * DX);
+		public static readonly double HalfDiagonal = 0.5 * DiagonalD;
+		private static readonly double Phi = 0.5 * (-1.0 + Math.Sqrt(5.0)); // Golden Ratio
 		private const float DX = 250f;
 		public static readonly SizeF SquareSize = new SizeF(DX, DX);
 		public static readonly PointF Origin = new PointF(0f, 0f);
@@ -174,6 +177,52 @@ namespace TemplateGesture{
 
 
 			return localPoints;
+		}
+
+		public static double[] GoldenSectionSearch(List<PointF> pts1, List<PointF> pts2, double a, double b, double threshold)
+		{
+			double x1 = Phi * a + (1 - Phi) * b;
+			List<PointF> newPoints = GeotrigEx.RotatePoints(pts1, x1);
+			double fx1 = PathDistance(newPoints, pts2);
+			
+			double x2 = (1 - Phi) * a + Phi * b;
+			newPoints = GeotrigEx.RotatePoints(pts1, x2);
+			double fx2 = PathDistance(newPoints, pts2);
+			
+			double i = 2.0; // calls to pathdist
+			while (Math.Abs(b - a) > threshold)
+			{
+				if (fx1 < fx2)
+				{
+					b = x2;
+					x2 = x1;
+					fx2 = fx1;
+					x1 = Phi * a + (1 - Phi) * b;
+					newPoints = GeotrigEx.RotatePoints(pts1, x1);
+					fx1 = PathDistance(newPoints, pts2);
+				}
+				else
+				{
+					a = x1;
+					x1 = x2;
+					fx1 = fx2;
+					x2 = (1 - Phi) * a + Phi * b;
+					newPoints = GeotrigEx.RotatePoints(pts1, x2);
+					fx2 = PathDistance(newPoints, pts2);
+				}
+				i++;
+			}
+			return new double[3] { Math.Min(fx1, fx2), GeotrigEx.Radians2Degrees((b + a) / 2.0), i }; // distance, angle, calls to pathdist
+		}
+
+		public static double PathDistance(List<PointF> path1, List<PointF> path2)
+		{
+			double distance = 0;
+			for (int i = 0; i < Math.Min(path1.Count, path2.Count); i++)
+			{
+				distance += GeotrigEx.Distance(path1[i], path2[i]);
+			}
+			return distance / path1.Count;
 		}
 		
 	}

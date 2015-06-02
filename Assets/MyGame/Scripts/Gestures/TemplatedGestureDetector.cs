@@ -6,6 +6,7 @@ using System.Linq;
 using MyMath;
 using UnityEngine;
 using UnityEngine.UI;
+using WobbrockLib;
 
 namespace TemplateGesture{
 	public class TemplatedGestureDetector {
@@ -49,9 +50,19 @@ namespace TemplateGesture{
 		}
 		
 		public void Add(MyMath.Vector3 posL, MyMath.Vector3 posR){
-			//1. left, 2. right
+			TimePointF pr = TimePointF.Empty;
+			pr.X = posR.x;
+			pr.Y = posR.y;
 
-			Entry newEntry = new Entry {PositionRight = posR, PositionLeft = posL, Time = DateTime.Now};
+			TimePointF pl = TimePointF.Empty;
+			pl.X = posL.x;
+			pl.Y = posL.y;
+
+			Entry newEntry = new Entry {PositionRight = posR, 
+										PositionLeft = posL,
+										Time = DateTime.Now,
+										TpfPosLeft = pl,
+										TpfPosRight = pr};
 			Entries.Add(newEntry);
 
 			// Remove too old positions
@@ -69,7 +80,9 @@ namespace TemplateGesture{
 
 			//ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
 
-			ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),
+			ResultList resList = LearningMachine.Match (Entries.Select (e => e.TpfPosLeft).ToList(),
+			                                            Entries.Select (e => e.TpfPosRight).ToList(),
+			                                            Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),
 			                                            Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList(),
 			                                            Epsilon, MinimalSize);
 			

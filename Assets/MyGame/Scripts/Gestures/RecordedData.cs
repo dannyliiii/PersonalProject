@@ -5,6 +5,8 @@ using System.Diagnostics;
 using MyMath;
 using UnityEngine;
 using WobbrockLib;
+using WobbrockLib.Extensions;
+using System.Drawing;
 
 namespace TemplateGesture{
 	[Serializable]
@@ -12,8 +14,8 @@ namespace TemplateGesture{
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
-		List<TimePointF> lpf;
-		List<TimePointF> rpf;
+		List<PointF> lpf;
+		List<PointF> rpf;
 
 		int sampleCount;
 //		int lSamplesCount;
@@ -63,12 +65,12 @@ namespace TemplateGesture{
 			set { rPoints = value; }
 		}
 
-		public List<TimePointF> LP{
+		public List<PointF> LP{
 			get{return lpf;}
 			set{lpf = value;}
 		}
 
-		public List<TimePointF> RP{
+		public List<PointF> RP{
 			get{return rpf;}
 			set{rpf = value;}
 		}
@@ -82,8 +84,8 @@ namespace TemplateGesture{
 			this.gestureName = name;
 			lPoints = new List<MyMath.Vector2> ();
 			rPoints = new List<MyMath.Vector2> ();
-			rpf = new List<TimePointF> ();
-			lpf = new List<TimePointF> ();
+			rpf = new List<PointF> ();
+			lpf = new List<PointF> ();
 		}
 		
 //		public void CloseAndPrepare()
@@ -92,27 +94,55 @@ namespace TemplateGesture{
 //			rPoints = GoldenSection.Pack(rPoints, sampleCount);
 //		}
 		
-		public float Match(List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minSize)
+		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minSize)
 		{
 			if (lPositions.Count < 70)
 				return -1;
 
 //			if (!GoldenSectionExtension.IsLargeEnough(lPositions, minSize)|| !GoldenSectionExtension.IsLargeEnough(rPositions, minSize))
 //				return -2;
-			
-			List<MyMath.Vector2> lLocals = GoldenSection.Pack(lPositions, sampleCount);
-			List<MyMath.Vector2> rLocals = GoldenSection.Pack(rPositions, sampleCount);
-			
-			
-			float lScore = GoldenSection.Search(lLocals, lPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+			List<PointF> pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
+			List<PointF> pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 
-			float rScore = GoldenSection.Search(rLocals, rPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+
+			double[] bestl = GoldenSection.GoldenSectionSearch(
+				pfl,                             // to rotate
+				lpf,                           // to match
+				GeotrigEx.Degrees2Radians(-45.0),   // lbound
+				GeotrigEx.Degrees2Radians(+45.0),   // ubound
+				GeotrigEx.Degrees2Radians(2.0)      // threshold
+				);
+			
+			double scorel = 1.0 - bestl[0] / GoldenSection.HalfDiagonal;
+
+			double[] bestr = GoldenSection.GoldenSectionSearch(
+				pfr,                             // to rotate
+				rpf,                           // to match
+				GeotrigEx.Degrees2Radians(-45.0),   // lbound
+				GeotrigEx.Degrees2Radians(+45.0),   // ubound
+				GeotrigEx.Degrees2Radians(2.0)      // threshold
+				);
+			
+			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
+
+
+//			List<MyMath.Vector2> lLocals = GoldenSection.Pack(lPositions, sampleCount);
+//			List<MyMath.Vector2> rLocals = GoldenSection.Pack(rPositions, sampleCount);
+			
+			
+//			float lScore = GoldenSection.Search(lLocals, lPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
+//
+//			float rScore = GoldenSection.Search(rLocals, rPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
 
 			//UnityEngine.Debug.Log(score);
 //			if (lScore < 0.6 || rScore < 0.6)
 //				return (lScore + rScore) * 0.5f;	
 //			else
-				return Mathf.Max(lScore, rScore);
+
+			if (scorel > scorer)
+				return scorel;
+			else
+				return scorer;
 		}
 		
 	}
