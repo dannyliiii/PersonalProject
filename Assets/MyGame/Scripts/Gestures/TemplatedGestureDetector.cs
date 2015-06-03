@@ -26,7 +26,7 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly float minScore = 0.73f;
+		private readonly float minScore = 0.9f;
 
 
 		//change window size when change samplecount in learning machine
