@@ -14,14 +14,14 @@ public class Detector : MonoBehaviour {
 
 //	List<MyMath.Vector2> l;
 //	List<MyMath.Vector2> r;
+
+//	List<Entry> el;
+	int arrCount = 8;
 	Material material1; 
 	Material material2; 
 	Material material3; 
 	Material material4;
-	Texture2D texture1;
-	Texture2D texture2;
-	Texture2D texture3;
-	Texture2D texture4;
+	Texture2D[] textureArr;
 
 	public DeviceOrEmulator devOrEmu;
 	private KinectInterface kinect;
@@ -56,6 +56,14 @@ public class Detector : MonoBehaviour {
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
 	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
 
+	enum TexArrEnum : int{
+		t1 = 0,
+		t2 = 1,
+		t3 = 2,
+		t4 = 3,
+	}
+
+
 	void Awake () {
 
 		kinect = devOrEmu.getKinect();
@@ -71,26 +79,20 @@ public class Detector : MonoBehaviour {
 
 		gs = new GUIStyle ();
 		gs.fontSize = 40;
+		
+		textureArr = new Texture2D[arrCount];
+		
+		for (int i = 0; i < arrCount; i ++) {
+			textureArr[i] = new Texture2D(512,512, TextureFormat.RGB24, false);
+			textureArr[i].wrapMode = TextureWrapMode.Clamp;
+		}
+
 
 		material1 = dataImagePlaneRL.GetComponent<Renderer>().material;
 		material2 = dataImagePlaneRR.GetComponent<Renderer>().material;
 		material3 = dataImagePlane.GetComponent<Renderer>().material;
 		material4 = dataImagePlane2.GetComponent<Renderer>().material;
-		texture1 = new Texture2D(512,512, TextureFormat.RGB24, false);
-		texture2 = new Texture2D(512,512, TextureFormat.RGB24, false);
-		texture3 = new Texture2D(512,512, TextureFormat.RGB24, false);
-		texture4 = new Texture2D(512,512, TextureFormat.RGB24, false);
-		texture1.wrapMode = TextureWrapMode.Clamp;
-		texture2.wrapMode = TextureWrapMode.Clamp;
-		texture3.wrapMode = TextureWrapMode.Clamp;
-		texture4.wrapMode = TextureWrapMode.Clamp;
-		material1.SetTexture(0, texture1);
-		material2.SetTexture(0, texture2);
-		material3.SetTexture(0, texture3);
-		material4.SetTexture(0, texture4);
 		
-
-		//DrawData (paths[0]);
 	}
 
 	void Update () {
@@ -145,49 +147,6 @@ public class Detector : MonoBehaviour {
 			}
 			
 		}
-
-
-//		if (sw.pollSkeleton ()) {
-//
-//			for (int i = 0; i < (int)Kinect.NuiSkeletonPositionIndex.Count; i++) {
-//				bool flag = false;
-//				MyMath.Vector3 posL = MyMath.Vector3.Zero;
-//				MyMath.Vector3 posR = MyMath.Vector3.Zero;
-//				if (i == (int)NuiSkeletonPositionIndex.HandRight) {
-//
-//					posR = new MyMath.Vector3 (sw.bonePos[player, i].x
-//					                                         ,sw.bonePos[player, i].y
-//					                                         ,sw.bonePos[player, i].z);
-////					templateGestureDetector.Add (pos);
-//					flag = true;
-////					templateGestureDetector.LookForGesture();
-//
-////					if(KinectSensor.Instance.getIsRightHandGrip()){
-////						//Debug.Log("Right hand grips.");
-////						MyMath.Vector3 pos = new MyMath.Vector3 (sw.bonePos[player, i].x
-////						                                         ,sw.bonePos[player, i].y
-////						                                         ,sw.bonePos[player, i].z);
-////						templateGestureDetector.Add (pos);
-////					}else{
-////						//Debug.Log("Right hand releases.");
-////						templateGestureDetector.LookForGesture();
-////					}
-//				}
-//				if (i == (int)NuiSkeletonPositionIndex.HandLeft) {
-//					
-//					posL = new MyMath.Vector3 (sw.bonePos[player, i].x
-//					                                         ,sw.bonePos[player, i].y
-//					                                         ,sw.bonePos[player, i].z);
-////					templateGestureDetector.Add (pos);
-//					flag = true;
-//
-//				}
-//				if(flag){
-//					templateGestureDetector.Add (posL, posR);
-//					templateGestureDetector.LookForGesture();
-//				}
-//			}
-//		}
 	}
 
 	void Shoot(){
@@ -203,16 +162,17 @@ public class Detector : MonoBehaviour {
 
 	void DrawRealTimeHandsTracks(){
 
-//		List<MyMath.Vector2> l= GoldenSection.Pack(templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),100);
-//		List<MyMath.Vector2> r= GoldenSection.Pack(templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList (),100);
+		material1.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
+		DestroyImmediate (material1.mainTexture);
+		DestroyImmediate (textureArr[(int)TexArrEnum.t1]);
+		textureArr[(int)TexArrEnum.t1] = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		material1.SetTexture (0, textureArr[(int)TexArrEnum.t1]);
 
-
-//		l= templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList ();
-//		r= templateGestureDetector.Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList ();
-
-//		List<Entry> entryList = templateGestureDetector.Entries;
-
-
+		material2.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
+		DestroyImmediate (material2.mainTexture);
+		DestroyImmediate (textureArr[(int)TexArrEnum.t2]);
+		textureArr[(int)TexArrEnum.t2] = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		material2.SetTexture (0, textureArr[(int)TexArrEnum.t2]);
 
 		for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
 
@@ -220,42 +180,18 @@ public class Detector : MonoBehaviour {
 			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
 			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.y  + 1) * 256);
 			
-			texture1.DrawFilledCircle( (int)x, (int)y, 3, Color.green);
+			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.green);
 			
 			
 			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
 			
-			texture2.DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
+			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
 
 		}
 
-
-//		for (int i = 0; i < entryList.Count - 1; i ++) {
-//
-//			float x = Mathf.Round((-entryList[i].PositionLeft.x + 1) * 256);
-//			float y = Mathf.Round((entryList[i].PositionLeft.y  + 1) * 256);
-//			
-//			texture2.DrawFilledCircle( (int)x, (int)y, 3, Color.green);
-//
-//
-//			float xe = Mathf.Round((-entryList[i].PositionRight.x + 1) * 256);
-//			float ye = Mathf.Round((entryList[i].PositionRight.y  + 1) * 256);
-//
-//			texture.DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
-//
-////			texture2.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionLeft.x + 1) * 256, (entryList[i].PositionLeft.y  + 1) * 256),
-////			                 new UnityEngine.Vector2(( -entryList[i+1].PositionLeft.x + 1) * 256, (entryList[i+1].PositionLeft.y  + 1) * 256),
-////			                 Color.red);
-//
-////			texture.DrawLine(new UnityEngine.Vector2(( -entryList[i].PositionRight.x + 1) * 256, (entryList[i].PositionRight.y  + 1) * 256),
-////			                  new UnityEngine.Vector2(( -entryList[i+1].PositionRight.x + 1) * 256, (entryList[i+1].PositionRight.y  + 1) * 256),
-////			                 Color.blue);
-//		}
-		texture1.Apply ();
-		texture2.Apply ();
-//		l.Clear ();
-//		r.Clear ();
+		textureArr[(int)TexArrEnum.t1].Apply ();
+		textureArr[(int)TexArrEnum.t2].Apply ();
 
 	} 
 
@@ -288,74 +224,47 @@ public class Detector : MonoBehaviour {
 	}
 
 	void DrawDataPerFrame(int num){
-//		Debug.Log (currentData);
-
-//		Material material3 = dataImagePlane.GetComponent<Renderer>().material;
-//		Material material4 = dataImagePlane2.GetComponent<Renderer>().material;
-//		Texture2D texture3 = new Texture2D(512,512, TextureFormat.RGB24, false);
-//		Texture2D texture4 = new Texture2D(512,512, TextureFormat.RGB24, false);
-
-//		Texture2D texture3 = material3.mainTexture as Texture2D;
-//		texture3.wrapMode = TextureWrapMode.Clamp;
-//		texture4.wrapMode = TextureWrapMode.Clamp;
-//		material3.SetTexture(0, texture3);
-//		material4.SetTexture(0, texture4);
 
 		if (LearningMachine.RawData.Count <= 0)
 			return;
-//		RecordedPath path = LearningMachine.RawData [num];
-
 		RecordedData data = LearningMachine.RawPos [num];
-
-//		if (currentData >= path.SampleCount - 1)
-//			currentData = 0;
 		
 
 		if (currentData >= data.Size)
 			currentData = 0;
 
+
+		material3.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
+		DestroyImmediate (material3.mainTexture);
+		DestroyImmediate (textureArr[(int)TexArrEnum.t3]);
+		textureArr[(int)TexArrEnum.t3] = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		material3.SetTexture (0, textureArr[(int)TexArrEnum.t3]);
+
+		material4.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
+		DestroyImmediate (material4.mainTexture);
+		DestroyImmediate (textureArr[(int)TexArrEnum.t4]);
+		textureArr[(int)TexArrEnum.t4] = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		material4.SetTexture (0, textureArr[(int)TexArrEnum.t4]);
+
 		for (int i = 0; i < currentData; i ++) {
 
-//			MyMath.Vector2 start = path.Points[i];
-//			MyMath.Vector2 end = path.Points[i + 1];
 			MyMath.Vector2 lStart = data.LPoints[i];
 			MyMath.Vector2 lEnd = data.LPoints[i+1]; 
 			MyMath.Vector2 rStart = data.RPoints[i];
 			MyMath.Vector2 rEnd = data.RPoints[i+1];
 	
 
-//			if(i < data.LSampleCount){
-//				lStart = data.LPoints[i];
-//				lEnd = data.LPoints[i+1];
-//			}else{
-//				lStart = data.LPoints[data.LSampleCount - 2];
-//				lEnd = data.LPoints[data.LSampleCount - 1];
-//			}
-//
-//			if(i < data.RSampleCount){
-//				rStart = data.RPoints[i];
-//				rEnd = data.RPoints[i+1];
-//			}else{
-//				rStart = data.RPoints[data.LSampleCount -2];
-//				rEnd = data.RPoints[data.LSampleCount - 1];
-//			}
-		
-//			if(lStart != MyMath.Vector2.Zero)
-			texture3.DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
-				                 new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
-			                 Color.blue);
+			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
+			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
+			                                        Color.red);
 
-//			if(rStart != MyMath.Vector2.Zero)
-			texture4.DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
-			                  new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
-			                 Color.red);
+			textureArr[(int)TexArrEnum.t3].DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
+			                           				new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
+			                           				Color.blue);
 		}
-		
-		texture3.Apply ();
-		texture4.Apply();
-	
-//		Texture2D.Destroy (texture3);
-//		Texture2D.Destroy (texture4);
+
+		textureArr [(int)TexArrEnum.t3].Apply ();
+		textureArr [(int)TexArrEnum.t4].Apply ();
 
 
 		currentData ++;
