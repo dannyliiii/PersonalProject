@@ -9,7 +9,14 @@ using WobbrockLib.Extensions;
 using System.Drawing;
 
 namespace TemplateGesture{
-	[Serializable]
+	public enum Direction{
+		up_left,
+		up_right,
+		down_left,
+		down_right
+	}
+
+
 	public class RecordedData {
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
@@ -18,6 +25,10 @@ namespace TemplateGesture{
 		List<PointF> rpf;
 
 		int sampleCount;
+
+		Direction dl;
+		Direction dr;
+
 //		int lSamplesCount;
 //		int rSamplesCount;
 
@@ -38,7 +49,15 @@ namespace TemplateGesture{
 //				rSamplesCount = value;
 //			}
 //		}
+		public Direction DL{
+			set{dl = value;}
+			get{return dl;}
+		}
 
+		public Direction DR{
+			set{dr = value;}
+			get{return dr;}
+		}
 		public int Size{
 			get{
 				return lPoints.Count;
