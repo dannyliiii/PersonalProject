@@ -242,6 +242,7 @@ public class KinectRecorder : MonoBehaviour {
 				rWriter.WriteStartElement("LeftHandPoints");
 				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
 				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+				rWriter.WriteAttributeString("Z", XmlConvert.ToString(p.z));
 				rWriter.WriteEndElement(); 
 			}
 			
@@ -250,6 +251,7 @@ public class KinectRecorder : MonoBehaviour {
 				rWriter.WriteStartElement("RightHandPoints");
 				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
 				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+				rWriter.WriteAttributeString("Z", XmlConvert.ToString(p.z));
 				rWriter.WriteEndElement(); 
 			}
 			rWriter.WriteEndDocument();

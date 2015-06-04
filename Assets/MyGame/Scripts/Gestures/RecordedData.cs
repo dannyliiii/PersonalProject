@@ -115,8 +115,8 @@ namespace TemplateGesture{
 		
 		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minSize)
 		{
-			if (lPositions.Count < 70)
-				return -1;
+//			if (lPositions.Count < 70)
+//				return -1;
 
 //			if (!GoldenSectionExtension.IsLargeEnough(lPositions, minSize)|| !GoldenSectionExtension.IsLargeEnough(rPositions, minSize))
 //				return -2;
