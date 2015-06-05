@@ -14,7 +14,7 @@ namespace TemplateGesture{
 //		RecordedPath path;
 
 		public int MinimalPeriodBetweenGestures { get; set; }
-		
+
 		readonly List<Entry> entries = new List<Entry>();
 		
 		public event Action<string> OnGestureDetected;
@@ -26,13 +26,13 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly float minScore = 0.9f;
+		private readonly float minScore = 0.85f;
 
 
 		//change window size when change samplecount in learning machine
 		public TemplatedGestureDetector(int windowSize = 100){
 			this.windowSize = windowSize;
-			MinimalPeriodBetweenGestures = 0;
+			MinimalPeriodBetweenGestures = 500;
 			
 			Epsilon = 0.035f;
 			MinimalScore = 0.80f;
@@ -91,9 +91,16 @@ namespace TemplateGesture{
 //				string gesName = resList.Name;
 //				double gesScore = resList.Score;
 				int index = resList.Index;
-		
+//				Debug.Log(index);
+
 				if(resList.GetScore(index) > minScore){
+
 					RaiseGestureDetected(resList.GetName(index));
+
+					LearningMachine.ResultList.ResetList ();
+					//clear the point list
+					Entries.Clear();
+
 				}
 				//Entries.Clear();
 			}
@@ -111,11 +118,6 @@ namespace TemplateGesture{
 				lastGestureDate = DateTime.Now;
 			}
 
-			LearningMachine.ResultList.ResetList ();
-			//clear the point list
-			Entries.Clear();
-
-			//Debug.Log (Entries.Count ());
 		}
 		
 	}

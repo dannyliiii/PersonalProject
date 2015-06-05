@@ -143,6 +143,7 @@ namespace TemplateGesture{
 					for(int i = 0; i < arrList.Count; i++){
 						if(arrList[i].Score > score){
 							res = i;
+							score = arrList[i].Score;
 						}
 					}
 				}

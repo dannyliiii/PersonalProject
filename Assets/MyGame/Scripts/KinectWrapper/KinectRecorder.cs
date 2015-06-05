@@ -121,7 +121,6 @@ public class KinectRecorder : MonoBehaviour {
 	void StopRecord() {
 			
 		isRecording = false;
-
 		string gestureName = nameField.text;
 		string filePath = outputFile + gestureName;
 		
@@ -149,7 +148,8 @@ public class KinectRecorder : MonoBehaviour {
 	
 		string filePath = path + suffix;
 		string rFilePath = path + rawSuffix;
-		
+		string newFilePath = path + ".data";
+
 		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, LearningMachine.sampleCount);
 		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, LearningMachine.sampleCount);
 
@@ -225,7 +225,7 @@ public class KinectRecorder : MonoBehaviour {
 			rWriter.WriteEndDocument();
 
 			//save data new
-			string newFilePath = path + ".data";
+
 			rWriter = new XmlTextWriter(newFilePath, Encoding.UTF8);
 			rWriter.Formatting = Formatting.Indented;
 			rWriter.WriteStartDocument(true);
@@ -278,6 +278,7 @@ public class KinectRecorder : MonoBehaviour {
 			}
 			LearningMachine.LoadGesture(filePath);
 			LearningMachine.LoadRawData(rFilePath);
+			LearningMachine.LoadGestureNew(newFilePath);
 		}
 		return success; // Xml file successfully written (or not)
 	

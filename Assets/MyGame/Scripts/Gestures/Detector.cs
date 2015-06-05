@@ -253,6 +253,10 @@ public class Detector : MonoBehaviour {
 			MyMath.Vector2 rStart = data.RPoints[i];
 			MyMath.Vector2 rEnd = data.RPoints[i+1];
 	
+//			textureArr[(int)TexArrEnum.t4].DrawFilledCircle( (rStart.x + 1) * 256, (rStart.y + 1) * 256, 3, Color.green);
+//
+//			textureArr[(int)TexArrEnum.t3].DrawFilledCircle( (lStart.x + 1) * 256, (lStart.y + 1) * 256, 3, Color.green);
+
 
 			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
 			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),

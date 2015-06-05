@@ -109,6 +109,9 @@ namespace TemplateGesture{
 		}
 
 		public static Direction GetDirection(List<TimePointF> l){
+			if(l.Count < 20)
+				return	Direction.none; 
+
 
 			double pos = Math.Round( l.Count * 0.9f);
 			Direction dir;

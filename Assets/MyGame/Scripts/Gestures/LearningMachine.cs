@@ -100,15 +100,20 @@ namespace TemplateGesture{
 		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold,float minSize)
 		{
 			int i = 0;
+
 			Direction dl = GoldenSectionExtension.GetDirection (tpll);
 			Direction dr = GoldenSectionExtension.GetDirection (tplr);
 
+//				UnityEngine.Debug.Log (dl);
+//				UnityEngine.Debug.Log (dr);
+//				UnityEngine.Debug.Log ("==========");
+
 			foreach (RecordedData p in pos) {
 
-				if(dl != p.DL || dr != p.DR){
-					rl.UpdateResult(i++, p.gestureName, -3);
-					continue;
-				}
+//				if(dl != p.DL || dr != p.DR){
+//					rl.UpdateResult(i++, p.gestureName, -3);
+//					continue;
+//				}
 
 				double score = p.Match(tpll, tplr, entriesL, entriesR, threshold, minSize);
 				//				UnityEngine.Debug.Log(i);
@@ -339,6 +344,12 @@ namespace TemplateGesture{
 		
 				rd.DL = GoldenSectionExtension.GetDirection(pl);
 				rd.DR = GoldenSectionExtension.GetDirection(pr);
+
+
+//				UnityEngine.Debug.Log (rd.DL);
+//				UnityEngine.Debug.Log (rd.DR);
+//				UnityEngine.Debug.Log ("==========");
+
 
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);

@@ -13,7 +13,8 @@ namespace TemplateGesture{
 		up_left,
 		up_right,
 		down_left,
-		down_right
+		down_right,
+		none
 	}
 
 
@@ -154,14 +155,12 @@ namespace TemplateGesture{
 //			float rScore = GoldenSection.Search(rLocals, rPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
 
 			//UnityEngine.Debug.Log(score);
-//			if (lScore < 0.6 || rScore < 0.6)
-//				return (lScore + rScore) * 0.5f;	
-//			else
 
-			if (scorel > scorer)
-				return scorel;
-			else
-				return scorer;
+//			if (scorel > scorer)
+//				return scorel;
+//			else
+//				return scorer;
+			return (scorel + scorer) * 0.5f;
 		}
 		
 	}
