@@ -13,5 +13,7 @@ public class Entry {
 	public TimePointF TpfPosRight{ get; set;}
 	public TimePointF ZY_TpfPosLeft{ get; set;}
 	public TimePointF ZY_TpfPosRight{ get; set;}
+	public TimePointF ZX_TpfPosLeft{ get; set;}
+	public TimePointF ZX_TpfPosRight{ get; set;}
 
 }

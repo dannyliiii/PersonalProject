@@ -51,7 +51,10 @@ namespace TemplateGesture{
 
 
 
-		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, List<TimePointF> zy_tpll, List<TimePointF> zy_tplr, float threshold,float minSize)
+		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, 
+		                               List<TimePointF> zy_tpll, List<TimePointF> zy_tplr, 
+		                               List<TimePointF> zx_tpll, List<TimePointF> zx_tplr, 
+		                               float threshold,float minSize)
 		{
 			int i = 0;
 
@@ -59,9 +62,11 @@ namespace TemplateGesture{
 
 				double score = p.Match(tpll, tplr, threshold, minSize, 1);
 				double zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
+				double zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
 
-//				if(zy_score > 0.8)
+//				if(zy_score > 0.8 && zx_score > 0.8)
 //					UnityEngine.Debug.Log(zy_score);
+//					UnityEngine.Debug.Log(zx_score);
 
 				rl.UpdateResult(i++, p.gestureName, (float)score);
 
@@ -93,6 +98,9 @@ namespace TemplateGesture{
 				List<TimePointF> zy_pr = new List<TimePointF>(num);
 				List<TimePointF> zy_pl = new List<TimePointF>(num);
 
+				List<TimePointF> zx_pr = new List<TimePointF>(num);
+				List<TimePointF> zx_pl = new List<TimePointF>(num);
+
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
 
@@ -111,6 +119,11 @@ namespace TemplateGesture{
 						zy_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						zy_pl.Add(zy_p);
 
+						TimePointF zx_p = TimePointF.Empty;
+						zx_p.X = XmlConvert.ToSingle(reader.GetAttribute("Z"));
+						zx_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						zx_pl.Add(zx_p);
+
 					}else if(reader.LocalName == "RightHandPoints"){
 
 						MyMath.Vector2 rp = MyMath.Vector2.Zero;
@@ -128,6 +141,11 @@ namespace TemplateGesture{
 						zy_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						zy_pr.Add(zy_p);
 
+						TimePointF zx_p = TimePointF.Empty;
+						zx_p.X = XmlConvert.ToSingle(reader.GetAttribute("Z"));
+						zx_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						zx_pr.Add(zx_p);
+
 					}
 				}
 		
@@ -136,6 +154,9 @@ namespace TemplateGesture{
 
 				rd.ZY_LP = GoldenSection.DollarOnePack(zy_pl, LearningMachine.sampleCount);
 				rd.ZY_RP = GoldenSection.DollarOnePack(zy_pr, LearningMachine.sampleCount);
+
+				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
+				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
 
 				pos.Add(rd);
 

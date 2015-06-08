@@ -47,6 +47,7 @@ namespace TemplateGesture{
 		}
 		
 		public void Add(MyMath.Vector3 posL, MyMath.Vector3 posR){
+
 			TimePointF pr = TimePointF.Empty;
 			pr.X = posR.x;
 			pr.Y = posR.y;
@@ -63,13 +64,23 @@ namespace TemplateGesture{
 			zy_pl.X = posL.z;
 			zy_pl.Y = posL.y;
 
+			TimePointF zx_pr = TimePointF.Empty;
+			zx_pr.X = posR.x;
+			zx_pr.Y = posR.z;
+			
+			TimePointF zx_pl = TimePointF.Empty;
+			zx_pl.X = posL.x;
+			zx_pl.Y = posL.z;
+
 			Entry newEntry = new Entry {PositionRight = posR, 
 										PositionLeft = posL,
 										Time = DateTime.Now,
 										TpfPosLeft = pl,
 										TpfPosRight = pr,
 										ZY_TpfPosLeft = zy_pl,
-										ZY_TpfPosRight = zy_pr};
+										ZY_TpfPosRight = zy_pr,
+										ZX_TpfPosLeft = zx_pl,
+										ZX_TpfPosRight = zx_pr,};
 			Entries.Add(newEntry);
 
 			// Remove too old positions
@@ -89,6 +100,8 @@ namespace TemplateGesture{
 			                                            Entries.Select (e => e.TpfPosRight).ToList(),
 			                                            Entries.Select (e => e.ZY_TpfPosLeft).ToList(),
 			                                            Entries.Select (e => e.ZY_TpfPosRight).ToList(),
+			                                            Entries.Select (e => e.ZX_TpfPosLeft).ToList(),
+			                                            Entries.Select (e => e.ZX_TpfPosRight).ToList(),
 			                                            Epsilon, MinimalSize);
 
 			if (!resList.IsEmpty) {

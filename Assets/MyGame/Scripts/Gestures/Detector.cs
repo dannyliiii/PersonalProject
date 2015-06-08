@@ -126,7 +126,7 @@ public class Detector : MonoBehaviour {
 					Vector4 rightHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
 					Vector4 leftHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
 
-					templateGestureDetector.Add ( new MyMath.Vector3(leftHand.x, leftHand.y, leftHand.z),
+					templateGestureDetector.Add (new MyMath.Vector3(leftHand.x, leftHand.y, leftHand.z),
 					                             new MyMath.Vector3(rightHand.x, rightHand.y, rightHand.z)
 					                            );
 					templateGestureDetector.LookForGesture();

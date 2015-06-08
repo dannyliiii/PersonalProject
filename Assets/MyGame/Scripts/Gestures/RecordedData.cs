@@ -10,16 +10,22 @@ using System.Drawing;
 
 namespace TemplateGesture{
 
+	enum Plane{
+		xy,
+		xz,
+		zy
+	}
+
 	public class RecordedData {
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
 		List<PointF> lpf;
 		List<PointF> rpf;
-
 		int sampleCount;
+		Plane plane;
 
-		//for the z-y plane
+		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
 		List<PointF> zy_rpf;
 		public List<PointF> ZY_LP{
@@ -31,6 +37,22 @@ namespace TemplateGesture{
 			get{return zy_rpf;}
 			set{zy_rpf = value;}
 		}
+		//----------------------- for the z-y plane ------------------
+
+		//----------------------- for the z-x plane ------------------
+		List<PointF> zx_lpf;
+		List<PointF> zx_rpf;
+		public List<PointF> ZX_LP{
+			get{return zx_lpf;}
+			set{zx_lpf = value;}
+		}
+		
+		public List<PointF> ZX_RP{
+			get{return zx_rpf;}
+			set{zx_rpf = value;}
+		}
+		//----------------------- for the z-x plane ------------------
+
 
 		// getter/setter
 		public int Size{
@@ -79,12 +101,14 @@ namespace TemplateGesture{
 			lpf = new List<PointF> ();
 			zy_lpf = new List<PointF> ();
 			zy_rpf = new List<PointF> ();
+			zx_lpf = new List<PointF> ();
+			zx_rpf = new List<PointF> ();
 		}
 		
 
 		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane)
 		{
-//			if (lPositions.Count < 70)
+//			if (tpfll.Count < LearningMachine.sampleCount)
 //				return -1;
 
 //			if (!GoldenSectionExtension.IsLargeEnough(lPositions, minSize)|| !GoldenSectionExtension.IsLargeEnough(rPositions, minSize))
@@ -95,13 +119,17 @@ namespace TemplateGesture{
 
 			List<PointF> rdl, rdr;
 
-			// 1: xy_plane 2: zy_plane
+			// 1: xy_plane 2: zy_plane 2: zx_plane
 			if (plane == 1) {
 				rdr = new List<PointF> (rpf);
 				rdl = new List<PointF> (lpf);
-			} else{
+			} else if (plane == 2){
 				rdr = new List<PointF> (zy_rpf);
 				rdl = new List<PointF> (zy_lpf);
+			}
+			else{
+				rdr = new List<PointF> (zx_rpf);
+				rdl = new List<PointF> (zx_lpf);
 			}
 
 			double[] bestl = GoldenSection.GoldenSectionSearch(
