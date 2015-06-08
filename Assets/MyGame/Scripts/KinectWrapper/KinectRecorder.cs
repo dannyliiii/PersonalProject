@@ -112,7 +112,6 @@ public class KinectRecorder : MonoBehaviour {
 		}
 	
 		string filePath = path + suffix;
-//		string rFilePath = path + rawSuffix;
 		
 		//do xml writing
 		bool success = true;
@@ -172,7 +171,6 @@ public class KinectRecorder : MonoBehaviour {
 			if (writer != null){
 				writer.Close();
 			}
-//			LearningMachine.LoadRawData(rFilePath);
 			LearningMachine.LoadGestureNew(filePath);
 		}
 		return success; // Xml file successfully written (or not)

@@ -111,7 +111,7 @@ namespace TemplateGesture{
 //			if (tpfll.Count < LearningMachine.sampleCount)
 //				return -1;
 
-//			if (!GoldenSectionExtension.IsLargeEnough(lPositions, minSize)|| !GoldenSectionExtension.IsLargeEnough(rPositions, minSize))
+			//			if (!GoldenSectionExtension.IsLargeEnough(tpflr, minSize)|| !GoldenSectionExtension.IsLargeEnough(tpfll, minSize))
 //				return -2;
 
 			List<PointF> pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
