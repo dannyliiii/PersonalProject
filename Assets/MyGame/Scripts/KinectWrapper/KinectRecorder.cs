@@ -146,12 +146,12 @@ public class KinectRecorder : MonoBehaviour {
 //		l = lhPos;
 //		r = rhPos;
 	
-		string filePath = path + suffix;
+//		string filePath = path + suffix;
 		string rFilePath = path + rawSuffix;
 		string newFilePath = path + ".data";
 
-		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, LearningMachine.sampleCount);
-		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, LearningMachine.sampleCount);
+//		List<MyMath.Vector2> l = GoldenSection.Pack(lhPos, LearningMachine.sampleCount);
+//		List<MyMath.Vector2> r = GoldenSection.Pack(rhPos, LearningMachine.sampleCount);
 
 //		List<PointF> lp = GoldenSection.DollarOnePack (rTimePoints);
 //		List<PointF> rp = GoldenSection.DollarOnePack (lTimePoints);
@@ -170,7 +170,7 @@ public class KinectRecorder : MonoBehaviour {
 
 			writer.WriteStartElement("RawData");
 			writer.WriteAttributeString("GesName", gestureName);
-			writer.WriteAttributeString("NumPts", XmlConvert.ToString(l.Count + r.Count));
+			writer.WriteAttributeString("NumPts", XmlConvert.ToString(rhPos.Count + lhPos.Count));
 			//writer.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
 			writer.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
 			writer.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
@@ -195,34 +195,34 @@ public class KinectRecorder : MonoBehaviour {
 			writer.WriteEndDocument(); // </RawData>
 
 
-			//save processed data
-			rWriter = new XmlTextWriter(filePath, Encoding.UTF8);
-			rWriter.Formatting = Formatting.Indented;
-			rWriter.WriteStartDocument(true);
-			
-			rWriter.WriteStartElement("ProcessedData");
-			rWriter.WriteAttributeString("GesName", gestureName);
-			rWriter.WriteAttributeString("NumPts", XmlConvert.ToString(l.Count + r.Count));
-			//rWriter.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
-			rWriter.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
-			rWriter.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
-
-			foreach (MyMath.Vector2 p in l)
-			{
-				rWriter.WriteStartElement("LeftHandPoints");
-				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
-				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
-				rWriter.WriteEndElement(); 
-			}
-			
-			foreach (MyMath.Vector2 p in r)
-			{
-				rWriter.WriteStartElement("RightHandPoints");
-				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
-				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
-				rWriter.WriteEndElement(); 
-			}
-			rWriter.WriteEndDocument();
+//			//save processed data
+//			rWriter = new XmlTextWriter(filePath, Encoding.UTF8);
+//			rWriter.Formatting = Formatting.Indented;
+//			rWriter.WriteStartDocument(true);
+//			
+//			rWriter.WriteStartElement("ProcessedData");
+//			rWriter.WriteAttributeString("GesName", gestureName);
+//			rWriter.WriteAttributeString("NumPts", XmlConvert.ToString(l.Count + r.Count));
+//			//rWriter.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
+//			rWriter.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
+//			rWriter.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
+//
+//			foreach (MyMath.Vector2 p in l)
+//			{
+//				rWriter.WriteStartElement("LeftHandPoints");
+//				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
+//				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+//				rWriter.WriteEndElement(); 
+//			}
+//			
+//			foreach (MyMath.Vector2 p in r)
+//			{
+//				rWriter.WriteStartElement("RightHandPoints");
+//				rWriter.WriteAttributeString("X", XmlConvert.ToString(p.x));
+//				rWriter.WriteAttributeString("Y", XmlConvert.ToString(p.y));
+//				rWriter.WriteEndElement(); 
+//			}
+//			rWriter.WriteEndDocument();
 
 			//save data new
 
@@ -232,7 +232,7 @@ public class KinectRecorder : MonoBehaviour {
 			
 			rWriter.WriteStartElement("Gesture");
 			rWriter.WriteAttributeString("GesName", gestureName);
-			rWriter.WriteAttributeString("NumPts", XmlConvert.ToString(l.Count + r.Count));
+			rWriter.WriteAttributeString("NumPts", XmlConvert.ToString(rhPos.Count + lhPos.Count));
 			//rWriter.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
 			rWriter.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
 			rWriter.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
@@ -276,7 +276,7 @@ public class KinectRecorder : MonoBehaviour {
 			if (writer != null){
 				writer.Close();
 			}
-			LearningMachine.LoadGesture(filePath);
+//			LearningMachine.LoadGesture(filePath);
 			LearningMachine.LoadRawData(rFilePath);
 			LearningMachine.LoadGestureNew(newFilePath);
 		}

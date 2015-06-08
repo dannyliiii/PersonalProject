@@ -170,8 +170,8 @@ namespace TemplateGesture{
 //			List<TimePointF> rawPoints = new List<TimePointF> (pos);
 			double I = GeotrigEx.PathLength (pos) / (sampleCount);
 			List<PointF> localPoints = TimePointF.ConvertList (SeriesEx.ResampleInSpace (pos, I));
-			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
-			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
+//			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
+//			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
 			localPoints = GeotrigEx.ScaleTo (localPoints, SquareSize);
 			localPoints = GeotrigEx.TranslateTo (localPoints, Origin, true);
 

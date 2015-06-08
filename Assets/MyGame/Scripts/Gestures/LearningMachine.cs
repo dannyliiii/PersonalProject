@@ -101,8 +101,8 @@ namespace TemplateGesture{
 		{
 			int i = 0;
 
-			Direction dl = GoldenSectionExtension.GetDirection (tpll);
-			Direction dr = GoldenSectionExtension.GetDirection (tplr);
+//			Direction dl = GoldenSectionExtension.GetDirection (tpll);
+//			Direction dr = GoldenSectionExtension.GetDirection (tplr);
 
 //				UnityEngine.Debug.Log (dl);
 //				UnityEngine.Debug.Log (dr);
