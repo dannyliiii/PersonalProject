@@ -9,14 +9,6 @@ using WobbrockLib.Extensions;
 using System.Drawing;
 
 namespace TemplateGesture{
-	public enum Direction{
-		up_left,
-		up_right,
-		down_left,
-		down_right,
-		none
-	}
-
 
 	public class RecordedData {
 		public string gestureName;
@@ -27,38 +19,20 @@ namespace TemplateGesture{
 
 		int sampleCount;
 
-		Direction dl;
-		Direction dr;
-
-//		int lSamplesCount;
-//		int rSamplesCount;
-
-//		public int LSampleCount{
-//			get{
-//				return lSamplesCount;
-//			}
-//			set{
-//				lSamplesCount = value;
-//			}
-//		}
-//
-//		public int RSampleCount{
-//			get{
-//				return rSamplesCount;
-//			}
-//			set{
-//				rSamplesCount = value;
-//			}
-//		}
-		public Direction DL{
-			set{dl = value;}
-			get{return dl;}
+		//for the z-y plane
+		List<PointF> zy_lpf;
+		List<PointF> zy_rpf;
+		public List<PointF> ZY_LP{
+			get{return zy_lpf;}
+			set{zy_lpf = value;}
+		}
+		
+		public List<PointF> ZY_RP{
+			get{return zy_rpf;}
+			set{zy_rpf = value;}
 		}
 
-		public Direction DR{
-			set{dr = value;}
-			get{return dr;}
-		}
+		// getter/setter
 		public int Size{
 			get{
 				return lPoints.Count;
@@ -97,24 +71,18 @@ namespace TemplateGesture{
 		
 		public RecordedData(string name,int sc)
 		{
-//			this.lSamplesCount = lsc;
-//			this.rSamplesCount = rsc;
-
 			this.sampleCount = sc;
 			this.gestureName = name;
 			lPoints = new List<MyMath.Vector2> ();
 			rPoints = new List<MyMath.Vector2> ();
 			rpf = new List<PointF> ();
 			lpf = new List<PointF> ();
+			zy_lpf = new List<PointF> ();
+			zy_rpf = new List<PointF> ();
 		}
 		
-//		public void CloseAndPrepare()
-//		{
-//			lPoints = GoldenSection.Pack(lPoints, sampleCount);
-//			rPoints = GoldenSection.Pack(rPoints, sampleCount);
-//		}
-		
-		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, List<MyMath.Vector2> lPositions, List<MyMath.Vector2> rPositions, float threshold, float minSize)
+
+		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane)
 		{
 //			if (lPositions.Count < 70)
 //				return -1;
@@ -145,21 +113,6 @@ namespace TemplateGesture{
 			
 			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
 
-
-//			List<MyMath.Vector2> lLocals = GoldenSection.Pack(lPositions, sampleCount);
-//			List<MyMath.Vector2> rLocals = GoldenSection.Pack(rPositions, sampleCount);
-			
-			
-//			float lScore = GoldenSection.Search(lLocals, lPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
-//
-//			float rScore = GoldenSection.Search(rLocals, rPoints, -MathHelper.PiOver4, MathHelper.PiOver4, threshold);
-
-			//UnityEngine.Debug.Log(score);
-
-//			if (scorel > scorer)
-//				return scorel;
-//			else
-//				return scorer;
 			return (scorel + scorer) * 0.5f;
 		}
 		

@@ -107,52 +107,5 @@ namespace TemplateGesture{
 				positions[i] -= center;
 			}
 		}
-
-		public static Direction GetDirection(List<TimePointF> l){
-			if(l.Count < 20)
-				return	Direction.none; 
-
-
-			double pos = Math.Round( l.Count * 0.9f);
-			Direction dir;
-			if (l[(int)pos].X > l[l.Count - 1].X)
-			{
-				if (l[(int)pos].Y > l[l.Count - 1].Y)
-					dir = Direction.up_left;
-				else
-					dir = Direction.down_left;
-			}
-			else
-			{
-				if (l[(int)pos].Y > l[l.Count - 1].Y)
-					dir = Direction.up_right;
-				else
-					dir = Direction.down_right;
-			}
-
-			return dir;
-		}
-
-		public static Direction GetDirection(List<PointF> l){
-			
-			double pos = Math.Round( l.Count * 0.9f);
-			Direction dir;
-			if (l[(int)pos].X > l[l.Count - 1].X)
-			{
-				if (l[(int)pos].Y > l[l.Count - 1].Y)
-					dir = Direction.up_left;
-				else
-					dir = Direction.down_left;
-			}
-			else
-			{
-				if (l[(int)pos].Y > l[l.Count - 1].Y)
-					dir = Direction.up_right;
-				else
-					dir = Direction.down_right;
-			}
-			
-			return dir;
-		}
 	}
 }

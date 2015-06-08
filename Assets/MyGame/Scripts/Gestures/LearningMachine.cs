@@ -11,7 +11,6 @@ using UnityEngine;
 using System;
 using WobbrockLib;
 
-
 namespace TemplateGesture{
 	public class LearningMachine
 	{
@@ -19,9 +18,6 @@ namespace TemplateGesture{
 		private static LearningMachine instance = new LearningMachine ();
 
 		private static NuiSkeletonFrame[] skeletonFrame;
-
-		private static List<RecordedPath> paths;
-		private static List<RecordedPath> rawData;
 
 		private static List<RecordedData> pos;
 		private static List<RecordedData> rawPos;
@@ -40,16 +36,6 @@ namespace TemplateGesture{
 				return rl;
 			}
 		}
-		public static List<RecordedPath> RawData{
-			get{
-				return rawData;
-			}
-		}
-		public static List<RecordedPath> Paths{
-			get{
-				return paths;
-			}
-		}
 		public static List<RecordedData> RawPos{
 			get{
 				return rawPos;
@@ -62,165 +48,28 @@ namespace TemplateGesture{
 		}
 
 		public static void Initialize(){
-			paths = new List<RecordedPath>();
-			rawData = new List<RecordedPath>();
-
 			pos = new List<RecordedData> ();
 			rawPos = new List<RecordedData> ();
-
-//			foreach (string file in Directory.GetFiles(folderPath, "*.xml"))
-//			{
-//				LoadGesture(file);
-//			}
-			foreach (string file in Directory.GetFiles(folderPath, "*.raw"))
-				LoadRawData (file);
 
 			foreach (string file in Directory.GetFiles(folderPath, "*.data"))
 				LoadGestureNew (file);
 		}
 
-//		public static ResultList Match(List<MyMath.Vector2> entries, float threshold, float minimalScore, float minSize)
-//		{
-//			foreach (RecordedPath p in paths) {
-//				float score = p.Match(entries, threshold, minimalScore, minSize);
-//				//print score of z for testing
-//				if(p.gestureName == "a" && score > 0){
-//					//UnityEngine.Debug.Log(p.gestureName);
-//					//UnityEngine.Debug.Log(score);
-//				}
-//
-//				if(score >= 0)
-//					rl.UpdateResult(p.gestureName, score);
-////					rl.AddResult(p.gestureName, score);
-//			}
-//			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));
-//			return rl;
-//		}
+
 
 		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, List<MyMath.Vector2> entriesL, List<MyMath.Vector2> entriesR, float threshold,float minSize)
 		{
 			int i = 0;
 
-//			Direction dl = GoldenSectionExtension.GetDirection (tpll);
-//			Direction dr = GoldenSectionExtension.GetDirection (tplr);
-
-//				UnityEngine.Debug.Log (dl);
-//				UnityEngine.Debug.Log (dr);
-//				UnityEngine.Debug.Log ("==========");
-
 			foreach (RecordedData p in pos) {
 
-//				if(dl != p.DL || dr != p.DR){
-//					rl.UpdateResult(i++, p.gestureName, -3);
-//					continue;
-//				}
-
 				double score = p.Match(tpll, tplr, entriesL, entriesR, threshold, minSize);
-				//				UnityEngine.Debug.Log(i);
-				//				UnityEngine.Debug.Log(score);
-				//if(score >= 0)
 				rl.UpdateResult(i++, p.gestureName, (float)score);
-//					rl.AddResult(p.gestureName, score);
 
 			}
-//			UnityEngine.Debug.Log("========");
-			//return Paths.Any(path => path.Match(entries, threshold, minimalScore, minSize));
 			return rl;
 		}
 		
-		public static void AddPath(RecordedPath path)
-		{
-			path.CloseAndPrepare();
-			Paths.Add(path);
-		}
-
-		public static void AddRawData(RecordedPath rawData)
-		{
-			rawData.CloseAndPrepare();
-			Paths.Add(rawData);
-		}
-
-		public static bool LoadGesture(string filePath)
-		{
-			bool success = true;
-			XmlTextReader reader = null;
-			try
-			{
-				reader = new XmlTextReader(filePath);
-				reader.WhitespaceHandling = WhitespaceHandling.None;
-				reader.MoveToContent();
-
-				System.Diagnostics.Debug.Assert(reader.LocalName == "ProcessedData");
-//				string name = reader.GetAttribute("Name");
-
-//				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
-				string gesName = reader.GetAttribute("GesName");
-				//RecordedPath rp = new RecordedPath(numPts, gesName);
-
-				//100: window size, for temp use
-				RecordedData rd = new RecordedData(gesName, sampleCount);
-
-	
-				while(reader.Read()){
-					if(reader.LocalName == "LeftHandPoints"){
-						MyMath.Vector2 p = MyMath.Vector2.Zero;
-						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						//rp.Points.Add(p);
-						rd.LPoints.Add(p);
-					}else if(reader.LocalName == "RightHandPoints"){
-						MyMath.Vector2 p = MyMath.Vector2.Zero;
-						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						//rp.Points.Add(p);
-						rd.RPoints.Add(p);
-					}
-				}
-
-//				reader.Read(); // advance to the first Point
-//				System.Diagnostics.Debug.Assert(reader.LocalName == "LeftHandPoints");
-//				
-//				while (reader.NodeType != XmlNodeType.EndElement)
-//				{
-//
-//					reader.ReadStartElement("LeftHandPoints");
-//				}
-//
-//				System.Diagnostics.Debug.Assert(reader.LocalName == "RightHandPoints");
-//				
-//				while (reader.NodeType != XmlNodeType.EndElement)
-//				{
-//					MyMath.Vector2 p = MyMath.Vector2.Zero;
-//					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-//					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-//					rp.Points.Add(p);
-//					reader.ReadStartElement("RightHandPoints");
-//					
-//				}
-
-				//paths.Add(rp);
-				pos.Add(rd);
-				rl.AddResult(gesName, 2);
-
-			}
-			catch (XmlException xex)
-			{
-				UnityEngine.Debug.Log(xex.Message);
-				success = false;
-			}
-			catch (Exception ex)
-			{
-				UnityEngine.Debug.Log(ex.Message);
-				success = false;
-			}
-			finally
-			{
-				if (reader != null)
-					reader.Close();
-			}
-			return success;
-		}
-
 		public static bool LoadRawData(string filePath)
 		{
 			bool success = true;
@@ -232,13 +81,10 @@ namespace TemplateGesture{
 				reader.MoveToContent();
 				
 				System.Diagnostics.Debug.Assert(reader.LocalName == "RawData");
-				//				string name = reader.GetAttribute("Name");
+				//string name = reader.GetAttribute("Name");
 				
 				int numPts = XmlConvert.ToInt32(reader.GetAttribute("NumPts"));
 				string gesName = reader.GetAttribute("GesName");
-				RecordedPath rp = new RecordedPath(numPts, gesName);
-
-				// 100:window size  for temp use
 				RecordedData rd = new RecordedData(gesName, sampleCount);
 
 				while(reader.Read()){
@@ -246,46 +92,14 @@ namespace TemplateGesture{
 						MyMath.Vector2 p = MyMath.Vector2.Zero;
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						rp.Points.Add(p);
 						rd.LPoints.Add(p);
 					}else if(reader.LocalName == "RightHandPoints"){
 						MyMath.Vector2 p = MyMath.Vector2.Zero;
 						p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-						rp.Points.Add(p);
 						rd.RPoints.Add(p);
 					}
 				}
-
-//				reader.Read(); // advance to the first Point
-//
-//				System.Diagnostics.Debug.Assert(reader.LocalName == "LeftHandPoints");
-//				
-//				while (reader.NodeType != XmlNodeType.EndElement)
-//				{
-//					MyMath.Vector2 p = MyMath.Vector2.Zero;
-//					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-//					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-//					rp.Points.Add(p);
-//					reader.ReadStartElement("LeftHandPoints");
-//
-//				}
-//
-//				System.Diagnostics.Debug.Assert(reader.LocalName == "RightHandPoints");
-//				
-//				while (reader.NodeType != XmlNodeType.EndElement)
-//				{
-//					MyMath.Vector2 p = MyMath.Vector2.Zero;
-//					p.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
-//					p.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
-//					rp.Points.Add(p);
-//					reader.ReadStartElement("RightHandPoints");
-//					
-//				}
-
-				rawData.Add(rp);
-//				rd.RSampleCount = rd.RPoints.Count;
-//				rd.LSampleCount = rd.LPoints.Count;
 				rawPos.Add(rd);
 
 			}
@@ -328,6 +142,12 @@ namespace TemplateGesture{
 
 				while(reader.Read()){
 					if(reader.LocalName == "LeftHandPoints"){
+
+						MyMath.Vector2 rp = MyMath.Vector2.Zero;
+						rp.x = -XmlConvert.ToSingle(reader.GetAttribute("X"));
+						rp.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rd.LPoints.Add(rp);
+
 						TimePointF p = TimePointF.Empty;
 						p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
@@ -335,6 +155,12 @@ namespace TemplateGesture{
 
 
 					}else if(reader.LocalName == "RightHandPoints"){
+
+						MyMath.Vector2 rp = MyMath.Vector2.Zero;
+						rp.x = -XmlConvert.ToSingle(reader.GetAttribute("X"));
+						rp.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						rd.RPoints.Add(rp);
+
 						TimePointF p = TimePointF.Empty;
 						p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
@@ -342,18 +168,12 @@ namespace TemplateGesture{
 					}
 				}
 		
-				rd.DL = GoldenSectionExtension.GetDirection(pl);
-				rd.DR = GoldenSectionExtension.GetDirection(pr);
-
-
-//				UnityEngine.Debug.Log (rd.DL);
-//				UnityEngine.Debug.Log (rd.DR);
-//				UnityEngine.Debug.Log ("==========");
-
-
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
+
 				pos.Add(rd);
+				rawPos.Add(rd);
+
 				rl.AddResult(gesName, 2);
 				
 			}

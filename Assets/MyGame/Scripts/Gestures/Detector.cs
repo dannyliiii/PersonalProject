@@ -12,10 +12,6 @@ using System.Linq;
 
 public class Detector : MonoBehaviour {
 
-//	List<MyMath.Vector2> l;
-//	List<MyMath.Vector2> r;
-
-//	List<Entry> el;
 	int arrCount = 8;
 	Material material1; 
 	Material material2; 
@@ -31,7 +27,6 @@ public class Detector : MonoBehaviour {
 
 	public GameObject dataImagePlaneRL;
 	public GameObject dataImagePlaneRR;
-//	public RawImage dataImage;
 
 	public int player = 0;
 	TemplatedGestureDetector templateGestureDetector;
@@ -40,8 +35,6 @@ public class Detector : MonoBehaviour {
 	private UnityEngine.Vector3 upForce;
 	private readonly int speed = 50;
 	private List<GameObject> projList;
-//	private List<RecordedPath> paths;
-//	private List<RecordedPath> rawData;
 	private int currentData = 0;
 	private string gesText = "";
 	private int screenHeight = Screen.height;
@@ -49,6 +42,7 @@ public class Detector : MonoBehaviour {
 	private GUIStyle gs;
 	private int gesCount = 5;
 	private int num = -1;
+
 	// shooting projectile
 	public GameObject projectile;
 
@@ -73,10 +67,6 @@ public class Detector : MonoBehaviour {
 
 		LoadTemplateGestureDetector ();
 
-		//paths = templateGestureDetector.LearningMachine.Paths;
-
-		//rawData = templateGestureDetector.LearningMachine.RawData;
-
 		gs = new GUIStyle ();
 		gs.fontSize = 40;
 		
@@ -98,7 +88,6 @@ public class Detector : MonoBehaviour {
 	void Update () {
 
 		if (num != -1)
-			//DrawData (LearningMachine.RawData [num]);
 			DrawDataPerFrame (num);
 
 		if(!KinectRecorder.IsRecording)
@@ -203,12 +192,7 @@ public class Detector : MonoBehaviour {
 		texture.wrapMode = TextureWrapMode.Clamp;
 		material.SetTexture(0, texture);
 	
-		//texture.DrawLine(new UnityEngine.Vector2(0, 0), new UnityEngine.Vector2(512, 256), Color.black);
-
 		for (int i = 0; i < path.SampleCount - 1; i ++) {
-
-//			MyMath.Vector2 start = MathHelper.NormalizeVector2D(path.Points[i]);
-//			MyMath.Vector2 end = MathHelper.NormalizeVector2D(path.Points[i + 1]);
 
 			MyMath.Vector2 start = path.Points[i];
 			MyMath.Vector2 end = path.Points[i + 1];
@@ -225,7 +209,7 @@ public class Detector : MonoBehaviour {
 
 	void DrawDataPerFrame(int num){
 
-		if (LearningMachine.RawData.Count <= 0)
+		if (LearningMachine.RawPos.Count <= 0)
 			return;
 		RecordedData data = LearningMachine.RawPos [num];
 		
@@ -253,11 +237,6 @@ public class Detector : MonoBehaviour {
 			MyMath.Vector2 rStart = data.RPoints[i];
 			MyMath.Vector2 rEnd = data.RPoints[i+1];
 	
-//			textureArr[(int)TexArrEnum.t4].DrawFilledCircle( (rStart.x + 1) * 256, (rStart.y + 1) * 256, 3, Color.green);
-//
-//			textureArr[(int)TexArrEnum.t3].DrawFilledCircle( (lStart.x + 1) * 256, (lStart.y + 1) * 256, 3, Color.green);
-
-
 			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
 			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
 			                                        Color.red);
@@ -276,11 +255,11 @@ public class Detector : MonoBehaviour {
 
 	void OnGUI() {
 
-		if (LearningMachine.RawData.Count <= 0)
+		if (LearningMachine.RawPos.Count <= 0)
 			return;
 
-		if (gesCount < LearningMachine.RawData.Count) {
-			gesCount = LearningMachine.RawData.Count;
+		if (gesCount < LearningMachine.RawPos.Count) {
+			gesCount = LearningMachine.RawPos.Count;
 		}
 
 		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.05f , 100, 200), 
@@ -289,8 +268,8 @@ public class Detector : MonoBehaviour {
 		                    				 false, 
 		                                     true);
 
-		for (int i = 0; i < LearningMachine.RawData.Count; i ++) {
-			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.RawData[i].gestureName)){
+		for (int i = 0; i < LearningMachine.RawPos.Count; i ++) {
+			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.RawPos[i].gestureName)){
 				currentData = 0;
 				num = i;
 			}
@@ -306,8 +285,6 @@ public class Detector : MonoBehaviour {
 		                                         true);
 
 		for(int j = 0; j < LearningMachine.ResultList.Size(); j ++){
-//			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetName(j));
-//			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), templateGestureDetector.LearningMachine.ResultList.GetScore(j).ToString());
 			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
 			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
 	
@@ -319,9 +296,7 @@ public class Detector : MonoBehaviour {
 		if(gesText != "")
 			str = gesText + " detected";
 
-		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);
-
-		
+		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);	
 	}
 	
 }
