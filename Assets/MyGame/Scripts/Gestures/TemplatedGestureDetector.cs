@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-//using System.IO;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -10,8 +9,6 @@ using WobbrockLib;
 
 namespace TemplateGesture{
 	public class TemplatedGestureDetector {
-
-//		RecordedPath path;
 
 		public int MinimalPeriodBetweenGestures { get; set; }
 
@@ -58,11 +55,21 @@ namespace TemplateGesture{
 			pl.X = posL.x;
 			pl.Y = posL.y;
 
+			TimePointF zy_pr = TimePointF.Empty;
+			zy_pr.X = posR.z;
+			zy_pr.Y = posR.y;
+			
+			TimePointF zy_pl = TimePointF.Empty;
+			zy_pl.X = posL.z;
+			zy_pl.Y = posL.y;
+
 			Entry newEntry = new Entry {PositionRight = posR, 
 										PositionLeft = posL,
 										Time = DateTime.Now,
 										TpfPosLeft = pl,
-										TpfPosRight = pr};
+										TpfPosRight = pr,
+										ZY_TpfPosLeft = zy_pl,
+										ZY_TpfPosRight = zy_pr};
 			Entries.Add(newEntry);
 
 			// Remove too old positions
@@ -78,20 +85,14 @@ namespace TemplateGesture{
 			if (Entries.Count <= 0)
 				return;
 
-			//ResultList resList = LearningMachine.Match (Entries.Select (e => new MyMath.Vector2 (e.Position.x, e.Position.y)).ToList (), Epsilon, MinimalScore, MinimalSize);
-
 			ResultList resList = LearningMachine.Match (Entries.Select (e => e.TpfPosLeft).ToList(),
 			                                            Entries.Select (e => e.TpfPosRight).ToList(),
-			                                            Entries.Select (e => new MyMath.Vector2 (e.PositionLeft.x, e.PositionLeft.y)).ToList (),
-			                                            Entries.Select (e => new MyMath.Vector2 (e.PositionRight.x, e.PositionRight.y)).ToList(),
+			                                            Entries.Select (e => e.ZY_TpfPosLeft).ToList(),
+			                                            Entries.Select (e => e.ZY_TpfPosRight).ToList(),
 			                                            Epsilon, MinimalSize);
-			
-			//resList.SortDescending ();
+
 			if (!resList.IsEmpty) {
-//				string gesName = resList.Name;
-//				double gesScore = resList.Score;
 				int index = resList.Index;
-//				Debug.Log(index);
 
 				if(resList.GetScore(index) > minScore){
 
@@ -102,7 +103,6 @@ namespace TemplateGesture{
 					Entries.Clear();
 
 				}
-				//Entries.Clear();
 			}
 
 		}

@@ -89,13 +89,24 @@ namespace TemplateGesture{
 
 //			if (!GoldenSectionExtension.IsLargeEnough(lPositions, minSize)|| !GoldenSectionExtension.IsLargeEnough(rPositions, minSize))
 //				return -2;
+
 			List<PointF> pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
 			List<PointF> pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 
+			List<PointF> rdl, rdr;
+
+			// 1: xy_plane 2: zy_plane
+			if (plane == 1) {
+				rdr = new List<PointF> (rpf);
+				rdl = new List<PointF> (lpf);
+			} else{
+				rdr = new List<PointF> (zy_rpf);
+				rdl = new List<PointF> (zy_lpf);
+			}
 
 			double[] bestl = GoldenSection.GoldenSectionSearch(
 				pfl,                             // to rotate
-				lpf,                           // to match
+				rdl,                           // to match
 				GeotrigEx.Degrees2Radians(-45.0),   // lbound
 				GeotrigEx.Degrees2Radians(+45.0),   // ubound
 				GeotrigEx.Degrees2Radians(2.0)      // threshold
@@ -105,7 +116,7 @@ namespace TemplateGesture{
 
 			double[] bestr = GoldenSection.GoldenSectionSearch(
 				pfr,                             // to rotate
-				rpf,                           // to match
+				rdr,                           // to match
 				GeotrigEx.Degrees2Radians(-45.0),   // lbound
 				GeotrigEx.Degrees2Radians(+45.0),   // ubound
 				GeotrigEx.Degrees2Radians(2.0)      // threshold

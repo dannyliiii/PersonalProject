@@ -209,9 +209,9 @@ public class Detector : MonoBehaviour {
 
 	void DrawDataPerFrame(int num){
 
-		if (LearningMachine.RawPos.Count <= 0)
+		if (LearningMachine.Pos.Count <= 0)
 			return;
-		RecordedData data = LearningMachine.RawPos [num];
+		RecordedData data = LearningMachine.Pos [num];
 		
 
 		if (currentData >= data.Size)
@@ -255,11 +255,11 @@ public class Detector : MonoBehaviour {
 
 	void OnGUI() {
 
-		if (LearningMachine.RawPos.Count <= 0)
+		if (LearningMachine.Pos.Count <= 0)
 			return;
 
-		if (gesCount < LearningMachine.RawPos.Count) {
-			gesCount = LearningMachine.RawPos.Count;
+		if (gesCount < LearningMachine.Pos.Count) {
+			gesCount = LearningMachine.Pos.Count;
 		}
 
 		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.05f , 100, 200), 
@@ -268,8 +268,8 @@ public class Detector : MonoBehaviour {
 		                    				 false, 
 		                                     true);
 
-		for (int i = 0; i < LearningMachine.RawPos.Count; i ++) {
-			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.RawPos[i].gestureName)){
+		for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
+			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos[i].gestureName)){
 				currentData = 0;
 				num = i;
 			}

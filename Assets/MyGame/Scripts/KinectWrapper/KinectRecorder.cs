@@ -20,7 +20,7 @@ public class KinectRecorder : MonoBehaviour {
 	private KinectInterface kinect;
 	
 	private string outputFile = "Assets/MyGame/Recordings/";
-	public string suffix = ".xml";
+	public string suffix = ".data";
 	public InputField nameField;
 	public Canvas inputCanvas;
 	
@@ -68,7 +68,6 @@ public class KinectRecorder : MonoBehaviour {
 						Vector4 leftHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
 
 //						long unixTimeStamp = (long)(System.DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
-//						points.Add(new JointPosition(rightHand.x, rightHand.y, rightHand.z, unixTimeStamp));
 						rhPos.Add(new MyMath.Vector3(rightHand.x , rightHand.y, rightHand.z));
 						lhPos.Add(new MyMath.Vector3(leftHand.x , leftHand.y, leftHand.z));
 						break;
@@ -122,37 +121,6 @@ public class KinectRecorder : MonoBehaviour {
 		
 		try
 		{
-//			// save the gesture data as an Xml file
-//			writer = new XmlTextWriter(rFilePath, Encoding.UTF8);
-//			writer.Formatting = Formatting.Indented;
-//			writer.WriteStartDocument(true);
-//
-//			writer.WriteStartElement("RawData");
-//			writer.WriteAttributeString("GesName", gestureName);
-//			writer.WriteAttributeString("NumPts", XmlConvert.ToString(rhPos.Count + lhPos.Count));
-//			//writer.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
-//			writer.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
-//			writer.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
-//
-//			foreach (MyMath.Vector3 p in lhPos)
-//			{
-//				writer.WriteStartElement("LeftHandPoints");
-//				writer.WriteAttributeString("X", XmlConvert.ToString(-p.x));
-//				writer.WriteAttributeString("Y", XmlConvert.ToString(p.y));
-//				writer.WriteAttributeString("Z", XmlConvert.ToString(p.z));
-//				writer.WriteEndElement(); 
-//			}
-//
-//			foreach (MyMath.Vector3 p in rhPos)
-//			{
-//				writer.WriteStartElement("RightHandPoints");
-//				writer.WriteAttributeString("X", XmlConvert.ToString(-p.x));
-//				writer.WriteAttributeString("Y", XmlConvert.ToString(p.y));
-//				writer.WriteAttributeString("Z", XmlConvert.ToString(p.z));
-//				writer.WriteEndElement(); 
-//			}
-//			writer.WriteEndDocument(); // </RawData>
-
 			//save data new
 
 			rWriter = new XmlTextWriter(filePath, Encoding.UTF8);

@@ -11,5 +11,7 @@ public class Entry {
 	public Vector3 PositionLeft { get; set;}
 	public TimePointF TpfPosLeft{ get; set;}
 	public TimePointF TpfPosRight{ get; set;}
+	public TimePointF ZY_TpfPosLeft{ get; set;}
+	public TimePointF ZY_TpfPosRight{ get; set;}
 
 }
