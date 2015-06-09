@@ -28,6 +28,8 @@ public class KinectRecorder : MonoBehaviour {
 	private ArrayList currentData = new ArrayList();
 	private List<MyMath.Vector3> rhPos;
 	private List<MyMath.Vector3> lhPos;
+	Vector4 rightHand, leftHand;
+	private List<Vector4> joints;
 	
 	// Use this for initialization
 	void Awake () {
@@ -35,6 +37,12 @@ public class KinectRecorder : MonoBehaviour {
 		kinect = devOrEmu.getKinect();
 		rhPos = new List<MyMath.Vector3> (256);
 		lhPos = new List<MyMath.Vector3> (256);
+
+		//to record the position of joints in the latest frame
+		joints = new List<Vector4> ((int)NuiSkeletonPositionIndex.Count);
+		for (int i = 0; i < (int)NuiSkeletonPositionIndex.Count; i ++) {
+			joints[i] = Vector4.zero;
+		}
 	}
 	
 	// Update is called once per frame
@@ -59,13 +67,20 @@ public class KinectRecorder : MonoBehaviour {
 				currentData.Add(kinect.getSkeleton());
 
 				// to record the first tracked player's right hand positon;
-				for (int ii = 0; ii < Kinect.Constants.NuiSkeletonCount; ii++)
+				for (int i = 0; i < Kinect.Constants.NuiSkeletonCount; i++)
 				{
-					if (kinect.getSkeleton().SkeletonData[ii].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
+					if (kinect.getSkeleton().SkeletonData[i].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
 					{
 
-						Vector4 rightHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
-						Vector4 leftHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
+						rightHand = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
+						leftHand = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
+//						leftShoulder = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.ShoulderLeft];
+//						rightShoulder = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.ShoulderRight];
+//						head = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.Head];
+
+						for(int j = 0; j < (int)NuiSkeletonPositionIndex.Count; j ++){
+							joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
+						}
 
 //						long unixTimeStamp = (long)(System.DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
 						rhPos.Add(new MyMath.Vector3(rightHand.x , rightHand.y, rightHand.z));
@@ -74,7 +89,6 @@ public class KinectRecorder : MonoBehaviour {
 
 					}
 				}
-
 			}
 		}
 	}
@@ -82,9 +96,7 @@ public class KinectRecorder : MonoBehaviour {
 	public static bool IsRecording{
 		get{
 			return isRecording;
-
 		}
-
 	}
 
 	void StartRecord() {
@@ -115,13 +127,13 @@ public class KinectRecorder : MonoBehaviour {
 		
 		//do xml writing
 		bool success = true;
-		XmlTextWriter writer = null;
 		XmlTextWriter rWriter = null;
 		
 		try
 		{
-			//save data new
+			Constrain[] c = GetConstrains();
 
+			//save data
 			rWriter = new XmlTextWriter(filePath, Encoding.UTF8);
 			rWriter.Formatting = Formatting.Indented;
 			rWriter.WriteStartDocument(true);
@@ -132,6 +144,12 @@ public class KinectRecorder : MonoBehaviour {
 			//rWriter.WriteAttributeString("Millseconds", XmlConvert.ToString(points[points.Count - 1].time - points[0].time));
 			rWriter.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
 			rWriter.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
+
+			for(int i =0; i < c.GetLength(); i ++){
+				rWriter.WriteStartElement("Constrains");
+				rWriter.WriteAttributeString("Value", XmlConvert.ToString(c[i]));
+				rWriter.WriteEndElement(); 
+			}
 
 			foreach (var p in lhPos)
 			{
@@ -168,12 +186,31 @@ public class KinectRecorder : MonoBehaviour {
 		{
 			if (rWriter != null )
 				rWriter.Close();
-			if (writer != null){
-				writer.Close();
-			}
 			LearningMachine.LoadGestureNew(filePath);
 		}
 		return success; // Xml file successfully written (or not)
 	
+	}
+
+	private Constrain[] GetConstrains(){
+		//calculate the constrains
+		Constrain[] constrains = new Constrain[4];
+
+		//right hands - right shoulders
+		if(joints[NuiSkeletonPositionIndex.HandRight].y < joints[NuiSkeletonPositionIndex.ShoulderRight].y){
+			if(joints[NuiSkeletonPositionIndex.HandRight].x < joints[NuiSkeletonPositionIndex.ShoulderRight].x){
+				constrains[0] = Constrain.down_left;
+			}else{
+				constrains[0]  = Constrain.down_right;
+			}
+		}else{
+			if(joints[NuiSkeletonPositionIndex.HandRight].x < joints[NuiSkeletonPositionIndex.ShoulderRight].x){
+				constrains[0]  = Constrain.up_left;
+			}else{
+				constrains[0]  = Constrain.up_right;
+			}
+		}
+		
+		return constrains;
 	}
 }

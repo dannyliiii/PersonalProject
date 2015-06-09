@@ -10,6 +10,14 @@ using System.Drawing;
 
 namespace TemplateGesture{
 
+	enum Constrain : int{
+		up_left,
+		up_right,
+		down_left,
+		down_right,
+		count
+	}
+
 	enum Plane{
 		xy,
 		xz,
@@ -108,8 +116,8 @@ namespace TemplateGesture{
 
 		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane)
 		{
-//			if (tpfll.Count < LearningMachine.sampleCount)
-//				return -1;
+			if (tpfll.Count < LearningMachine.sampleCount / 2)
+				return -1;
 
 			//			if (!GoldenSectionExtension.IsLargeEnough(tpflr, minSize)|| !GoldenSectionExtension.IsLargeEnough(tpfll, minSize))
 //				return -2;

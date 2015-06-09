@@ -236,6 +236,11 @@ public class Detector : MonoBehaviour {
 			MyMath.Vector2 lEnd = data.LPoints[i+1]; 
 			MyMath.Vector2 rStart = data.RPoints[i];
 			MyMath.Vector2 rEnd = data.RPoints[i+1];
+
+//			MyMath.Vector2 lStart = new MyMath.Vector2(data.LP[i].X, data.LP[i].Y);
+//			MyMath.Vector2 lEnd = new MyMath.Vector2(data.LP[i+1].X, data.LP[i+1].Y); 
+//			MyMath.Vector2 rStart = new MyMath.Vector2(data.RP[i].X, data.RP[i].Y);
+//			MyMath.Vector2 rEnd = new MyMath.Vector2(data.RP[i+1].X, data.RP[i+1].Y);
 	
 			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
 			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
