@@ -6,6 +6,7 @@ using MyMath;
 using UnityEngine;
 using UnityEngine.UI;
 using WobbrockLib;
+using Kinect;
 
 namespace TemplateGesture{
 	public class TemplatedGestureDetector {
@@ -46,7 +47,11 @@ namespace TemplateGesture{
 			get { return windowSize; }
 		}
 		
-		public void Add(MyMath.Vector3 posL, MyMath.Vector3 posR){
+		public void Add(List<Vector4> joints){
+
+			MyMath.Vector3 posR = new MyMath.Vector3 (joints[(int)NuiSkeletonPositionIndex.HandRight].x, joints[(int)NuiSkeletonPositionIndex.HandRight].y, joints[(int)NuiSkeletonPositionIndex.HandRight].z);
+			MyMath.Vector3 posL = new MyMath.Vector3 (joints[(int)NuiSkeletonPositionIndex.HandLeft].x, joints[(int)NuiSkeletonPositionIndex.HandLeft].y, joints[(int)NuiSkeletonPositionIndex.HandLeft].z);
+			
 
 			TimePointF pr = TimePointF.Empty;
 			pr.X = posR.x;
@@ -72,6 +77,11 @@ namespace TemplateGesture{
 			zx_pl.X = posL.x;
 			zx_pl.Y = posL.z;
 
+			Constrain[] c = GestureConstrains.GetConstrains (joints);
+//			foreach (var v in c) {
+//				Debug.Log(v);
+//			}
+//			Debug.Log ("=========");
 			Entry newEntry = new Entry {PositionRight = posR, 
 										PositionLeft = posL,
 										Time = DateTime.Now,
@@ -80,7 +90,8 @@ namespace TemplateGesture{
 										ZY_TpfPosLeft = zy_pl,
 										ZY_TpfPosRight = zy_pr,
 										ZX_TpfPosLeft = zx_pl,
-										ZX_TpfPosRight = zx_pr,};
+										ZX_TpfPosRight = zx_pr,
+										constrain = c};
 			Entries.Add(newEntry);
 
 			// Remove too old positions
@@ -102,7 +113,9 @@ namespace TemplateGesture{
 			                                            Entries.Select (e => e.ZY_TpfPosRight).ToList(),
 			                                            Entries.Select (e => e.ZX_TpfPosLeft).ToList(),
 			                                            Entries.Select (e => e.ZX_TpfPosRight).ToList(),
-			                                            Epsilon, MinimalSize);
+			                                            entries.Last().constrain,
+			                                            Epsilon,
+			                                            MinimalSize);
 
 			if (!resList.IsEmpty) {
 				int index = resList.Index;

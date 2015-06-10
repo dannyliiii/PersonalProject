@@ -20,7 +20,7 @@ public class KinectRecorder : MonoBehaviour {
 	private KinectInterface kinect;
 	
 	private string outputFile = "Assets/MyGame/Recordings/";
-	public string suffix = ".data";
+	private string suffix = ".data";
 	public InputField nameField;
 	public Canvas inputCanvas;
 	
@@ -28,9 +28,9 @@ public class KinectRecorder : MonoBehaviour {
 	private ArrayList currentData = new ArrayList();
 	private List<MyMath.Vector3> rhPos;
 	private List<MyMath.Vector3> lhPos;
-	Vector4 rightHand, leftHand;
+//	Vector4 rightHand, leftHand;
 	private List<Vector4> joints;
-	
+
 	// Use this for initialization
 	void Awake () {
 		inputCanvas.gameObject.SetActive (false);
@@ -39,9 +39,9 @@ public class KinectRecorder : MonoBehaviour {
 		lhPos = new List<MyMath.Vector3> (256);
 
 		//to record the position of joints in the latest frame
-		joints = new List<Vector4> ((int)NuiSkeletonPositionIndex.Count);
+		joints = new List<Vector4> ();
 		for (int i = 0; i < (int)NuiSkeletonPositionIndex.Count; i ++) {
-			joints[i] = Vector4.zero;
+			joints.Add(Vector4.zero);
 		}
 	}
 	
@@ -72,8 +72,8 @@ public class KinectRecorder : MonoBehaviour {
 					if (kinect.getSkeleton().SkeletonData[i].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
 					{
 
-						rightHand = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
-						leftHand = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
+//						rightHand = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
+//						leftHand = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
 //						leftShoulder = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.ShoulderLeft];
 //						rightShoulder = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.ShoulderRight];
 //						head = kinect.getSkeleton().SkeletonData[i].SkeletonPositions[(int)NuiSkeletonPositionIndex.Head];
@@ -83,8 +83,8 @@ public class KinectRecorder : MonoBehaviour {
 						}
 
 //						long unixTimeStamp = (long)(System.DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds;
-						rhPos.Add(new MyMath.Vector3(rightHand.x , rightHand.y, rightHand.z));
-						lhPos.Add(new MyMath.Vector3(leftHand.x , leftHand.y, leftHand.z));
+						rhPos.Add(new MyMath.Vector3(joints[(int)NuiSkeletonPositionIndex.HandRight].x , joints[(int)NuiSkeletonPositionIndex.HandRight].y, joints[(int)NuiSkeletonPositionIndex.HandRight].z));
+						lhPos.Add(new MyMath.Vector3(joints[(int)NuiSkeletonPositionIndex.HandLeft].x , joints[(int)NuiSkeletonPositionIndex.HandLeft].y, joints[(int)NuiSkeletonPositionIndex.HandLeft].z));
 						break;
 
 					}
@@ -131,7 +131,7 @@ public class KinectRecorder : MonoBehaviour {
 		
 		try
 		{
-			Constrain[] c = GetConstrains();
+			Constrain[] c = GestureConstrains.GetConstrains(joints);
 
 			//save data
 			rWriter = new XmlTextWriter(filePath, Encoding.UTF8);
@@ -145,9 +145,9 @@ public class KinectRecorder : MonoBehaviour {
 			rWriter.WriteAttributeString("Date", System.DateTime.Now.ToLongDateString());
 			rWriter.WriteAttributeString("TimeOfDay", System.DateTime.Now.ToLongTimeString());
 
-			for(int i =0; i < c.GetLength(); i ++){
+			for(int i =0; i < (int)ConstrainPosition.count; i ++){
 				rWriter.WriteStartElement("Constrains");
-				rWriter.WriteAttributeString("Value", XmlConvert.ToString(c[i]));
+				rWriter.WriteAttributeString("Value", XmlConvert.ToString((int)c[i]));
 				rWriter.WriteEndElement(); 
 			}
 
@@ -190,27 +190,5 @@ public class KinectRecorder : MonoBehaviour {
 		}
 		return success; // Xml file successfully written (or not)
 	
-	}
-
-	private Constrain[] GetConstrains(){
-		//calculate the constrains
-		Constrain[] constrains = new Constrain[4];
-
-		//right hands - right shoulders
-		if(joints[NuiSkeletonPositionIndex.HandRight].y < joints[NuiSkeletonPositionIndex.ShoulderRight].y){
-			if(joints[NuiSkeletonPositionIndex.HandRight].x < joints[NuiSkeletonPositionIndex.ShoulderRight].x){
-				constrains[0] = Constrain.down_left;
-			}else{
-				constrains[0]  = Constrain.down_right;
-			}
-		}else{
-			if(joints[NuiSkeletonPositionIndex.HandRight].x < joints[NuiSkeletonPositionIndex.ShoulderRight].x){
-				constrains[0]  = Constrain.up_left;
-			}else{
-				constrains[0]  = Constrain.up_right;
-			}
-		}
-		
-		return constrains;
 	}
 }

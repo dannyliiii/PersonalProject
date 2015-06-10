@@ -42,6 +42,7 @@ public class Detector : MonoBehaviour {
 	private GUIStyle gs;
 	private int gesCount = 5;
 	private int num = -1;
+	private List<Vector4> joints;
 
 	// shooting projectile
 	public GameObject projectile;
@@ -82,6 +83,12 @@ public class Detector : MonoBehaviour {
 		material2 = dataImagePlaneRR.GetComponent<Renderer>().material;
 		material3 = dataImagePlane.GetComponent<Renderer>().material;
 		material4 = dataImagePlane2.GetComponent<Renderer>().material;
+
+		//to detect the position of joints in the latest frame
+		joints = new List<Vector4> ();
+		for (int i = 0; i < (int)NuiSkeletonPositionIndex.Count; i ++) {
+			joints.Add(Vector4.zero);
+		}
 		
 	}
 
@@ -118,17 +125,19 @@ public class Detector : MonoBehaviour {
 
 			
 			// to record the first tracked player's right hand positon;
-			for (int ii = 0; ii < Kinect.Constants.NuiSkeletonCount; ii++)
+			for (int i = 0; i < Kinect.Constants.NuiSkeletonCount; i++)
 			{
-				if (kinect.getSkeleton().SkeletonData[ii].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
+				if (kinect.getSkeleton().SkeletonData[i].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
 				{
-					
-					Vector4 rightHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandRight];
-					Vector4 leftHand = kinect.getSkeleton().SkeletonData[ii].SkeletonPositions[(int)NuiSkeletonPositionIndex.HandLeft];
+					for(int j = 0; j < (int)NuiSkeletonPositionIndex.Count; j ++){
+						joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
+					}
 
-					templateGestureDetector.Add (new MyMath.Vector3(leftHand.x, leftHand.y, leftHand.z),
-					                             new MyMath.Vector3(rightHand.x, rightHand.y, rightHand.z)
-					                            );
+					templateGestureDetector.Add(joints);
+
+//					templateGestureDetector.Add (new MyMath.Vector3(leftHand.x, leftHand.y, leftHand.z),
+//					                             new MyMath.Vector3(rightHand.x, rightHand.y, rightHand.z)
+//					                            );
 					templateGestureDetector.LookForGesture();
 					break;
 					
@@ -169,13 +178,13 @@ public class Detector : MonoBehaviour {
 			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
 			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.y  + 1) * 256);
 			
-			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.green);
+			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
 			
 			
 			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
 			
-			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.green);
+			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
 
 		}
 

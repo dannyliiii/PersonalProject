@@ -10,15 +10,7 @@ using System.Drawing;
 
 namespace TemplateGesture{
 
-	enum Constrain : int{
-		up_left,
-		up_right,
-		down_left,
-		down_right,
-		count
-	}
-
-	enum Plane{
+	public enum Plane{
 		xy,
 		xz,
 		zy
@@ -32,6 +24,7 @@ namespace TemplateGesture{
 		List<PointF> rpf;
 		int sampleCount;
 		Plane plane;
+		public List<Constrain> constrain;
 
 		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
@@ -111,6 +104,7 @@ namespace TemplateGesture{
 			zy_rpf = new List<PointF> ();
 			zx_lpf = new List<PointF> ();
 			zx_rpf = new List<PointF> ();
+			constrain = new List<Constrain>();
 		}
 		
 

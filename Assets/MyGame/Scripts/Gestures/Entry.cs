@@ -3,6 +3,7 @@ using System;
 using MyMath;
 using WobbrockLib;
 using System.Drawing;
+using TemplateGesture;
 
 public class Entry {
 	
@@ -15,5 +16,6 @@ public class Entry {
 	public TimePointF ZY_TpfPosRight{ get; set;}
 	public TimePointF ZX_TpfPosLeft{ get; set;}
 	public TimePointF ZX_TpfPosRight{ get; set;}
+	public Constrain[] constrain = new Constrain[(int)ConstrainPosition.count];
 
 }

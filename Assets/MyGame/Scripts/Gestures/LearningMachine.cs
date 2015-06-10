@@ -23,6 +23,7 @@ namespace TemplateGesture{
 
 		private static string folderPath = "Assets/MyGame/Recordings/";
 		private static ResultList rl = new ResultList();
+		private static readonly int frameCount = 20;
 
 		public static LearningMachine Instance{
 			get{
@@ -54,15 +55,42 @@ namespace TemplateGesture{
 		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, 
 		                               List<TimePointF> zy_tpll, List<TimePointF> zy_tplr, 
 		                               List<TimePointF> zx_tpll, List<TimePointF> zx_tplr, 
-		                               float threshold,float minSize)
+		                               Constrain[]c, float threshold,float minSize)
 		{
 			int i = 0;
 
 			foreach (RecordedData p in pos) {
 
-				double score = p.Match(tpll, tplr, threshold, minSize, 1);
-				double zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
-				double zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
+//				UnityEngine.Debug.Log(p.gestureName);
+//				foreach(var v in p.constrain){
+//					UnityEngine.Debug.Log(v);
+//				}
+//				UnityEngine.Debug.Log("==========");
+//
+//				UnityEngine.Debug.Log("c");
+//				foreach(var v in c){
+//					UnityEngine.Debug.Log(v);
+//				}
+//				UnityEngine.Debug.Log("==========");
+
+
+				double score = 0;
+				double zy_score = 0;
+				double zx_score = 0;
+
+				if(LearningMachine.IsFinished(tpll) && LearningMachine.IsFinished(tplr)){
+					score = -5;
+				}
+
+				else if(score != -5 && p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+					score = -4;
+				}
+
+				else{
+					score = p.Match(tpll, tplr, threshold, minSize, 1);
+					zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
+					zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
+				}
 
 //				if(zy_score > 0.8 && zx_score > 0.8)
 //					UnityEngine.Debug.Log(zy_score);
@@ -102,6 +130,9 @@ namespace TemplateGesture{
 				List<TimePointF> zx_pl = new List<TimePointF>(num);
 
 				while(reader.Read()){
+					if(reader.LocalName == "Constrains"){
+						rd.constrain.Add((Constrain)XmlConvert.ToSingle(reader.GetAttribute("Value")));
+					}
 					if(reader.LocalName == "LeftHandPoints"){
 
 						MyMath.Vector2 rp = MyMath.Vector2.Zero;
@@ -161,7 +192,7 @@ namespace TemplateGesture{
 				pos.Add(rd);
 
 				rl.AddResult(gesName, 2);
-				
+
 			}
 			catch (XmlException xex)
 			{
@@ -181,6 +212,26 @@ namespace TemplateGesture{
 			return success;
 		}
 
+		// to check if the gesture is finished
+		private static bool IsFinished(List<TimePointF> list){
+			bool res = false;
+			int count = 0;
+			for (int i = list.Count - 1; i > 0; i --) {
+				MyMath.Vector2 v1, v2, v3;
+				v1 = new MyMath.Vector2(list[i].X, list[i].Y);
+				v2 = new MyMath.Vector2(list[i-1].X, list[i-1].Y);
+				v3 = v1 - v2;
+				if(v3.LengthSqr < 0.01){
+					count ++;
+				}else{
+					if(count > frameCount)
+						res = true;
+					else
+						break;
+				}
+			}
+			return res;
+		}
 	}
 }
 
