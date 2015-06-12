@@ -47,7 +47,7 @@ public class Detector : MonoBehaviour {
 	// shooting projectile
 	public GameObject projectile;
 
-	bool controlMouse;
+	public bool controlMouse;
 	public GUITexture handCursor;
 
 	//gui scroll view
@@ -93,8 +93,6 @@ public class Detector : MonoBehaviour {
 			joints.Add(Vector4.zero);
 		}
 
-		controlMouse = true;
-		
 	}
 
 	void Update () {
@@ -138,11 +136,15 @@ public class Detector : MonoBehaviour {
 						joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
 					}
 
-					//Move mouse according to the movement of hands
-					UnityEngine.Vector3 vCursorPos = handCursor.GetComponent<GUITexture>() != null ? handCursor.transform.position :
-						Camera.main.WorldToViewportPoint(handCursor.transform.position);
+					if(controlMouse){
+						//Move mouse according to the movement of hands
+						UnityEngine.Vector3 vCursorPos = handCursor.GetComponent<GUITexture>() != null ? handCursor.transform.position :
+							Camera.main.WorldToViewportPoint(handCursor.transform.position);
+//						MouseControl.MouseMove(vCursorPos);
 
-					MouseControl.MouseMove(vCursorPos);
+						if(templateGestureDetector.MouseClicked())
+							MouseControl.MouseClick();
+					}
 
 					templateGestureDetector.Add(joints);
 					templateGestureDetector.LookForGesture();
@@ -318,6 +320,9 @@ public class Detector : MonoBehaviour {
 			str = gesText + " detected";
 
 		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);	
+
+		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.9f,50,30),"Click"))
+			Debug.Log("Button Clicked!");
 	}
 }
 

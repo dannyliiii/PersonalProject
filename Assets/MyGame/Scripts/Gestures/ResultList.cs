@@ -151,6 +151,15 @@ namespace TemplateGesture{
 			}
 		}
 
+		public double GetScore(string name){
+			foreach (var v in arrList) {
+				if(v.Name == name){
+					return v.Score;
+				}
+			}
+			return -1;
+		}
+
 		public double GetScore(int pos){
 			if (arrList.Count > pos && pos >= 0)
 			{

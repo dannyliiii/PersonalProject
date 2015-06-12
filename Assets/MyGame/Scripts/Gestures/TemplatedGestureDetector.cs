@@ -25,7 +25,8 @@ namespace TemplateGesture{
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
 		private readonly float minScore = 0.85f;
-
+		private readonly int frameCount = 40;
+		
 
 		//change window size when change samplecount in learning machine
 		public TemplatedGestureDetector(int windowSize = 100){
@@ -107,6 +108,9 @@ namespace TemplateGesture{
 			if (Entries.Count <= 0)
 				return;
 
+			if (!IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (Entries.Select (e => e.TpfPosRight).ToList ()))
+				return;
+
 			ResultList resList = LearningMachine.Match (Entries.Select (e => e.TpfPosLeft).ToList(),
 			                                            Entries.Select (e => e.TpfPosRight).ToList(),
 			                                            Entries.Select (e => e.ZY_TpfPosLeft).ToList(),
@@ -117,19 +121,20 @@ namespace TemplateGesture{
 			                                            Epsilon,
 			                                            MinimalSize);
 
-			if (!resList.IsEmpty) {
+
+			Debug.Log(resList.GetScore("hdel3"));
+//			if (!resList.IsEmpty) {
 				int index = resList.Index;
 
 				if(resList.GetScore(index) > minScore){
 
 					RaiseGestureDetected(resList.GetName(index));
-
-					LearningMachine.ResultList.ResetList ();
-					//clear the point list
-					Entries.Clear();
-
 				}
-			}
+				LearningMachine.ResultList.ResetList ();
+				//clear the point list
+				Entries.Clear();
+//			}
+//			Debug.Log("Entries Clear.");			
 
 		}
 
@@ -144,6 +149,50 @@ namespace TemplateGesture{
 				lastGestureDate = DateTime.Now;
 			}
 
+		}
+
+		public bool MouseClicked(){
+			bool res = false;
+			if (IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
+				res = true;
+			}
+//			if (res) {
+//				Entries.Clear();		
+//			}
+			return res;
+		}
+
+		// to check if the gesture is finished
+		public bool IsFinished(List<TimePointF> list){
+
+			bool res = false;
+			int count = 0;
+			int listCount = 0;
+		
+			if (list.Count > frameCount) {
+				MyMath.Vector2 v1 = new MyMath.Vector2 (list [list.Count - 1].X, list [list.Count - 1].Y);
+				for (int i = list.Count - 2; i > 1; i --) {
+					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i - 2].X, list [i - 2].Y);
+					MyMath.Vector2 v3 = v1 - v2;
+	//				Debug.Log(v3.LengthSqr);
+					if (v3.LengthSqr < 0.001f) {
+						count ++;
+					}
+					listCount ++;
+
+					if (count >= listCount) {
+						if (count > frameCount) {
+							res = true;
+							UnityEngine.Debug.Log ("Gesture Finished!");
+							break;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+//			Debug.Log (count);
+			return res;
 		}
 		
 	}
