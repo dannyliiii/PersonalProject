@@ -49,6 +49,9 @@ public class Detector : MonoBehaviour {
 
 	public bool controlMouse;
 	public GUITexture handCursor;
+	List<Vector4> rightHands;
+	int rhpMax = 100;
+	int timer = 40;
 
 	//gui scroll view
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
@@ -96,9 +99,14 @@ public class Detector : MonoBehaviour {
 		if (controlMouse == false)
 			handCursor.gameObject.SetActive (false);
 
+		rightHands = new List<Vector4> ();
+
 	}
 
 	void Update () {
+
+		if (timer < 40)
+			timer++;
 
 		if (num != -1)
 			DrawDataPerFrame (num);
@@ -139,6 +147,20 @@ public class Detector : MonoBehaviour {
 						joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
 					}
 
+//					if(Mathf.Abs(joints[(int)NuiSkeletonPositionIndex.HandRight].x - rightHands[rightHands.Count - 1].x) > 0.001 
+//					   &&Mathf.Abs(joints[(int)NuiSkeletonPositionIndex.HandRight].x - rightHands[rightHands.Count - 1].x) > 0.001){
+//						rightHands.Add(joints[(int)NuiSkeletonPositionIndex.HandRight]);
+//					}else{
+//						rightHands.Add(rightHands[rightHands.Count - 1]);
+//					}
+
+					if (rightHands.Count > rhpMax)
+					{
+						Vector4 entryToRemove = rightHands[0];
+						rightHands.Remove(entryToRemove);
+					}
+
+
 					//control the mouse with right hand.
 					if(controlMouse && handCursor != null)
 					{
@@ -155,14 +177,16 @@ public class Detector : MonoBehaviour {
 //						}
 
 						//interpolate the cursor position
-						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4*Time.deltaTime);
+						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
 
-//						MouseControl.MouseMove(vCursorPos);
-//
-//						if(templateGestureDetector.MouseClicked())
-//							MouseControl.MouseClick();
+						MouseControl.MouseMove(vCursorPos);
+
+						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
+							MouseControl.MouseClick();
+							timer = 0;
+						}
 					}
-
+					
 
 					templateGestureDetector.Add(joints);
 					templateGestureDetector.LookForGesture();
@@ -339,7 +363,7 @@ public class Detector : MonoBehaviour {
 
 		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);	
 
-		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.9f,50,30),"Click"))
+		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.5f,200,200),"Click"))
 			Debug.Log("Button Clicked!");
 	}
 }

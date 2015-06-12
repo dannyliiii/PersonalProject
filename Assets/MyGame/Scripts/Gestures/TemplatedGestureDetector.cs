@@ -151,14 +151,34 @@ namespace TemplateGesture{
 
 		}
 
-		public bool MouseClicked(){
+		public bool MouseClicked(List<Vector4> joints, List<Vector4>rh){
 			bool res = false;
-			if (IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
-				res = true;
+
+			bool p1 = true;
+			if (rh.Count < frameCount)
+				return res;
+
+
+			MyMath.Vector2 v1 = new MyMath.Vector2(rh [rh.Count - 1].x, rh [rh.Count - 1].y);
+			for (int i = rh.Count-2; i > rh.Count - frameCount; i --) {
+//				Debug.Log(Entries[i].PositionRight.z );
+				MyMath.Vector2 v2 = new MyMath.Vector2 (rh[i].x, rh[i].y);
+				MyMath.Vector2 v3 = v1 - v2;
+				if(v3.LengthSqr > 0.001f){
+					p1 = false;
+					break;
+				}
 			}
-//			if (res) {
-//				Entries.Clear();		
-//			}
+
+			if (p1) {
+				if(joints[(int)NuiSkeletonPositionIndex.HandLeft].y > joints[(int)NuiSkeletonPositionIndex.Head].y){
+					res = true;
+				}
+			}
+
+			if(res)
+				Debug.Log ("click!");
+			
 			return res;
 		}
 
@@ -172,7 +192,7 @@ namespace TemplateGesture{
 			if (list.Count > frameCount) {
 				MyMath.Vector2 v1 = new MyMath.Vector2 (list [list.Count - 1].X, list [list.Count - 1].Y);
 				for (int i = list.Count - 2; i > 1; i --) {
-					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i - 2].X, list [i - 2].Y);
+					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i].X, list [i].Y);
 					MyMath.Vector2 v3 = v1 - v2;
 	//				Debug.Log(v3.LengthSqr);
 					if (v3.LengthSqr < 0.001f) {
@@ -183,7 +203,7 @@ namespace TemplateGesture{
 					if (count >= listCount) {
 						if (count > frameCount) {
 							res = true;
-							UnityEngine.Debug.Log ("Gesture Finished!");
+//							UnityEngine.Debug.Log ("Gesture Finished!");
 							break;
 						}
 					} else {
