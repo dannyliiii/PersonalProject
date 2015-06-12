@@ -122,7 +122,7 @@ namespace TemplateGesture{
 			                                            MinimalSize);
 
 
-			Debug.Log(resList.GetScore("hdel3"));
+//			Debug.Log(resList.GetScore("hdel3"));
 //			if (!resList.IsEmpty) {
 				int index = resList.Index;
 

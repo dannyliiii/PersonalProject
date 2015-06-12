@@ -93,6 +93,9 @@ public class Detector : MonoBehaviour {
 			joints.Add(Vector4.zero);
 		}
 
+		if (controlMouse == false)
+			handCursor.gameObject.SetActive (false);
+
 	}
 
 	void Update () {
@@ -136,15 +139,30 @@ public class Detector : MonoBehaviour {
 						joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
 					}
 
-					if(controlMouse){
-						//Move mouse according to the movement of hands
-						UnityEngine.Vector3 vCursorPos = handCursor.GetComponent<GUITexture>() != null ? handCursor.transform.position :
-							Camera.main.WorldToViewportPoint(handCursor.transform.position);
-//						MouseControl.MouseMove(vCursorPos);
+					//control the mouse with right hand.
+					if(controlMouse && handCursor != null)
+					{
+						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
+						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
+						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
 
-						if(templateGestureDetector.MouseClicked())
-							MouseControl.MouseClick();
+//						if(handCursor.GetComponent<GUITexture>() == null)
+//						{
+//							float zDist = handCursor.transform.position.z - Camera.main.transform.position.z;
+//							vCursorPos.z = zDist;
+//							
+//							vCursorPos = Camera.main.ViewportToWorldPoint(vCursorPos);
+//						}
+
+						//interpolate the cursor position
+						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4*Time.deltaTime);
+
+//						MouseControl.MouseMove(vCursorPos);
+//
+//						if(templateGestureDetector.MouseClicked())
+//							MouseControl.MouseClick();
 					}
+
 
 					templateGestureDetector.Add(joints);
 					templateGestureDetector.LookForGesture();
