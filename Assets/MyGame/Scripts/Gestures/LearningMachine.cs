@@ -77,9 +77,6 @@ namespace TemplateGesture{
 				double zy_score = 0;
 				double zx_score = 0;
 
-//				if(LearningMachine.IsFinished(tpll) && LearningMachine.IsFinished(tplr)){
-//					score = -5;
-//				}
 
 				if(p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
 					score = -4;

@@ -121,8 +121,6 @@ namespace TemplateGesture{
 			                                            Epsilon,
 			                                            MinimalSize);
 
-
-//			Debug.Log(resList.GetScore("hdel3"));
 //			if (!resList.IsEmpty) {
 				int index = resList.Index;
 
@@ -133,8 +131,7 @@ namespace TemplateGesture{
 				LearningMachine.ResultList.ResetList ();
 				//clear the point list
 				Entries.Clear();
-//			}
-//			Debug.Log("Entries Clear.");			
+//			}		
 
 		}
 
@@ -203,7 +200,7 @@ namespace TemplateGesture{
 					if (count >= listCount) {
 						if (count > frameCount) {
 							res = true;
-//							UnityEngine.Debug.Log ("Gesture Finished!");
+							UnityEngine.Debug.Log ("Gesture Finished!");
 							break;
 						}
 					} else {

@@ -112,7 +112,6 @@ public class Detector : MonoBehaviour {
 		DrawRealTimeHandsTracks ();
 
 		if (Input.GetKeyDown (KeyCode.A)) {
-			print(1111);
 			playerClass.CastSpell();
 		}
 	}
