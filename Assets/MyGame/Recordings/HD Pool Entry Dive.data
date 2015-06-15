@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="HD Pool Entry Dive" NumPts="144" Date="Monday, June 15, 2015" TimeOfDay="3:05:33 PM">
-  <Constrains Value="1" />
+  <Constrains Value="0" />
   <Constrains Value="0" />
   <LeftHandPoints X="-0.148486823" Y="-0.525235236" Z="2.004432" />
   <LeftHandPoints X="-0.1435554" Y="-0.550126731" Z="1.98443532" />

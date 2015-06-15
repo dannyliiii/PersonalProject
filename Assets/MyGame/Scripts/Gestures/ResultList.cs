@@ -172,7 +172,7 @@ namespace TemplateGesture{
 		}
 
 		public string GetName(int pos){
-			if (arrList.Count > pos)
+			if (arrList.Count > pos && pos >= 0)
 			{
 //				BestResult r = (BestResult) arrList[pos];
 				return arrList[pos].Name;

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="Teeterboard Easy lv10" NumPts="194" Date="Monday, June 15, 2015" TimeOfDay="3:12:01 PM">
-  <Constrains Value="2" />
-  <Constrains Value="3" />
+  <Constrains Value="1" />
+  <Constrains Value="1" />
   <LeftHandPoints X="0.0100437105" Y="-0.0562134758" Z="1.93771243" />
   <LeftHandPoints X="0.0101246107" Y="-0.0549372472" Z="1.93894148" />
   <LeftHandPoints X="0.0100735771" Y="-0.053753756" Z="1.94020152" />

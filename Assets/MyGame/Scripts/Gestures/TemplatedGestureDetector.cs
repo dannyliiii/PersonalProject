@@ -24,8 +24,8 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly float minScore = 0.85f;
-		private readonly int frameCount = 40;
+		private readonly float minScore = 0.8f;
+		private readonly int frameCount = 60;
 		
 
 		//change window size when change samplecount in learning machine
@@ -121,9 +121,17 @@ namespace TemplateGesture{
 			                                            Epsilon,
 			                                            MinimalSize);
 
+			double s = resList.GetScore("HD Pool Entry Dive");
+//			if (s > 0)
+				Debug.Log (s);
+
 //			if (!resList.IsEmpty) {
 				int index = resList.Index;
+				
+//				//show the highest score gesture
+//				RaiseGestureDetected(resList.GetName(index));
 
+				//show the highest score if it's large than a value
 				if(resList.GetScore(index) > minScore){
 
 					RaiseGestureDetected(resList.GetName(index));
@@ -200,7 +208,7 @@ namespace TemplateGesture{
 					if (count >= listCount) {
 						if (count > frameCount) {
 							res = true;
-							UnityEngine.Debug.Log ("Gesture Finished!");
+//							UnityEngine.Debug.Log ("Gesture Finished!");
 							break;
 						}
 					} else {

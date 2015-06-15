@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="jel5" NumPts="244" Date="Monday, June 15, 2015" TimeOfDay="3:09:24 PM">
-  <Constrains Value="3" />
-  <Constrains Value="2" />
+  <Constrains Value="1" />
+  <Constrains Value="1" />
   <LeftHandPoints X="-0.1825575" Y="-0.180083677" Z="1.901701" />
   <LeftHandPoints X="-0.182518244" Y="-0.1823236" Z="1.901628" />
   <LeftHandPoints X="-0.182507887" Y="-0.183911055" Z="1.90165007" />

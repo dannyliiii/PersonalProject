@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="High Dive Power-Up" NumPts="172" Date="Monday, June 15, 2015" TimeOfDay="3:06:22 PM">
-  <Constrains Value="3" />
-  <Constrains Value="2" />
+  <Constrains Value="1" />
+  <Constrains Value="1" />
   <LeftHandPoints X="-0.132537931" Y="-0.5026461" Z="1.851864" />
   <LeftHandPoints X="-0.132079929" Y="-0.5037174" Z="1.85097587" />
   <LeftHandPoints X="-0.1315854" Y="-0.5048277" Z="1.8500185" />

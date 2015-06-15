@@ -6,10 +6,10 @@ using Kinect;
 namespace TemplateGesture{
 	
 	public enum Constrain : int{
-		up_left,
-		up_right,
-		down_left,
-		down_right,
+		up,
+		down,
+		left,
+		right,
 		count
 	}
 	public enum ConstrainPosition : int{
@@ -28,32 +28,16 @@ namespace TemplateGesture{
 
 			//righthand - head
 			if(list[(int)NuiSkeletonPositionIndex.HandRight].y < list[(int)NuiSkeletonPositionIndex.Head].y){
-				if(list[(int)NuiSkeletonPositionIndex.HandRight].x < list[(int)NuiSkeletonPositionIndex.Head].x){
-					res[0] = Constrain.down_left;
-				}else{
-					res[0]  = Constrain.down_right;
-				}
+				res[0] = Constrain.down;
 			}else{
-				if(list[(int)NuiSkeletonPositionIndex.HandRight].x < list[(int)NuiSkeletonPositionIndex.Head].x){
-					res[0]  = Constrain.up_left;
-				}else{
-					res[0]  = Constrain.up_right;
-				}
+				res[0] = Constrain.up;
 			}
 
 			//lefthand - head
 			if(list[(int)NuiSkeletonPositionIndex.HandLeft].y < list[(int)NuiSkeletonPositionIndex.Head].y){
-				if(list[(int)NuiSkeletonPositionIndex.HandLeft].x < list[(int)NuiSkeletonPositionIndex.Head].x){
-					res[1] = Constrain.down_left;
-				}else{
-					res[1]  = Constrain.down_right;
-				}
+				res[1] = Constrain.down;
 			}else{
-				if(list[(int)NuiSkeletonPositionIndex.HandLeft].x < list[(int)NuiSkeletonPositionIndex.Head].x){
-					res[1]  = Constrain.up_left;
-				}else{
-					res[1]  = Constrain.up_right;
-				}
+				res[1] = Constrain.up;
 			}
 
 			return res;

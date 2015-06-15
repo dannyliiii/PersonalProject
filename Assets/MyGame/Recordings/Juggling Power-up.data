@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="Juggling Power-up" NumPts="206" Date="Monday, June 15, 2015" TimeOfDay="3:10:51 PM">
-  <Constrains Value="3" />
-  <Constrains Value="3" />
+  <Constrains Value="1" />
+  <Constrains Value="1" />
   <LeftHandPoints X="-0.488031983" Y="0.0496617742" Z="1.91244292" />
   <LeftHandPoints X="-0.487991452" Y="0.04950838" Z="1.9126308" />
   <LeftHandPoints X="-0.487964779" Y="0.0493685454" Z="1.91281557" />
