@@ -130,36 +130,6 @@ public class KinectRecorder : MonoBehaviour {
 		bool success = true;
 		XmlTextWriter rWriter = null;
 
-
-
-		List<double> radiansR = new List<double> ();
-		List<double> radiansL = new List<double> ();
-
-		double sumL = 0;
-		double sumR = 0;
-		for (int i = 1; i < lhPos.Count; i ++) {
-
-			double l = GeotrigEx.Angle(lhPos[0], lhPos[i], false);
-			double r = GeotrigEx.Angle(rhPos[0], rhPos[i], false);
-			sumL += l;
-			sumR += r;
-			radiansR.Add(r);
-			radiansL.Add(l);
-		}
-		double avgR = sumR / rhPos.Count;
-		double avgL = sumL / lhPos.Count;
-
-		double varianceSumR = 0;
-		double varianceSumL = 0;
-		for (int i = 0; i < radiansR.Count; i++)
-		{
-			varianceSumR += (radiansR[i] - avgR) * (radiansR[i] - avgR);
-			varianceSumL += (radiansL[i] - avgL) * (radiansL[i] - avgL);
-		}
-
-		double varianceR = varianceSumR / radiansR.Count;
-		double varianceL = varianceSumL / radiansL.Count;
-
 		try
 		{
 			Constrain[] c = GestureConstrains.GetConstrains(joints);

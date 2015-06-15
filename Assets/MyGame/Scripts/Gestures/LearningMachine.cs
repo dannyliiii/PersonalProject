@@ -10,6 +10,7 @@ using System.Diagnostics;
 using UnityEngine;
 using System;
 using WobbrockLib;
+using WobbrockLib.Extensions;
 
 namespace TemplateGesture{
 	public class LearningMachine
@@ -126,6 +127,7 @@ namespace TemplateGesture{
 				List<TimePointF> zx_pr = new List<TimePointF>(num);
 				List<TimePointF> zx_pl = new List<TimePointF>(num);
 
+
 				while(reader.Read()){
 					if(reader.LocalName == "Constrains"){
 						rd.constrain.Add((Constrain)XmlConvert.ToSingle(reader.GetAttribute("Value")));
@@ -176,7 +178,7 @@ namespace TemplateGesture{
 
 					}
 				}
-		
+
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
 
@@ -185,6 +187,37 @@ namespace TemplateGesture{
 
 				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
+
+				//calculate the variance
+				List<double> radiansR = new List<double> ();
+				List<double> radiansL = new List<double> ();
+				
+				double sumL = 0;
+				double sumR = 0;
+				for (int i = 1; i < pr.Count; i ++) {
+					
+					double l = GeotrigEx.Angle(GeotrigEx.Centroid(rd.LP), rd.LP[i], false);
+					double r = GeotrigEx.Angle(GeotrigEx.Centroid(rd.RP), rd.RP[i], false);
+					sumL += l;
+					sumR += r;
+					radiansR.Add(r);
+					radiansL.Add(l);
+				}
+				double avgR = sumR / pr.Count;
+				double avgL = sumL / pl.Count;
+				
+				double varianceSumR = 0;
+				double varianceSumL = 0;
+				for (int i = 0; i < radiansR.Count; i++)
+				{
+					varianceSumR += (radiansR[i] - avgR) * (radiansR[i] - avgR);
+					varianceSumL += (radiansL[i] - avgL) * (radiansL[i] - avgL);
+				}
+				
+				double varianceR = varianceSumR / radiansR.Count;
+				double varianceL = varianceSumL / radiansL.Count;
+
+
 
 				pos.Add(rd);
 
