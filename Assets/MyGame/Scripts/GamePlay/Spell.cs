@@ -12,8 +12,7 @@ namespace Game{
 		dark,
 		lighting
 	}
-	
-	
+
 	public class Spell : MonoBehaviour {
 		
 		string spellName;
@@ -30,10 +29,13 @@ namespace Game{
 		// Update is called once per frame
 		void Update () {
 			time += Time.deltaTime;
-			//Debug.Log (time);
 			if (time > 4.0f) {
 				Destroy(gameObject);
 			}
+		}
+
+		void OnCollisionEnter(Collision collision) {
+			Destroy(gameObject);
 		}
 
 	}

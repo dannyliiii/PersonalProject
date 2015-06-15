@@ -13,7 +13,6 @@ using Game;
 
 public class Detector : MonoBehaviour {
 
-//	public GameObject playerGO;
 	public Player playerClass;
 
 	int arrCount = 8;
@@ -62,7 +61,6 @@ public class Detector : MonoBehaviour {
 		t4 = 3,
 	}
 
-
 	void Awake () {
 
 		kinect = devOrEmu.getKinect();
@@ -96,6 +94,8 @@ public class Detector : MonoBehaviour {
 
 		rightHands = new List<Vector4> ();
 
+//		var playerScript: OtherScript = GetComponent(OtherScript); 
+
 	}
 
 	void Update () {
@@ -112,7 +112,7 @@ public class Detector : MonoBehaviour {
 		DrawRealTimeHandsTracks ();
 
 		if (Input.GetKeyDown (KeyCode.A)) {
-			Debug.Log(123123);
+			print(1111);
 			playerClass.CastSpell();
 		}
 	}
@@ -197,7 +197,6 @@ public class Detector : MonoBehaviour {
 			
 		}
 	}
-
 
 
 	void DrawRealTimeHandsTracks(){
@@ -354,8 +353,8 @@ public class Detector : MonoBehaviour {
 
 		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);	
 
-		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.5f,200,200),"Click"))
-			Debug.Log("Button Clicked!");
+//		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.5f,200,200),"Click"))
+//			Debug.Log("Button Clicked!");
 	}
 }
 

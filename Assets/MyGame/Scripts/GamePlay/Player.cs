@@ -11,6 +11,7 @@ namespace Game{
 		int mp;
 		int atk;
 		int def;
+		int money;
 		List<Spell> spells;
 
 		public GameObject projectile;
@@ -25,10 +26,13 @@ namespace Game{
 			mp = 100;
 			atk = 1;
 			def = 1;
+			money = 0;
 			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
-			upForce = new UnityEngine.Vector3 (0.0f, 150.0f, 0.0f);
+			upForce = new UnityEngine.Vector3 (0.0f, 100.0f, 0.0f);
+
+			gameObject.transform.position = Camera.main.transform.position;
 		}
 
 		public void CastSpell(){
