@@ -9,8 +9,12 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using Drawing;
 using System.Linq;
+using Game;
 
 public class Detector : MonoBehaviour {
+
+//	public GameObject playerGO;
+	public Player playerClass;
 
 	int arrCount = 8;
 	Material material1; 
@@ -32,9 +36,6 @@ public class Detector : MonoBehaviour {
 	TemplatedGestureDetector templateGestureDetector;
 	public SkeletonWrapper sw;
 
-	private UnityEngine.Vector3 upForce;
-	private readonly int speed = 50;
-	private List<GameObject> projList;
 	private int currentData = 0;
 	private string gesText = "";
 	private int screenHeight = Screen.height;
@@ -43,9 +44,6 @@ public class Detector : MonoBehaviour {
 	private int gesCount = 5;
 	private int num = -1;
 	private List<Vector4> joints;
-
-	// shooting projectile
-	public GameObject projectile;
 
 	public bool controlMouse;
 	public GUITexture handCursor;
@@ -68,9 +66,6 @@ public class Detector : MonoBehaviour {
 	void Awake () {
 
 		kinect = devOrEmu.getKinect();
-
-		projList = new List<GameObject> ();
-		upForce = new UnityEngine.Vector3 (0.0f, 150.0f, 0.0f);
 
 		LoadTemplateGestureDetector ();
 
@@ -115,6 +110,11 @@ public class Detector : MonoBehaviour {
 			ProcessFrame ();
 
 		DrawRealTimeHandsTracks ();
+
+		if (Input.GetKeyDown (KeyCode.A)) {
+			Debug.Log(123123);
+			playerClass.CastSpell();
+		}
 	}
 
 	void LoadTemplateGestureDetector()
@@ -127,7 +127,7 @@ public class Detector : MonoBehaviour {
 	void OnGestureDetected(string gesture)
 	{
 		gesText = gesture;
-		//Shoot ();
+		//PlayerGo.CastSpell ();
 	}
 
 	void ProcessFrame()
@@ -198,16 +198,7 @@ public class Detector : MonoBehaviour {
 		}
 	}
 
-	void Shoot(){
-		
-		GameObject proj =  Instantiate(projectile, transform.position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
-		Rigidbody rb = proj.GetComponent<Rigidbody> ();
-		rb.velocity = transform.forward * speed;
-		rb.AddForce (upForce);
-		ParticleSystem ps = proj.GetComponent<ParticleSystem>();
-		ps.Play ();
-		projList.Add (proj);
-	}
+
 
 	void DrawRealTimeHandsTracks(){
 
@@ -245,27 +236,27 @@ public class Detector : MonoBehaviour {
 	} 
 
 
-	void DrawData(RecordedPath path){
-		
-		Material material = dataImagePlane.GetComponent<Renderer>().material;
-		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
-		texture.wrapMode = TextureWrapMode.Clamp;
-		material.SetTexture(0, texture);
-	
-		for (int i = 0; i < path.SampleCount - 1; i ++) {
-
-			MyMath.Vector2 start = path.Points[i];
-			MyMath.Vector2 end = path.Points[i + 1];
-
-			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
-			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
-			                 Color.black);
-
-		}
-		
-		texture.Apply();
-
-	}
+//	void DrawData(RecordedPath path){
+//		
+//		Material material = dataImagePlane.GetComponent<Renderer>().material;
+//		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
+//		texture.wrapMode = TextureWrapMode.Clamp;
+//		material.SetTexture(0, texture);
+//	
+//		for (int i = 0; i < path.SampleCount - 1; i ++) {
+//
+//			MyMath.Vector2 start = path.Points[i];
+//			MyMath.Vector2 end = path.Points[i + 1];
+//
+//			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
+//			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
+//			                 Color.black);
+//
+//		}
+//		
+//		texture.Apply();
+//
+//	}
 
 	void DrawDataPerFrame(int num){
 
