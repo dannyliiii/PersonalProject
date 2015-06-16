@@ -188,34 +188,37 @@ namespace TemplateGesture{
 				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
 
-				//calculate the variance
-				List<double> radiansR = new List<double> ();
-				List<double> radiansL = new List<double> ();
-				
-				double sumL = 0;
-				double sumR = 0;
-				for (int i = 1; i < pr.Count; i ++) {
-					
-					double l = GeotrigEx.Angle(GeotrigEx.Centroid(rd.LP), rd.LP[i], false);
-					double r = GeotrigEx.Angle(GeotrigEx.Centroid(rd.RP), rd.RP[i], false);
-					sumL += l;
-					sumR += r;
-					radiansR.Add(r);
-					radiansL.Add(l);
-				}
-				double avgR = sumR / pr.Count;
-				double avgL = sumL / pl.Count;
-				
-				double varianceSumR = 0;
-				double varianceSumL = 0;
-				for (int i = 0; i < radiansR.Count; i++)
-				{
-					varianceSumR += (radiansR[i] - avgR) * (radiansR[i] - avgR);
-					varianceSumL += (radiansL[i] - avgL) * (radiansL[i] - avgL);
-				}
-				
-				double varianceR = varianceSumR / radiansR.Count;
-				double varianceL = varianceSumL / radiansL.Count;
+//				//calculate the angles and variances
+//				List<double> angleR = new List<double> ();
+//				List<double> angleL = new List<double> ();
+//				
+//				double sumL = 0;
+//				double sumR = 0;
+//				for (int i = 1; i < pr.Count; i ++) {
+//
+//					double l = Math.Atan2(pr[0].Y - pr[i].Y, pr[0].X - pr[i].X);
+//					double r = Math.Atan2(pl[0].Y - pl[i].Y, pl[0].X - pl[i].X);
+//					l = RadianToDegree(l);
+//					r = RadianToDegree(r);
+//
+//					angleR.Add(r);
+//					angleL.Add(l);
+//					sumL += l;
+//					sumR += r;
+//				}
+//				double avgR = sumR / (pr.Count - 1);
+//				double avgL = sumL / (pl.Count - 1);
+//				
+//				double varianceSumR = 0;
+//				double varianceSumL = 0;
+//				for (int i = 0; i < angleR.Count; i++)
+//				{
+//					varianceSumR += (angleR[i] - avgR) * (angleR[i] - avgR);
+//					varianceSumL += (angleL[i] - avgL) * (angleL[i] - avgL);
+//				}
+//				
+//				double varianceR = varianceSumR / angleR.Count;
+//				double varianceL = varianceSumL / angleL.Count;
 
 
 
@@ -240,6 +243,11 @@ namespace TemplateGesture{
 					reader.Close();
 			}
 			return success;
+		}
+
+		private static double RadianToDegree(double angle)
+		{
+			return angle * (180.0 / Math.PI);
 		}
 	}
 }

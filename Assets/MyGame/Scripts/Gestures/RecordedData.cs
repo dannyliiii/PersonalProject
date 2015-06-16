@@ -24,6 +24,7 @@ namespace TemplateGesture{
 		List<PointF> rpf;
 		int sampleCount;
 		Plane plane;
+		bool isLine;
 		public List<Constrain> constrain;
 
 		//----------------------- for the z-y plane ------------------
@@ -56,6 +57,12 @@ namespace TemplateGesture{
 
 
 		// getter/setter
+		public bool IsLine{
+			get{return isLine;}
+			set{isLine = value;}
+		}
+
+
 		public int Size{
 			get{
 				return lPoints.Count;
