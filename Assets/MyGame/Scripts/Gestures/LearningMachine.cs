@@ -104,18 +104,21 @@ namespace TemplateGesture{
 //				if((p.IsLineL == l) && (p.IsLineR == r)){
 //
 //				}
-
+			
 				double score = 0;
 				double zy_score = 0;
 				double zx_score = 0;
 
+				if(p.IsLineL != l || p.IsLineR != r){
+					score = -5;
+				}
 
-				if(p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+				if(score ==0 && p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
 					score = -4;
 //					UnityEngine.Debug.Log(p.gestureName);
 				}
 
-				else{
+				if(score == 0){
 					score = p.Match(tpll, tplr, threshold, minSize, 1);
 					zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
 					zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
