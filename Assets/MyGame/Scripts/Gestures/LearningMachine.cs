@@ -59,6 +59,17 @@ namespace TemplateGesture{
 		{
 			int i = 0;
 
+			double cl = GetCorrelation (tpll);
+			double cr = GetCorrelation (tplr);
+
+			int l = 0;
+			int r = 0;
+
+			if (cl > 0.8)
+				l = 1;
+			if (cr > 0.8)
+				r = 1;
+
 			foreach (RecordedData p in pos) {
 
 //				UnityEngine.Debug.Log(p.gestureName);
@@ -72,7 +83,9 @@ namespace TemplateGesture{
 //					UnityEngine.Debug.Log(v);
 //				}
 //				UnityEngine.Debug.Log("==========");
+				if((p.IsLineL == l) && (p.IsLineR == r)){
 
+				}
 
 				double score = 0;
 				double zy_score = 0;
@@ -118,14 +131,14 @@ namespace TemplateGesture{
 
 				int num = numPts / 2;
 
-				List<TimePointF> pr = new List<TimePointF>(num);
-				List<TimePointF> pl = new List<TimePointF>(num);
+				List<TimePointF> pr = new List<TimePointF>();
+				List<TimePointF> pl = new List<TimePointF>();
 
-				List<TimePointF> zy_pr = new List<TimePointF>(num);
-				List<TimePointF> zy_pl = new List<TimePointF>(num);
+				List<TimePointF> zy_pr = new List<TimePointF>();
+				List<TimePointF> zy_pl = new List<TimePointF>();
 
-				List<TimePointF> zx_pr = new List<TimePointF>(num);
-				List<TimePointF> zx_pl = new List<TimePointF>(num);
+				List<TimePointF> zx_pr = new List<TimePointF>();
+				List<TimePointF> zx_pl = new List<TimePointF>();
 
 
 				while(reader.Read()){
@@ -220,7 +233,24 @@ namespace TemplateGesture{
 //				double varianceR = varianceSumR / angleR.Count;
 //				double varianceL = varianceSumL / angleL.Count;
 
+				//calculate the correlation
+				double correlationL = GetCorrelation(pl);
+				double correlationR = GetCorrelation(pr);
+				
 
+				UnityEngine.Debug.Log(correlationL);
+				UnityEngine.Debug.Log(correlationR);
+				if(correlationL > 0.8){
+					rd.IsLineL = 1;
+				}
+				else{
+					rd.IsLineL = 0;
+				}
+				if(correlationR > 0.8){
+					rd.IsLineR = 1;
+				}else{
+					rd.IsLineR = 0;
+				}
 
 				pos.Add(rd);
 
@@ -248,6 +278,29 @@ namespace TemplateGesture{
 		private static double RadianToDegree(double angle)
 		{
 			return angle * (180.0 / Math.PI);
+		}
+
+		public static double GetCorrelation(List<TimePointF> list){
+			//calculate the correlation
+			float sumAB = 0;
+			float sumA = 0;
+			float sumB = 0;
+			float sumAA = 0;
+			float sumBB = 0;
+			
+			foreach (var p in list){
+				sumAB += p.X * p.Y;
+				sumA += p.X;
+				sumB += p.Y;
+				sumAA += p.X * p.X;
+				sumBB += p.Y * p.Y;
+			}
+			
+			double res = ((list.Count * sumAB) - (sumA * sumB))
+				/ (Math.Sqrt((list.Count * sumAA) - (sumA * sumA))
+				   * Math.Sqrt((list.Count * sumBB) - (sumB * sumB)));
+
+			return res;
 		}
 	}
 }
