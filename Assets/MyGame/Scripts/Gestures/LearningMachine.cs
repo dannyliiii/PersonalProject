@@ -11,6 +11,7 @@ using UnityEngine;
 using System;
 using WobbrockLib;
 using WobbrockLib.Extensions;
+using System.Drawing;
 
 namespace TemplateGesture{
 	public class LearningMachine
@@ -24,6 +25,8 @@ namespace TemplateGesture{
 
 		private static string folderPath = "Assets/MyGame/Recordings/";
 		private static ResultList rl = new ResultList();
+
+		private static readonly double lineMin = 0.95;
 
 		public static LearningMachine Instance{
 			get{
@@ -59,16 +62,31 @@ namespace TemplateGesture{
 		{
 			int i = 0;
 
-			double cl = GetCorrelation (tpll);
-			double cr = GetCorrelation (tplr);
-
 			int l = 0;
 			int r = 0;
+			List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(tpll);
+			List<PointF> listPFR = GoldenSectionExtension.ListTimePointF2ListPointF(tplr);
+			
+			double radiance45 = GoldenSectionExtension.DegreeToRadian(45);
+			double radiansL = radiance45 - Math.Atan2(listPFL[0].Y - listPFL[listPFL.Count - 1].Y, listPFL[0].X - listPFL[listPFL.Count - 1].X);
+			double radiansR = radiance45 - Math.Atan2(listPFR[0].Y - listPFR[listPFR.Count - 1].Y, listPFR[0].X - listPFR[listPFR.Count - 1].X);
+			
+			listPFL = GeotrigEx.RotatePoints(listPFL, -radiansL);
+			listPFR = GeotrigEx.RotatePoints(listPFR, -radiansR);
+			
+			double correlationL = GetCorrelation(listPFL);
+			double correlationR = GetCorrelation(listPFR);
 
-			if (cl > 0.8)
+			UnityEngine.Debug.Log(correlationL);
+			UnityEngine.Debug.Log(correlationR);
+			if(Math.Abs(correlationL) > lineMin){
 				l = 1;
-			if (cr > 0.8)
+			}
+			if(Math.Abs(correlationR) > lineMin){
 				r = 1;
+			}
+			UnityEngine.Debug.Log (correlationL);
+			UnityEngine.Debug.Log (correlationR);
 
 			foreach (RecordedData p in pos) {
 
@@ -83,9 +101,9 @@ namespace TemplateGesture{
 //					UnityEngine.Debug.Log(v);
 //				}
 //				UnityEngine.Debug.Log("==========");
-				if((p.IsLineL == l) && (p.IsLineR == r)){
-
-				}
+//				if((p.IsLineL == l) && (p.IsLineR == r)){
+//
+//				}
 
 				double score = 0;
 				double zy_score = 0;
@@ -232,21 +250,30 @@ namespace TemplateGesture{
 //				
 //				double varianceR = varianceSumR / angleR.Count;
 //				double varianceL = varianceSumL / angleL.Count;
-
+			
 				//calculate the correlation
-				double correlationL = GetCorrelation(pl);
-				double correlationR = GetCorrelation(pr);
-				
+				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);
+				List<PointF> listPFR = GoldenSectionExtension.ListTimePointF2ListPointF(pr);
 
+				double radiance45 = GoldenSectionExtension.DegreeToRadian(45);
+				double radiansL = radiance45 - Math.Atan2(listPFL[0].Y - listPFL[listPFL.Count - 1].Y, listPFL[0].X - listPFL[listPFL.Count - 1].X);
+				double radiansR = radiance45 - Math.Atan2(listPFR[0].Y - listPFR[listPFR.Count - 1].Y, listPFR[0].X - listPFR[listPFR.Count - 1].X);
+
+				listPFL = GeotrigEx.RotatePoints(listPFL, radiansL);
+				listPFR = GeotrigEx.RotatePoints(listPFR, radiansR);
+
+				double correlationL = GetCorrelation(listPFL);
+				double correlationR = GetCorrelation(listPFR);
+				
+				UnityEngine.Debug.Log(gesName);
 				UnityEngine.Debug.Log(correlationL);
 				UnityEngine.Debug.Log(correlationR);
-				if(correlationL > 0.8){
+				if(Math.Abs(correlationL) > lineMin){
 					rd.IsLineL = 1;
-				}
-				else{
+				}else{
 					rd.IsLineL = 0;
 				}
-				if(correlationR > 0.8){
+				if(Math.Abs(correlationR) > lineMin){
 					rd.IsLineR = 1;
 				}else{
 					rd.IsLineR = 0;
@@ -280,7 +307,7 @@ namespace TemplateGesture{
 			return angle * (180.0 / Math.PI);
 		}
 
-		public static double GetCorrelation(List<TimePointF> list){
+		public static double GetCorrelation(List<PointF> list){
 			//calculate the correlation
 			float sumAB = 0;
 			float sumA = 0;

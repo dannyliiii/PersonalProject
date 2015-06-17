@@ -107,5 +107,20 @@ namespace TemplateGesture{
 				positions[i] -= center;
 			}
 		}
+
+		public static double DegreeToRadian(double angle)
+		{
+			return Math.PI * angle / 180.0;
+		}
+
+		public static List<PointF> ListTimePointF2ListPointF(List<TimePointF> list){
+			List<PointF> res = new List<PointF> ();
+
+			foreach (var p in list) {
+				res.Add (new PointF (p.X, p.Y));
+			}
+
+			return res;
+		}
 	}
 }

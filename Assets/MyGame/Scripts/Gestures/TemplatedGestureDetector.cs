@@ -121,9 +121,9 @@ namespace TemplateGesture{
 			                                            Epsilon,
 			                                            MinimalSize);
 
-			double s = resList.GetScore("HD Pool Entry Dive");
+//			double s = resList.GetScore("HD Pool Entry Dive");
 //			if (s > 0)
-				Debug.Log (s);
+//				Debug.Log (s);
 
 //			if (!resList.IsEmpty) {
 				int index = resList.Index;

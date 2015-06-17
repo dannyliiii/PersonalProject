@@ -58,11 +58,11 @@ namespace TemplateGesture{
 
 
 		// getter/setter
-		public bool IsLineL{
+		public int IsLineL{
 			get{return isLineL;}
 			set{isLineL = value;}
 		}
-		public bool IsLineR{
+		public int IsLineR{
 			get{return isLineR;}
 			set{isLineR = value;}
 		}

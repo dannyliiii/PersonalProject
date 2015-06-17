@@ -291,13 +291,22 @@ public class Detector : MonoBehaviour {
 //			MyMath.Vector2 rStart = new MyMath.Vector2(data.RP[i].X, data.RP[i].Y);
 //			MyMath.Vector2 rEnd = new MyMath.Vector2(data.RP[i+1].X, data.RP[i+1].Y);
 	
-			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
-			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
-			                                        Color.red);
+//			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
+//			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
+//			                                        Color.red);
 
-			textureArr[(int)TexArrEnum.t3].DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
-			                           				new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
-			                           				Color.blue);
+			float x = Mathf.Round((rStart.x + 1) * 256);
+			float y = Mathf.Round((rStart.y  + 1) * 256);
+
+			float x2 = Mathf.Round((lStart.x + 1) * 256);
+			float y2 = Mathf.Round((lStart.y  + 1) * 256);
+
+			textureArr[(int)TexArrEnum.t4].DrawFilledCircle( (int)x, (int)y, 3, Color.red);
+
+//			textureArr[(int)TexArrEnum.t3].DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
+//			                           				new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
+//			                           				Color.blue);
+			textureArr[(int)TexArrEnum.t3].DrawFilledCircle( (int)x2, (int)y2, 3, Color.blue);
 		}
 
 		textureArr [(int)TexArrEnum.t3].Apply ();
