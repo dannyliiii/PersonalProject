@@ -24,9 +24,11 @@ namespace TemplateGesture{
 		List<PointF> rpf;
 		int sampleCount;
 		Plane plane;
-		int isLineL; // 0: false, 1: true
-		int isLineR;
+		bool isLineL; // 0: false, 1: true
+		bool isLineR;
 		public List<Constrain> constrain;
+		double angleL;
+		double angleR;
 
 		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
@@ -58,13 +60,22 @@ namespace TemplateGesture{
 
 
 		// getter/setter
-		public int IsLineL{
+		public bool IsLineL{
 			get{return isLineL;}
 			set{isLineL = value;}
 		}
-		public int IsLineR{
+		public bool IsLineR{
 			get{return isLineR;}
 			set{isLineR = value;}
+		}
+
+		public double AngleL{
+			get{return angleL;}
+			set{angleL = value;}
+		}
+		public double AngleR{
+			get{return angleR;}
+			set{angleR = value;}
 		}
 
 		public int Size{

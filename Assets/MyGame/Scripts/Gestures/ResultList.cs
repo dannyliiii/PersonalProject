@@ -12,12 +12,16 @@ namespace TemplateGesture{
 			
 			private string name;
 			private double score;
+			private double radianceDiff = 0;
 
 			public void SetScore(double s){
 				score = s;
 			}
 			public void SetName(string n){
 				name = n;
+			}
+			public void SetRadianceDiff(double diff){
+				radianceDiff = diff;
 			}
 			// constructor
 			public BestResult(string n, double s)
@@ -41,7 +45,11 @@ namespace TemplateGesture{
 					return score;
 				}
 			}
-			
+			public double Diff{
+				get{
+					return radianceDiff;
+				}
+			}
 			// sorts in descending order of Score
 			public int CompareTo(object obj)
 			{
@@ -77,10 +85,10 @@ namespace TemplateGesture{
 			arrList.Add(r);
 		}
 
-		public void UpdateResult(int num, string name, double score){
+		public void UpdateResult(int num, string name, double score, double diff){
 			arrList [num].SetName (name);
 			arrList [num].SetScore(score);
-
+			arrList [num].SetRadianceDiff (diff);
 //			for (int i = 0; i < arrList.Count; i ++) {
 //				if(arrList[i].Name == name){
 //					if(arrList[i].Score < score){
@@ -144,6 +152,12 @@ namespace TemplateGesture{
 						if(arrList[i].Score > score){
 							res = i;
 							score = arrList[i].Score;
+						}else if(arrList[i].Score == score){
+							if(arrList[res].Diff > arrList[i].Diff){
+								res = i;
+							}
+						}else{
+							//do nothing
 						}
 					}
 				}

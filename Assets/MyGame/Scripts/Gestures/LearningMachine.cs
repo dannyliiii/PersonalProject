@@ -26,7 +26,8 @@ namespace TemplateGesture{
 		private static string folderPath = "Assets/MyGame/Recordings/";
 		private static ResultList rl = new ResultList();
 
-		private static readonly double lineMin = 0.95;
+		private static readonly double lineMin = 0.99;
+		private static double radiance45;
 
 		public static LearningMachine Instance{
 			get{
@@ -48,6 +49,7 @@ namespace TemplateGesture{
 
 		public static void Initialize(){
 			pos = new List<RecordedData> ();
+			radiance45 = GoldenSectionExtension.DegreeToRadian(45);
 
 			foreach (string file in Directory.GetFiles(folderPath, "*.data"))
 				LoadGestureNew (file);
@@ -62,8 +64,8 @@ namespace TemplateGesture{
 		{
 			int i = 0;
 
-			int l = 0;
-			int r = 0;
+			bool l = false;
+			bool r = false;
 			List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(tpll);
 			List<PointF> listPFR = GoldenSectionExtension.ListTimePointF2ListPointF(tplr);
 			
@@ -77,14 +79,13 @@ namespace TemplateGesture{
 			double correlationL = GetCorrelation(listPFL);
 			double correlationR = GetCorrelation(listPFR);
 
-			UnityEngine.Debug.Log(correlationL);
-			UnityEngine.Debug.Log(correlationR);
 			if(Math.Abs(correlationL) > lineMin){
-				l = 1;
+				l = true;
 			}
 			if(Math.Abs(correlationR) > lineMin){
-				r = 1;
+				r = true;
 			}
+			UnityEngine.Debug.Log ("correlation");
 			UnityEngine.Debug.Log (correlationL);
 			UnityEngine.Debug.Log (correlationR);
 
@@ -105,30 +106,45 @@ namespace TemplateGesture{
 //
 //				}
 			
+
 				double score = 0;
 				double zy_score = 0;
 				double zx_score = 0;
+				double rL = radiance45 - Math.Atan2(tpll[0].Y - tpll[tpll.Count - 1].Y, tpll[0].X - tpll[tpll.Count - 1].X);
+				double rR = radiance45 - Math.Atan2(tplr[0].Y - tplr[tplr.Count - 1].Y, tplr[0].X - tplr[tplr.Count - 1].X);
 
-				if(p.IsLineL != l || p.IsLineR != r){
-					score = -5;
-				}
-
-				if(score ==0 && p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+				if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
 					score = -4;
-//					UnityEngine.Debug.Log(p.gestureName);
 				}
-
-				if(score == 0){
-					score = p.Match(tpll, tplr, threshold, minSize, 1);
-					zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
-					zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
+				else{
+					if(l & r){
+						if(p.IsLineL && p.IsLineR){
+							rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
+							rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
+							score = 2;
+							UnityEngine.Debug.Log(p.gestureName);
+							UnityEngine.Debug.Log(rL + rR);
+						}
+						else{
+							score = -5;
+						}
+					}
+					else{
+						score = p.Match(tpll, tplr, threshold, minSize, 1);
+						zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
+						zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
+					}
 				}
-
+				//for testing
+				if(p.gestureName == "jel2"){
+					UnityEngine.Debug.Log(p.gestureName);
+					UnityEngine.Debug.Log(score);
+				}
 //				if(zy_score > 0.8 && zx_score > 0.8)
 //					UnityEngine.Debug.Log(zy_score);
 //					UnityEngine.Debug.Log(zx_score);
 
-				rl.UpdateResult(i++, p.gestureName, (float)score);
+				rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR);
 
 			}
 			return rl;
@@ -258,7 +274,6 @@ namespace TemplateGesture{
 				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);
 				List<PointF> listPFR = GoldenSectionExtension.ListTimePointF2ListPointF(pr);
 
-				double radiance45 = GoldenSectionExtension.DegreeToRadian(45);
 				double radiansL = radiance45 - Math.Atan2(listPFL[0].Y - listPFL[listPFL.Count - 1].Y, listPFL[0].X - listPFL[listPFL.Count - 1].X);
 				double radiansR = radiance45 - Math.Atan2(listPFR[0].Y - listPFR[listPFR.Count - 1].Y, listPFR[0].X - listPFR[listPFR.Count - 1].X);
 
@@ -271,17 +286,22 @@ namespace TemplateGesture{
 				UnityEngine.Debug.Log(gesName);
 				UnityEngine.Debug.Log(correlationL);
 				UnityEngine.Debug.Log(correlationR);
+
 				if(Math.Abs(correlationL) > lineMin){
-					rd.IsLineL = 1;
+					rd.IsLineL = true;
+					rd.AngleL = GoldenSectionExtension.RadiansToDegree(radiansL);
 				}else{
-					rd.IsLineL = 0;
-				}
-				if(Math.Abs(correlationR) > lineMin){
-					rd.IsLineR = 1;
-				}else{
-					rd.IsLineR = 0;
+					rd.IsLineL = false;
 				}
 
+				if(Math.Abs(correlationL) > lineMin){
+					rd.IsLineR = true;
+					rd.AngleR = GoldenSectionExtension.RadiansToDegree(radiansR);
+				}else{
+					rd.IsLineR = false;
+				}
+				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansL));
+				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansR));
 				pos.Add(rd);
 
 				rl.AddResult(gesName, 2);

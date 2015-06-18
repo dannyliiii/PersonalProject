@@ -113,6 +113,12 @@ namespace TemplateGesture{
 			return Math.PI * angle / 180.0;
 		}
 
+		public static double RadiansToDegree(double radians)
+		{
+			return radians * (180.0 / Math.PI);
+			
+		}
+
 		public static List<PointF> ListTimePointF2ListPointF(List<TimePointF> list){
 			List<PointF> res = new List<PointF> ();
 

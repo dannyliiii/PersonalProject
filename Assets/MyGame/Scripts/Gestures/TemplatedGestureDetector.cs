@@ -121,21 +121,21 @@ namespace TemplateGesture{
 			                                            Epsilon,
 			                                            MinimalSize);
 
-//			double s = resList.GetScore("HD Pool Entry Dive");
-//			if (s > 0)
-//				Debug.Log (s);
 
-//			if (!resList.IsEmpty) {
-				int index = resList.Index;
-				
-//				//show the highest score gesture
-//				RaiseGestureDetected(resList.GetName(index));
+			int index = resList.Index;
+			
 
-				//show the highest score if it's large than a value
-				if(resList.GetScore(index) > minScore){
+			if(resList.GetScore(index) > minScore){
 
-					RaiseGestureDetected(resList.GetName(index));
-				}
+				RaiseGestureDetected(resList.GetName(index));
+			}
+
+//			int size = resList.Size();
+//			for (int i = 0; i < size; i ++) {
+//				UnityEngine.Debug.Log("============");
+//				UnityEngine.Debug.Log(resList.GetName(i));
+//				UnityEngine.Debug.Log(resList.GetScore(i));
+//			}
 				LearningMachine.ResultList.ResetList ();
 				//clear the point list
 				Entries.Clear();
