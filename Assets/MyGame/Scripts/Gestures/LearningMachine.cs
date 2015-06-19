@@ -85,9 +85,9 @@ namespace TemplateGesture{
 			if(Math.Abs(correlationR) > lineMin){
 				r = true;
 			}
-			UnityEngine.Debug.Log ("correlation");
-			UnityEngine.Debug.Log (correlationL);
-			UnityEngine.Debug.Log (correlationR);
+//			UnityEngine.Debug.Log ("correlation");
+//			UnityEngine.Debug.Log (correlationL);
+//			UnityEngine.Debug.Log (correlationR);
 
 			foreach (RecordedData p in pos) {
 
@@ -105,7 +105,6 @@ namespace TemplateGesture{
 //				if((p.IsLineL == l) && (p.IsLineR == r)){
 //
 //				}
-			
 
 				double score = 0;
 				double zy_score = 0;
@@ -135,11 +134,12 @@ namespace TemplateGesture{
 						zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
 					}
 				}
-				//for testing
-				if(p.gestureName == "jel2"){
-					UnityEngine.Debug.Log(p.gestureName);
-					UnityEngine.Debug.Log(score);
-				}
+//				//for testing
+//				if(p.gestureName == "hdel8"){
+//					UnityEngine.Debug.Log(p.gestureName);
+//					UnityEngine.Debug.Log(zx_score);
+//				}
+
 //				if(zy_score > 0.8 && zx_score > 0.8)
 //					UnityEngine.Debug.Log(zy_score);
 //					UnityEngine.Debug.Log(zx_score);
@@ -179,6 +179,9 @@ namespace TemplateGesture{
 
 
 				while(reader.Read()){
+					if(reader.LocalName == "Plane"){
+						rd.Plane = (Plane)XmlConvert.ToSingle(reader.GetAttribute("Value"));
+					}
 					if(reader.LocalName == "Constrains"){
 						rd.constrain.Add((Constrain)XmlConvert.ToSingle(reader.GetAttribute("Value")));
 					}
@@ -200,8 +203,9 @@ namespace TemplateGesture{
 						zy_pl.Add(zy_p);
 
 						TimePointF zx_p = TimePointF.Empty;
-						zx_p.X = XmlConvert.ToSingle(reader.GetAttribute("Z"));
-						zx_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						zx_p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						zx_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Z"));
+						rd.ZX_LPoints.Add(new MyMath.Vector2(zx_p.X, zx_p.Y));
 						zx_pl.Add(zx_p);
 
 					}else if(reader.LocalName == "RightHandPoints"){
@@ -222,9 +226,11 @@ namespace TemplateGesture{
 						zy_pr.Add(zy_p);
 
 						TimePointF zx_p = TimePointF.Empty;
-						zx_p.X = XmlConvert.ToSingle(reader.GetAttribute("Z"));
-						zx_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						zx_p.X = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						zx_p.Y = XmlConvert.ToSingle(reader.GetAttribute("Z"));
 						zx_pr.Add(zx_p);
+						rd.ZX_RPoints.Add(new MyMath.Vector2(zx_p.X, zx_p.Y));
+						
 
 					}
 				}
@@ -283,9 +289,9 @@ namespace TemplateGesture{
 				double correlationL = GetCorrelation(listPFL);
 				double correlationR = GetCorrelation(listPFR);
 				
-				UnityEngine.Debug.Log(gesName);
-				UnityEngine.Debug.Log(correlationL);
-				UnityEngine.Debug.Log(correlationR);
+//				UnityEngine.Debug.Log(gesName);
+//				UnityEngine.Debug.Log(correlationL);
+//				UnityEngine.Debug.Log(correlationR);
 
 				if(Math.Abs(correlationL) > lineMin){
 					rd.IsLineL = true;
@@ -300,8 +306,8 @@ namespace TemplateGesture{
 				}else{
 					rd.IsLineR = false;
 				}
-				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansL));
-				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansR));
+//				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansL));
+//				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansR));
 				pos.Add(rd);
 
 				rl.AddResult(gesName, 2);

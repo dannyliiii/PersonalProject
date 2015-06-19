@@ -10,16 +10,20 @@ using System.Drawing;
 
 namespace TemplateGesture{
 
-	public enum Plane{
+	public enum Plane : int{
 		xy,
-		xz,
-		zy
+		zy,
+		xz
 	}
 
 	public class RecordedData {
 		public string gestureName;
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
+		List<MyMath.Vector2> zy_lPoints;
+		List<MyMath.Vector2> zy_rPoints;
+		List<MyMath.Vector2> zx_lPoints;
+		List<MyMath.Vector2> zx_rPoints;
 		List<PointF> lpf;
 		List<PointF> rpf;
 		int sampleCount;
@@ -58,7 +62,10 @@ namespace TemplateGesture{
 		}
 		//----------------------- for the z-x plane ------------------
 
-
+		public Plane Plane{
+			get{return plane;}
+			set{plane = value;}
+		}
 		// getter/setter
 		public bool IsLineL{
 			get{return isLineL;}
@@ -104,6 +111,30 @@ namespace TemplateGesture{
 			set { rPoints = value; }
 		}
 
+		public List<MyMath.Vector2> ZY_LPoints
+		{
+			get { return zy_lPoints; }
+			set { zy_lPoints = value; }
+		}
+		
+		public List<MyMath.Vector2> ZY_RPoints
+		{
+			get { return zy_rPoints; }
+			set { zy_rPoints = value; }
+		}
+
+		public List<MyMath.Vector2> ZX_LPoints
+		{
+			get { return zx_lPoints; }
+			set { zx_lPoints = value; }
+		}
+		
+		public List<MyMath.Vector2> ZX_RPoints
+		{
+			get { return zx_rPoints; }
+			set { zx_rPoints = value; }
+		}
+
 		public List<PointF> LP{
 			get{return lpf;}
 			set{lpf = value;}
@@ -120,6 +151,10 @@ namespace TemplateGesture{
 			this.gestureName = name;
 			lPoints = new List<MyMath.Vector2> ();
 			rPoints = new List<MyMath.Vector2> ();
+			zy_lPoints = new List<MyMath.Vector2> ();
+			zy_rPoints = new List<MyMath.Vector2> ();
+			zx_lPoints = new List<MyMath.Vector2> ();
+			zx_rPoints = new List<MyMath.Vector2> ();
 			rpf = new List<PointF> ();
 			lpf = new List<PointF> ();
 			zy_lpf = new List<PointF> ();

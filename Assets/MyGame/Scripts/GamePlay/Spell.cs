@@ -34,9 +34,5 @@ namespace Game{
 			}
 		}
 
-		void OnCollisionEnter(Collision collision) {
-			Destroy(gameObject);
-		}
-
 	}
 }

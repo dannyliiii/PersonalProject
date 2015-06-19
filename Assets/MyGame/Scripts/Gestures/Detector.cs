@@ -126,7 +126,7 @@ public class Detector : MonoBehaviour {
 	void OnGestureDetected(string gesture)
 	{
 		gesText = gesture;
-		//PlayerGo.CastSpell ();
+		playerClass.CastSpell();
 	}
 
 	void ProcessFrame()
@@ -214,7 +214,7 @@ public class Detector : MonoBehaviour {
 
 		for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
 
-
+			// draw x,y
 			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
 			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.y  + 1) * 256);
 			
@@ -226,35 +226,25 @@ public class Detector : MonoBehaviour {
 			
 			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
 
+//			//draw x,z
+//			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
+//			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.z) * 256);
+//			
+//			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
+//			
+//			
+//			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
+//			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
+//			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
+
+//			Debug.Log(templateGestureDetector.Entries[i].PositionRight.z);
+
 		}
 
 		textureArr[(int)TexArrEnum.t1].Apply ();
 		textureArr[(int)TexArrEnum.t2].Apply ();
 
 	} 
-
-
-//	void DrawData(RecordedPath path){
-//		
-//		Material material = dataImagePlane.GetComponent<Renderer>().material;
-//		Texture2D texture = new Texture2D(512,512, TextureFormat.RGB24, false);
-//		texture.wrapMode = TextureWrapMode.Clamp;
-//		material.SetTexture(0, texture);
-//	
-//		for (int i = 0; i < path.SampleCount - 1; i ++) {
-//
-//			MyMath.Vector2 start = path.Points[i];
-//			MyMath.Vector2 end = path.Points[i + 1];
-//
-//			texture.DrawLine(new UnityEngine.Vector2((start.x + 1) * 256, (start.y + 1) * 256),
-//			                 new UnityEngine.Vector2((end.x + 1) * 256, (end.y + 1) * 256),
-//			                 Color.black);
-//
-//		}
-//		
-//		texture.Apply();
-//
-//	}
 
 	void DrawDataPerFrame(int num){
 
@@ -281,19 +271,11 @@ public class Detector : MonoBehaviour {
 
 		for (int i = 0; i < currentData; i ++) {
 
+			//xy
 			MyMath.Vector2 lStart = data.LPoints[i];
 			MyMath.Vector2 lEnd = data.LPoints[i+1]; 
 			MyMath.Vector2 rStart = data.RPoints[i];
 			MyMath.Vector2 rEnd = data.RPoints[i+1];
-
-//			MyMath.Vector2 lStart = new MyMath.Vector2(data.LP[i].X, data.LP[i].Y);
-//			MyMath.Vector2 lEnd = new MyMath.Vector2(data.LP[i+1].X, data.LP[i+1].Y); 
-//			MyMath.Vector2 rStart = new MyMath.Vector2(data.RP[i].X, data.RP[i].Y);
-//			MyMath.Vector2 rEnd = new MyMath.Vector2(data.RP[i+1].X, data.RP[i+1].Y);
-	
-//			textureArr[(int)TexArrEnum.t4].DrawLine(new UnityEngine.Vector2(((rStart.x  + 1)) * 256, (rStart.y + 1) * 256),
-//			                                		new UnityEngine.Vector2(((rEnd.x + 1)) * 256, (rEnd.y + 1) * 256),
-//			                                        Color.red);
 
 			float x = Mathf.Round((rStart.x + 1) * 256);
 			float y = Mathf.Round((rStart.y  + 1) * 256);
@@ -301,6 +283,19 @@ public class Detector : MonoBehaviour {
 			float x2 = Mathf.Round((lStart.x + 1) * 256);
 			float y2 = Mathf.Round((lStart.y  + 1) * 256);
 
+//			//xz
+//			MyMath.Vector2 lStart = new MyMath.Vector2 (data.ZX_LPoints[i].x, data.ZX_LPoints[i].y);
+//			MyMath.Vector2 rStart = new MyMath.Vector2 (data.ZX_RPoints[i].x, data.ZX_RPoints[i].y);
+//			
+//			float x = Mathf.Round((rStart.x + 1) * 256);
+//			float y = Mathf.Round((rStart.y) * 256);
+//
+//			float x2 = Mathf.Round((lStart.x + 1) * 256);
+//			float y2 = Mathf.Round((lStart.y) * 256);
+
+
+//			Debug.Log(rStart.y);
+			
 			textureArr[(int)TexArrEnum.t4].DrawFilledCircle( (int)x, (int)y, 3, Color.red);
 
 //			textureArr[(int)TexArrEnum.t3].DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
@@ -325,7 +320,7 @@ public class Detector : MonoBehaviour {
 			gesCount = LearningMachine.Pos.Count;
 		}
 
-		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.05f , 100, 200), 
+		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.65f , 100, 200), 
 		                                     scrollPosition , 
 		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
 		                    				 false, 
@@ -341,25 +336,25 @@ public class Detector : MonoBehaviour {
 		GUI.EndScrollView();
 	
 
-		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
-		                                         scrollPositionText , 
-		                                         new Rect(screenWidth * 0.7f, screenHeight * 0.05f, screenWidth * 0.08f, gesCount * 40),
-		                                         false, 
-		                                         true);
-
-		for(int j = 0; j < LearningMachine.ResultList.Size(); j ++){
-			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
-			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
-	
-		}
-
-		GUI.EndScrollView ();
+//		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
+//		                                         scrollPositionText , 
+//		                                         new Rect(screenWidth * 0.7f, screenHeight * 0.05f, screenWidth * 0.08f, gesCount * 40),
+//		                                         false, 
+//		                                         true);
+//
+//		for(int j = 0; j < LearningMachine.ResultList.Size(); j ++){
+//			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
+//			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
+//	
+//		}
+//
+//		GUI.EndScrollView ();
 
 		string str = "Detected gesture shows here.";
 		if(gesText != "")
 			str = gesText + " detected";
 
-		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.05f , 200, 40), str, gs);	
+		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.01f , 200, 40), str, gs);	
 
 //		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.5f,200,200),"Click"))
 //			Debug.Log("Button Clicked!");

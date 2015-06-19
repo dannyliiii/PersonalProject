@@ -11,17 +11,21 @@ namespace Game{
 		Attribute attribute;
 		public RectTransform imageTrans;
 		public RectTransform imageTransGreen;
-		float hpLength = 54;
+		float hpLength;
 		int hpTotal = 100;
+		float height; 
+		int count = 0;
 
 		// Use this for initialization
 		void Awake () {
 			Vector3 position = gameObject.transform.position;
-			imageTrans.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
-			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
+			height = GetComponent<MeshRenderer>().bounds.size.y;
+			imageTrans.position = new Vector3 (position.x, position.y + height * 0.6f , -1.0f);
+//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
 			
 //			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
 			hp = hpTotal;
+			hpLength = imageTrans.rect.width;
 		}
 		
 		// Update is called once per frame
@@ -34,10 +38,14 @@ namespace Game{
 
 		void OnCollisionEnter(Collision collision) {
 //			if (collision.gameObject.transform.name == "Projectile") {
-				hp -= 10;
-				Vector3 posTemp = imageTransGreen.position;
+			Destroy (collision.gameObject);
+			hp -= 10;
+			Vector2 posTemp = imageTransGreen.anchoredPosition;
 
-				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);			
+			Debug.Log (hpLength * 0.1f);
+//				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
+			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * 0.1f, posTemp.y);			
+			
 //				print (imageTransGreen.position.x);
 //			}
 		}
