@@ -13,7 +13,7 @@ namespace Game{
 		int def;
 		int money;
 		List<Spell> spells;
-
+	
 		public GameObject projectile;
 		private List<GameObject> projList;
 		private UnityEngine.Vector3 upForce;
@@ -33,6 +33,13 @@ namespace Game{
 			upForce = new UnityEngine.Vector3 (0.0f, 100.0f, 0.0f);
 
 			gameObject.transform.position = Camera.main.transform.position;
+		}
+
+		void Update(){
+			//temp
+			if (Input.GetKeyDown (KeyCode.A)) {
+				CastSpell();
+			}
 		}
 
 		public void CastSpell(){
