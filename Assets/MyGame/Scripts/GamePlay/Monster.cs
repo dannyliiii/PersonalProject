@@ -16,6 +16,7 @@ namespace Game{
 		float height; 
 		int count = 0;
 		public Animator animator;
+		float animeTime = 0;
 
 		// Use this for initialization
 		void Awake () {
@@ -27,16 +28,38 @@ namespace Game{
 			hp = hpTotal;
 			hpLength = imageTrans.rect.width;
 			animator.SetBool("die",false);
-		
+
+			RuntimeAnimatorController ac = animator.runtimeAnimatorController;    //Get Animator controller
+			for(int i = 0; i< ac.animationClips.Length; i++)                 //For all animations
+			{
+				if(ac.animationClips[i].name == "SimpleDie")        //If it has the same name as your clip
+				{
+					animeTime = ac.animationClips[i].length;
+				}
+			}
+
+
+			
 		}
 		
 		// Update is called once per frame
 		void Update () {
 			if (hp <= 0) {
 //				Reset();
-				animator.SetBool("die",true);
-			}
+				
+				StartCoroutine(PlayAnimeAndWait(animeTime));
 
+			}
+			
+		}
+
+		IEnumerator PlayAnimeAndWait(float time){
+//			Debug.Log("in play and wait");
+			animator.SetBool("die",true);
+
+			yield return new WaitForSeconds(time);
+
+			Destroy(gameObject);
 		}
 
 		void OnCollisionEnter(Collision collision) {

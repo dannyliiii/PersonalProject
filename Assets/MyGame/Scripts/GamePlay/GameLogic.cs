@@ -17,7 +17,10 @@ namespace Game{
 		
 		// Update is called once per frame
 		void Update () {
-
+			if (monster == null) {
+				Debug.Log("monster is destroied");
+				SpawnMonster();
+			}
 		}
 
 		void SpawnMonster(){
