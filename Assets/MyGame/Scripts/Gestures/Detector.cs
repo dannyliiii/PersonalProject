@@ -216,28 +216,20 @@ public class Detector : MonoBehaviour {
 
 			// draw x,y
 			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
-			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.y  + 1) * 256);
-			
-			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
-			
+			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.y  + 1) * 256);		
 			
 			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
-			
-			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
 
 //			//draw x,z
 //			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
 //			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.z) * 256);
-//			
-//			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
-//			
-//			
+//
 //			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 //			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
-//			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
-
-//			Debug.Log(templateGestureDetector.Entries[i].PositionRight.z);
+			
+			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
+			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
 
 		}
 
@@ -294,13 +286,8 @@ public class Detector : MonoBehaviour {
 //			float y2 = Mathf.Round((lStart.y) * 256);
 
 
-//			Debug.Log(rStart.y);
 			
 			textureArr[(int)TexArrEnum.t4].DrawFilledCircle( (int)x, (int)y, 3, Color.red);
-
-//			textureArr[(int)TexArrEnum.t3].DrawLine(new UnityEngine.Vector2((lStart.x + 1) * 256, (lStart.y  + 1) * 256),
-//			                           				new UnityEngine.Vector2((lEnd.x + 1) * 256, (lEnd.y  + 1) * 256),
-//			                           				Color.blue);
 			textureArr[(int)TexArrEnum.t3].DrawFilledCircle( (int)x2, (int)y2, 3, Color.blue);
 		}
 

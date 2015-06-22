@@ -64,6 +64,17 @@ namespace TemplateGesture{
 		{
 			int i = 0;
 
+//			bool[] l = new bool[3];
+//			bool[] r = new bool[3];
+//
+//
+//			l [0] = IsLine (tpll);
+//			l [1] = IsLine (zy_tpll);
+//			l [2] = IsLine (zx_tpll);
+//			r [0] = IsLine (tplr);
+//			r [1] = IsLine (zy_tpll);
+//			r [2] = IsLine (zx_tpll);
+
 			bool l = false;
 			bool r = false;
 			List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(tpll);
@@ -85,9 +96,6 @@ namespace TemplateGesture{
 			if(Math.Abs(correlationR) > lineMin){
 				r = true;
 			}
-//			UnityEngine.Debug.Log ("correlation");
-//			UnityEngine.Debug.Log (correlationL);
-//			UnityEngine.Debug.Log (correlationR);
 
 			foreach (RecordedData p in pos) {
 
@@ -105,8 +113,8 @@ namespace TemplateGesture{
 //				if((p.IsLineL == l) && (p.IsLineR == r)){
 //
 //				}
-
 				double score = 0;
+				double xy_score = 0;
 				double zy_score = 0;
 				double zx_score = 0;
 				double rL = radiance45 - Math.Atan2(tpll[0].Y - tpll[tpll.Count - 1].Y, tpll[0].X - tpll[tpll.Count - 1].X);
@@ -116,6 +124,7 @@ namespace TemplateGesture{
 					score = -4;
 				}
 				else{
+//					if(l[(int)p.Plane] & r[(int)p.Plane]){
 					if(l & r){
 						if(p.IsLineL && p.IsLineR){
 							rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
@@ -129,20 +138,28 @@ namespace TemplateGesture{
 						}
 					}
 					else{
-						score = p.Match(tpll, tplr, threshold, minSize, 1);
+						xy_score = p.Match(tpll, tplr, threshold, minSize, 1);
 						zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
 						zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
 					}
 				}
+
 //				//for testing
 //				if(p.gestureName == "hdel8"){
 //					UnityEngine.Debug.Log(p.gestureName);
+//					UnityEngine.Debug.Log(xy_score);
 //					UnityEngine.Debug.Log(zx_score);
+//					UnityEngine.Debug.Log(zy_score);
 //				}
 
 //				if(zy_score > 0.8 && zx_score > 0.8)
 //					UnityEngine.Debug.Log(zy_score);
 //					UnityEngine.Debug.Log(zx_score);
+				score = xy_score;
+//				if(score < zy_score)
+//					score = zy_score;
+//				if(score < zx_score)
+//					score = zx_score;
 
 				rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR);
 
@@ -355,6 +372,25 @@ namespace TemplateGesture{
 			double res = ((list.Count * sumAB) - (sumA * sumB))
 				/ (Math.Sqrt((list.Count * sumAA) - (sumA * sumA))
 				   * Math.Sqrt((list.Count * sumBB) - (sumB * sumB)));
+
+			return res;
+		}
+
+		private bool IsLine(List<TimePointF> list){
+
+			bool res = false;
+			List<PointF> listP = GoldenSectionExtension.ListTimePointF2ListPointF(list);
+			
+			double radiance45 = GoldenSectionExtension.DegreeToRadian(45);
+			double radians = radiance45 - Math.Atan2(listP[0].Y - listP[listP.Count - 1].Y, listP[0].X - listP[listP.Count - 1].X);
+			
+			listP = GeotrigEx.RotatePoints(listP, -radians);
+			
+			double correlation = GetCorrelation(listP);
+			
+			if(Math.Abs(correlation) > lineMin){
+				res = true;
+			}
 
 			return res;
 		}
