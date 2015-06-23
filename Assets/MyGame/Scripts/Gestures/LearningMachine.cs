@@ -130,22 +130,22 @@ namespace TemplateGesture{
 							rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
 							rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
 							score = 2;
-							UnityEngine.Debug.Log(p.gestureName);
-							UnityEngine.Debug.Log(rL + rR);
+//							UnityEngine.Debug.Log(p.gestureName);
+//							UnityEngine.Debug.Log(rL + rR);
 						}
 						else{
 							score = -5;
 						}
 					}
 					else{
-						xy_score = p.Match(tpll, tplr, threshold, minSize, 1);
+						score = p.Match(tpll, tplr, threshold, minSize, 1);
 						zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
 						zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
 					}
 				}
 
 //				//for testing
-//				if(p.gestureName == "hdel8"){
+//				if(p.gestureName == "HD Pool Entry Dive"){
 //					UnityEngine.Debug.Log(p.gestureName);
 //					UnityEngine.Debug.Log(xy_score);
 //					UnityEngine.Debug.Log(zx_score);
@@ -155,7 +155,6 @@ namespace TemplateGesture{
 //				if(zy_score > 0.8 && zx_score > 0.8)
 //					UnityEngine.Debug.Log(zy_score);
 //					UnityEngine.Debug.Log(zx_score);
-				score = xy_score;
 //				if(score < zy_score)
 //					score = zy_score;
 //				if(score < zx_score)
