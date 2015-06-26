@@ -13,26 +13,40 @@ namespace Game{
 		lighting
 	}
 
-	public class Spell : MonoBehaviour {
+	public class Spell /*: MonoBehaviour*/ {
 		
-		string spellName;
-		Attribute attribute;
-		int atk;
-		int lvl;
-		string gesture;
+		public string spellName;
+		public Attribute attribute;
+		public int atk;
+		public int lvl;
+		public string gesture;
+		public bool IsLocked;
 
-		private float time;
+		private readonly float maxTime = 4.0f;
+		private float liveTime;
 
-		void Start () {
-			time = 0.0f;
+		public Spell(){
+
 		}
-		// Update is called once per frame
-		void Update () {
-			time += Time.deltaTime;
-			if (time > 4.0f) {
-				Destroy(gameObject);
-			}
+		public Spell(string name, int attr, int a, int l, string ges, bool locked = true){
+			spellName = name;
+			attribute = (Attribute)attr;
+			atk = a;
+			lvl = l;
+			gesture = ges;
+			IsLocked = locked;
 		}
+
+//		void Start () {
+//			liveTime = 0.0f;
+//		}
+//		// Update is called once per frame
+//		void Update () {
+//			liveTime += Time.deltaTime;
+//			if (liveTime > maxTime) {
+////				Destroy(gameObject);
+//			}
+//		}
 
 	}
 }

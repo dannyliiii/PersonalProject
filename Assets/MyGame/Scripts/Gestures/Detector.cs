@@ -110,10 +110,7 @@ public class Detector : MonoBehaviour {
 			ProcessFrame ();
 
 		DrawRealTimeHandsTracks ();
-
-//		if (Input.GetKeyDown (KeyCode.A)) {
-//			playerClass.CastSpell();
-//		}
+		
 	}
 
 	void LoadTemplateGestureDetector()

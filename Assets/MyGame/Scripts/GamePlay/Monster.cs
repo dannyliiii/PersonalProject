@@ -38,18 +38,11 @@ namespace Game{
 				}
 			}
 
-
-			
 		}
 		
 		// Update is called once per frame
 		void Update () {
-			if (hp <= 0) {
-//				Reset();
-				
-				StartCoroutine(PlayAnimeAndWait(animeTime));
 
-			}
 			
 		}
 
@@ -63,17 +56,27 @@ namespace Game{
 		}
 
 		void OnCollisionEnter(Collision collision) {
+
 //			if (collision.gameObject.transform.name == "Projectile") {
-			Destroy (collision.gameObject);
-			hp -= 10;
+			SpellBehavior spellBehavior  = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
+			int hpTemp = hp;
+			hp -= spellBehavior.spell.atk;
 			Vector2 posTemp = imageTransGreen.anchoredPosition;
 
 //			Debug.Log (hpLength * 0.1f);
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
-			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * 0.1f, posTemp.y);			
+			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * (1 - (float)hp / (float)hpTemp), posTemp.y);			
 			
 //				print (imageTransGreen.position.x);
 //			}
+			Destroy (collision.gameObject);
+			if (hp <= 0) {
+				//				Reset();
+				
+				StartCoroutine(PlayAnimeAndWait(animeTime));
+				
+			}
+
 		}
 
 		public void Reset(){

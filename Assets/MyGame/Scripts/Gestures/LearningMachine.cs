@@ -325,7 +325,7 @@ namespace TemplateGesture{
 //				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansL));
 //				UnityEngine.Debug.Log(GoldenSectionExtension.RadiansToDegree(radiansR));
 				pos.Add(rd);
-
+				
 				rl.AddResult(gesName, 2);
 
 			}
