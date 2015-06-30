@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Spells SpellNums="8" Date="Monday, June 08, 2015" TimeOfDay="11:24:27 AM">
-  <Spell Name="FireBall" Level="1" Damage="1" Attribute="0" Gesture="hdel1" Lock="0"/>
+  <Spell Name="FireBall" Level="1" Damage="10" Attribute="0" Gesture="hdel1" Lock="0"/>
   <Spell Name="WaterGun" Level="1" Damage="1" Attribute="1" Gesture="hdel2" Lock="1"/>
   <Spell Name="WindeBlade" Level="1" Damage="1" Attribute="2" Gesture="hdel3" Lock="1"/>
   <Spell Name="LighteningBolt" Level="1" Damage="1" Attribute="3" Gesture="hdel4" Lock="1"/>

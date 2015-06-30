@@ -123,7 +123,7 @@ public class Detector : MonoBehaviour {
 	void OnGestureDetected(string gesture)
 	{
 		gesText = gesture;
-//		playerClass.CastSpell();
+		playerClass.CastSpell(gesture);
 	}
 
 	void ProcessFrame()
@@ -300,24 +300,25 @@ public class Detector : MonoBehaviour {
 		if (LearningMachine.Pos.Count <= 0)
 			return;
 
-//		if (gesCount < LearningMachine.Pos.Count) {
-//			gesCount = LearningMachine.Pos.Count;
-//		}
-//
-//		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.65f , 100, 200), 
-//		                                     scrollPosition , 
-//		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
-//		                    				 false, 
-//		                                     true);
-//
-//		for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
-//			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos[i].gestureName)){
-//				currentData = 0;
-//				num = i;
-//			}
-//		}
-//
-//		GUI.EndScrollView();
+		if (gesCount < LearningMachine.Pos.Count) {
+			gesCount = LearningMachine.Pos.Count;
+		}
+
+		//show the list of gesture templates
+		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.65f , 100, 200), 
+		                                     scrollPosition , 
+		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
+		                    				 false, 
+		                                     true);
+
+		for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
+			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos[i].gestureName)){
+				currentData = 0;
+				num = i;
+			}
+		}
+
+		GUI.EndScrollView();
 	
 
 //		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 

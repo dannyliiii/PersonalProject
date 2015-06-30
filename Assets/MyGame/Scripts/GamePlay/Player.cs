@@ -66,6 +66,10 @@ namespace Game{
 //				CastSpell();
 				CastSpell("hdel1");
 			}
+			if (Input.GetKeyDown (KeyCode.B)) {
+				//				CastSpell();
+				CastSpell("hdel2");
+			}
 		}
 
 		public void CastSpell(){
@@ -94,6 +98,7 @@ namespace Game{
 				} 
 			}
 			if (temp.IsLocked) {
+				UnityEngine.Debug.Log("Spell has not been unlocked.");
 				return;
 			}
 
@@ -110,7 +115,6 @@ namespace Game{
 			ParticleSystem ps = proj.GetComponent<ParticleSystem>();
 			ps.Play ();
 			projList.Add (proj);
-			
 		}
 
 

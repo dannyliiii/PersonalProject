@@ -43,7 +43,7 @@ namespace Game{
 		// Update is called once per frame
 		void Update () {
 
-			
+
 		}
 
 		IEnumerator PlayAnimeAndWait(float time){
@@ -59,24 +59,22 @@ namespace Game{
 
 //			if (collision.gameObject.transform.name == "Projectile") {
 			SpellBehavior spellBehavior  = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
-			int hpTemp = hp;
 			hp -= spellBehavior.spell.atk;
 			Vector2 posTemp = imageTransGreen.anchoredPosition;
 
 //			Debug.Log (hpLength * 0.1f);
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
-			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * (1 - (float)hp / (float)hpTemp), posTemp.y);			
+			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);			
 			
 //				print (imageTransGreen.position.x);
 //			}
-			Destroy (collision.gameObject);
+			Debug.Log (hp);
 			if (hp <= 0) {
 				//				Reset();
-				
 				StartCoroutine(PlayAnimeAndWait(animeTime));
-				
 			}
-
+			Destroy (collision.gameObject);
+		
 		}
 
 		public void Reset(){
