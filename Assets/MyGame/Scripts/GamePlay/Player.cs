@@ -38,7 +38,6 @@ namespace Game{
 
 			gameObject.transform.position = Camera.main.transform.position;
 
-			bool success = true;
 			XmlTextReader reader = null;
 
 			reader = new XmlTextReader(filePath);

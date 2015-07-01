@@ -28,6 +28,13 @@ namespace TemplateGesture{
 
 		private static readonly double lineMin = 0.99;
 		private static double radiance45;
+		private static readonly float minScore = 0.8f;
+
+		public static float MinScore{
+			get{
+				return minScore;
+			}
+		}
 
 		public static LearningMachine Instance{
 			get{
@@ -138,12 +145,30 @@ namespace TemplateGesture{
 						}
 					}
 					else{
-						score = p.Match(tpll, tplr, threshold, minSize, 1);
+						xy_score = p.Match(tpll, tplr, threshold, minSize, 1);
 						zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
 						zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
 					}
 				}
 
+				int planeCount = 1;
+
+				if(xy_score >= minScore){
+					planeCount ++;
+					score += xy_score;
+				}
+
+				if(zy_score >= minScore){
+					planeCount ++;
+					score += zy_score;
+					score /= 2;
+				}
+
+				if(zx_score >= minScore){
+					planeCount ++;
+					score += zx_score;
+					score /= 2;
+				}
 //				//for testing
 //				if(p.gestureName == "HD Pool Entry Dive"){
 //					UnityEngine.Debug.Log(p.gestureName);
@@ -159,8 +184,7 @@ namespace TemplateGesture{
 //					score = zy_score;
 //				if(score < zx_score)
 //					score = zx_score;
-
-				rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR);
+				rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
 
 			}
 			return rl;
@@ -316,7 +340,7 @@ namespace TemplateGesture{
 					rd.IsLineL = false;
 				}
 
-				if(Math.Abs(correlationL) > lineMin){
+				if(Math.Abs(correlationR) > lineMin){
 					rd.IsLineR = true;
 					rd.AngleR = GoldenSectionExtension.RadiansToDegree(radiansR);
 				}else{

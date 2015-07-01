@@ -262,9 +262,9 @@ public class Detector : MonoBehaviour {
 
 			//xy
 			MyMath.Vector2 lStart = data.LPoints[i];
-			MyMath.Vector2 lEnd = data.LPoints[i+1]; 
+//			MyMath.Vector2 lEnd = data.LPoints[i+1]; 
 			MyMath.Vector2 rStart = data.RPoints[i];
-			MyMath.Vector2 rEnd = data.RPoints[i+1];
+//			MyMath.Vector2 rEnd = data.RPoints[i+1];
 
 			float x = Mathf.Round((rStart.x + 1) * 256);
 			float y = Mathf.Round((rStart.y  + 1) * 256);

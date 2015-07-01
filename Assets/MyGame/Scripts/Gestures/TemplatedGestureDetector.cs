@@ -24,7 +24,6 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly float minScore = 0.8f;
 		private readonly int frameCount = 60;
 		
 
@@ -125,7 +124,7 @@ namespace TemplateGesture{
 			int index = resList.Index;
 			
 
-			if(resList.GetScore(index) > minScore){
+			if(resList.GetScore(index) > LearningMachine.MinScore){
 
 				RaiseGestureDetected(resList.GetName(index));
 			}

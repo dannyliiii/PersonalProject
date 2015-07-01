@@ -13,6 +13,7 @@ namespace TemplateGesture{
 			private string name;
 			private double score;
 			private double radianceDiff = 0;
+			private int plane;
 
 			public void SetScore(double s){
 				score = s;
@@ -50,6 +51,14 @@ namespace TemplateGesture{
 					return radianceDiff;
 				}
 			}
+			public int Plane{
+				get{
+					return plane;
+				}
+				set{
+					plane = value;
+				}
+			}
 			// sorts in descending order of Score
 			public int CompareTo(object obj)
 			{
@@ -85,10 +94,11 @@ namespace TemplateGesture{
 			arrList.Add(r);
 		}
 
-		public void UpdateResult(int num, string name, double score, double diff){
+		public void UpdateResult(int num, string name, double score, double diff, int plane){
 			arrList [num].SetName (name);
 			arrList [num].SetScore(score);
 			arrList [num].SetRadianceDiff (diff);
+			arrList [num].Plane = plane;
 //			for (int i = 0; i < arrList.Count; i ++) {
 //				if(arrList[i].Name == name){
 //					if(arrList[i].Score < score){
@@ -148,16 +158,30 @@ namespace TemplateGesture{
 				if (arrList.Count > 0)
 				{
 					double score = -1;
+					double score2 = -1;
+					bool flag = false;
 					for(int i = 0; i < arrList.Count; i++){
-						if(arrList[i].Score > score){
-							res = i;
-							score = arrList[i].Score;
-						}else if(arrList[i].Score == score){
-							if(arrList[res].Diff > arrList[i].Diff){
+						if(arrList[i].Plane > 1 && arrList[i].Score > LearningMachine.MinScore){
+							if(!flag)
+								flag = true;
+							if(arrList[i].Score > score2){
 								res = i;
+								score2 = arrList[i].Score;
+							}else{
+								//do nothing
 							}
-						}else{
-							//do nothing
+						}
+						if(!flag){
+							if(arrList[i].Score > score){
+								res = i;
+								score = arrList[i].Score;
+							}else if(arrList[i].Score == score){
+								if(arrList[res].Diff > arrList[i].Diff){
+									res = i;
+								}
+							}else{
+								//do nothing
+							}
 						}
 					}
 				}
