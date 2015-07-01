@@ -8,7 +8,9 @@ namespace Game{
 		public GameObject plane;
 		public GameObject monsterPrefab;
 		GameObject monster;
-		
+		int level = 0;
+
+
 		// Use this for initialization
 		void Start () {
 			SpawnMonster ();

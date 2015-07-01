@@ -21,20 +21,21 @@ namespace Game{
 		public int lvl;
 		public string gesture;
 		public bool IsLocked;
-
+		public int num;
 		private readonly float maxTime = 4.0f;
 		private float liveTime;
 
 		public Spell(){
 
 		}
-		public Spell(string name, int attr, int a, int l, string ges, bool locked = true){
+		public Spell(string name, int attr, int a, int l, string ges, int n, bool locked = true){
 			spellName = name;
 			attribute = (Attribute)attr;
 			atk = a;
 			lvl = l;
 			gesture = ges;
 			IsLocked = locked;
+			num = n;
 		}
 
 //		void Start () {

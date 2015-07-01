@@ -122,7 +122,6 @@ namespace TemplateGesture{
 
 
 			int index = resList.Index;
-			
 
 			if(resList.GetScore(index) > LearningMachine.MinScore){
 
