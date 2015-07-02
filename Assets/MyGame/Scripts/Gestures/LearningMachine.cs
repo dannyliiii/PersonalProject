@@ -153,28 +153,43 @@ namespace TemplateGesture{
 
 				if(p.gestureName == "hdel8"){
 					UnityEngine.Debug.Log(p.gestureName);
-					UnityEngine.Debug.Log(xy_score);
-					UnityEngine.Debug.Log(zy_score);
+//					UnityEngine.Debug.Log(xy_score);
 					UnityEngine.Debug.Log(zx_score);
+//					UnityEngine.Debug.Log(zy_score);
 				}
 				int planeCount = 1;
 
-				if(xy_score >= minScore){
-					planeCount ++;
-					score += xy_score;
+				if((int)p.Plane == 0){
+					score = xy_score;
 				}
-
-				if(zy_score >= minScore){
-					planeCount ++;
-					score += zy_score;
-					score /= 2;
+				if((int)p.Plane == 1){
+					score = zx_score;
 				}
-
-				if(zx_score >= minScore){
-					planeCount ++;
-					score += zx_score;
-					score /= 2;
+				if((int)p.Plane == 2){
+					score = zy_score;
 				}
+//				bool xy = false;
+//				bool xz = false;
+//				bool yz = false;
+//				if(xy_score >= minScore){
+//					planeCount ++;
+//					score += xy_score;
+//					xy = true;
+//				}
+//
+//				if(zy_score >= minScore){
+//					planeCount ++;
+//					score += zy_score;
+//					score /= 2;
+//					yz = true;
+//				}
+//
+//				if(zx_score >= minScore){
+//					planeCount ++;
+//					score += zx_score;
+//					score /= 2;
+//					xz = true;
+//				}
 //				//for testing
 //				if(p.gestureName == "HD Pool Entry Dive"){
 //					UnityEngine.Debug.Log(p.gestureName);
@@ -223,8 +238,9 @@ namespace TemplateGesture{
 				List<TimePointF> zx_pr = new List<TimePointF>();
 				List<TimePointF> zx_pl = new List<TimePointF>();
 
-
+				rd.Plane = 0;
 				while(reader.Read()){
+
 					if(reader.LocalName == "Plane"){
 						rd.Plane = (Plane)XmlConvert.ToSingle(reader.GetAttribute("Value"));
 					}

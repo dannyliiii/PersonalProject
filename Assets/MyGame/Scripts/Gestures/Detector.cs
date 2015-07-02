@@ -224,9 +224,9 @@ public class Detector : MonoBehaviour {
 //
 //			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 //			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
-			
-			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
-			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
+//			
+//			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
+//			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
 
 		}
 
@@ -304,23 +304,23 @@ public class Detector : MonoBehaviour {
 			gesCount = LearningMachine.Pos.Count;
 		}
 
-		//show the list of gesture templates
-		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.65f , 100, 200), 
-		                                     scrollPosition , 
-		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
-		                    				 false, 
-		                                     true);
-
-		for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
-			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos[i].gestureName)){
-				currentData = 0;
-				num = i;
-			}
-		}
-
-		GUI.EndScrollView();
+//		//show the list of gesture templates
+//		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.65f , 100, 200), 
+//		                                     scrollPosition , 
+//		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
+//		                    				 false, 
+//		                                     true);
+//
+//		for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
+//			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos[i].gestureName)){
+//				currentData = 0;
+//				num = i;
+//			}
+//		}
+//
+//		GUI.EndScrollView();
 	
-
+		//show the score
 //		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
 //		                                         scrollPositionText , 
 //		                                         new Rect(screenWidth * 0.7f, screenHeight * 0.05f, screenWidth * 0.08f, gesCount * 40),
@@ -330,7 +330,6 @@ public class Detector : MonoBehaviour {
 //		for(int j = 0; j < LearningMachine.ResultList.Size(); j ++){
 //			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
 //			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
-//	
 //		}
 //
 //		GUI.EndScrollView ();

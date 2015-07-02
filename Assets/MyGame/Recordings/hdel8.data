@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="hdel8" NumPts="156" Date="Friday, June 19, 2015" TimeOfDay="2:05:55 PM">
-  <Plane Value="2" />
+  <Plane Value="1" />
   <Constrains Value="1" />
   <Constrains Value="1" />
   <LeftHandPoints X="-0.180593491" Y="0.175488725" Z="1.41463625" />

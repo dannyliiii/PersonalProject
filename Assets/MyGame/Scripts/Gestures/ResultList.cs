@@ -13,6 +13,7 @@ namespace TemplateGesture{
 			private string name;
 			private double score;
 			private double radianceDiff = 0;
+			private bool xy, xz, yz;
 			private int plane;
 
 			public void SetScore(double s){
@@ -59,6 +60,31 @@ namespace TemplateGesture{
 					plane = value;
 				}
 			}
+
+			public bool XY{
+				get{
+					return xy;
+				}
+				set{
+					xy = value;
+				}
+			}
+			public bool XZ{
+				get{
+					return XZ;
+				}
+				set{
+					xz = value;
+				}
+			}
+			public bool YZ{
+				get{
+					return yz;
+				}
+				set{
+					yz = value;
+				}
+			}
 			// sorts in descending order of Score
 			public int CompareTo(object obj)
 			{
@@ -99,6 +125,10 @@ namespace TemplateGesture{
 			arrList [num].SetScore(score);
 			arrList [num].SetRadianceDiff (diff);
 			arrList [num].Plane = plane;
+
+//			arrList [num].XY = xy;
+//			arrList [num].XZ = xz;
+//			arrList [num].YZ = yz;
 //			for (int i = 0; i < arrList.Count; i ++) {
 //				if(arrList[i].Name == name){
 //					if(arrList[i].Score < score){
