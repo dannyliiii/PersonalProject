@@ -151,6 +151,12 @@ namespace TemplateGesture{
 					}
 				}
 
+				if(p.gestureName == "hdel8"){
+					UnityEngine.Debug.Log(p.gestureName);
+					UnityEngine.Debug.Log(xy_score);
+					UnityEngine.Debug.Log(zy_score);
+					UnityEngine.Debug.Log(zx_score);
+				}
 				int planeCount = 1;
 
 				if(xy_score >= minScore){

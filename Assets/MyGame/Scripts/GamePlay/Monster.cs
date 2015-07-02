@@ -20,13 +20,7 @@ namespace Game{
 
 		// Use this for initialization
 		void Awake () {
-			Vector3 position = gameObject.transform.position;
-			height = GetComponent<MeshRenderer>().bounds.size.y;
-			imageTrans.position = new Vector3 (position.x, position.y + height * 0.6f , -1.0f);
-//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
-//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
-			hp = hpTotal;
-			hpLength = imageTrans.rect.width;
+
 			animator.SetBool("die",false);
 
 			RuntimeAnimatorController ac = animator.runtimeAnimatorController;    //Get Animator controller
@@ -37,13 +31,37 @@ namespace Game{
 					animeTime = ac.animationClips[i].length;
 				}
 			}
-
 		}
 		
 		// Update is called once per frame
 		void Update () {
 
 
+		}
+
+		void LateUpdate(){
+
+		}
+
+		public void ConfigMonster(int level){
+			Vector3 position = gameObject.transform.position;
+			height = GetComponent<MeshRenderer>().bounds.size.y;
+			imageTrans.position = new Vector3 (position.x, position.y + height * 0.6f , -1.0f);
+			//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
+			//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
+			hpTotal = 100 + level * 10;
+			hp = hpTotal;
+			hpLength = imageTrans.rect.width;
+			Debug.Log (level);
+			RectTransform rt = gameObject.GetComponent<RectTransform> ();
+//			Debug.Log (rt.localScale);
+//			Vector3 scale = rt.localScale + new Vector3((float)level, (float)level, (float)level );
+//			rt.localScale = scale;
+//			Debug.Log (rt.localScale);
+			Color randColor = new Color(Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), 1.0f);
+			gameObject.GetComponent<MeshRenderer> ().material.color = randColor;
+			Debug.Log (gameObject.GetComponent<MeshRenderer> ().material.color);
+			
 		}
 
 		IEnumerator PlayAnimeAndWait(float time){
@@ -64,17 +82,14 @@ namespace Game{
 
 //			Debug.Log (hpLength * 0.1f);
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
-			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);			
-			
-//				print (imageTransGreen.position.x);
-//			}
-			Debug.Log (hp);
+			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
+
 			if (hp <= 0) {
 				//				Reset();
 				StartCoroutine(PlayAnimeAndWait(animeTime));
 			}
+//			Debug.Log (hp);
 			Destroy (collision.gameObject);
-		
 		}
 
 		public void Reset(){
