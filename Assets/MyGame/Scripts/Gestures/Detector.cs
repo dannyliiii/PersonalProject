@@ -62,7 +62,7 @@ public class Detector : MonoBehaviour {
 	}
 
 	void Awake () {
-
+		Debug.Log("detector awake");
 		kinect = devOrEmu.getKinect();
 
 		LoadTemplateGestureDetector ();
@@ -103,6 +103,9 @@ public class Detector : MonoBehaviour {
 		if (timer < 40)
 			timer++;
 
+		Debug.Log("detector update");
+		Debug.Log(num);
+		
 		if (num != -1)
 			DrawDataPerFrame (num);
 
@@ -236,7 +239,7 @@ public class Detector : MonoBehaviour {
 	} 
 
 	void DrawDataPerFrame(int num){
-
+		Debug.Log (LearningMachine.Pos.Count);
 		if (LearningMachine.Pos.Count <= 0)
 			return;
 		RecordedData data = LearningMachine.Pos [num];

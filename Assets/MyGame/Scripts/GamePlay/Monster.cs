@@ -17,11 +17,12 @@ namespace Game{
 		int count = 0;
 		public Animator animator;
 		float animeTime = 0;
+		Animation anime;
 
 		// Use this for initialization
 		void Awake () {
 
-//			animator.SetBool("die",false);
+
 
 //			RuntimeAnimatorController ac = animator.runtimeAnimatorController;    //Get Animator controller
 //			for(int i = 0; i< ac.animationClips.Length; i++)                 //For all animations
@@ -33,7 +34,9 @@ namespace Game{
 //			}
 			hp = hpTotal = 100;
 			hpLength = imageTrans.rect.width;
-			
+			anime = GetComponent<Animation> ();
+
+			animeTime = anime.GetClip("monster1Die").length;
 		}
 		
 		// Update is called once per frame
@@ -49,11 +52,14 @@ namespace Game{
 		public void ConfigMonster(int level){
 			Vector3 position = gameObject.transform.position;
 
-			GameObject robot2 = transform.Find("Robot2").gameObject;
-			height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
+			GameObject monster1 = transform.Find ("meshes").Find ("body").gameObject;
+			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
+
+//			GameObject robot2 = transform.Find("Robot2").gameObject;
+//			height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
 
 //			height = GetComponent<MeshRenderer>().bounds.size.y;
-			imageTrans.position = new Vector3 (position.x, position.y + height * 0.6f , -1.0f);
+			imageTrans.position = new Vector3 (position.x, position.y + height , -1.0f);
 			//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
 			//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
 			hpTotal = 100 + level * 10;
@@ -74,9 +80,9 @@ namespace Game{
 
 		IEnumerator PlayAnimeAndWait(float time){
 //			Debug.Log("in play and wait");
-			animator.SetBool("die",true);
+//			animator.SetBool("die",true);
 
-			yield return new WaitForSeconds(time);
+			yield return new WaitForSeconds(time + 0.5f);
 
 			Destroy(gameObject);
 		}
@@ -92,13 +98,16 @@ namespace Game{
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
 			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 
+//			animator.SetBool("hit",true);
+			anime.Play("monster1Hit2");
 			Debug.Log (hp);
 			if (hp <= 0) {
-				//				Reset();
-//				StartCoroutine(PlayAnimeAndWait(animeTime));
+				anime.Play("monster1Die");
+				StartCoroutine(PlayAnimeAndWait(animeTime));
 			}
 //			Debug.Log (hp);
 			Destroy (collision.gameObject);
+//			animator.SetBool("hit",false);
 		}
 
 		public void Reset(){

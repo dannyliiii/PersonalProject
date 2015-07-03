@@ -184,34 +184,52 @@ namespace TemplateGesture{
 
 		public int Index{
 			get{
+//				int res = -1;
+//				if (arrList.Count > 0)
+//				{
+//					double score = -1;
+//					double score2 = -1;
+//					bool flag = false;
+//					for(int i = 0; i < arrList.Count; i++){
+//						if(arrList[i].Plane > 1 && arrList[i].Score > LearningMachine.MinScore){
+//							if(!flag)
+//								flag = true;
+//							if(arrList[i].Score > score2){
+//								res = i;
+//								score2 = arrList[i].Score;
+//							}else{
+//								//do nothing
+//							}
+//						}
+//						if(!flag){
+//							if(arrList[i].Score > score){
+//								res = i;
+//								score = arrList[i].Score;
+//							}else if(arrList[i].Score == score){
+//								if(arrList[res].Diff > arrList[i].Diff){
+//									res = i;
+//								}
+//							}else{
+//								//do nothing
+//							}
+//						}
+//					}
+//				}
+//				return res;
 				int res = -1;
 				if (arrList.Count > 0)
 				{
 					double score = -1;
-					double score2 = -1;
-					bool flag = false;
 					for(int i = 0; i < arrList.Count; i++){
-						if(arrList[i].Plane > 1 && arrList[i].Score > LearningMachine.MinScore){
-							if(!flag)
-								flag = true;
-							if(arrList[i].Score > score2){
+						if(arrList[i].Score > score){
+							res = i;
+							score = arrList[i].Score;
+						}else if(arrList[i].Score == score){
+							if(arrList[res].Diff > arrList[i].Diff){
 								res = i;
-								score2 = arrList[i].Score;
-							}else{
-								//do nothing
 							}
-						}
-						if(!flag){
-							if(arrList[i].Score > score){
-								res = i;
-								score = arrList[i].Score;
-							}else if(arrList[i].Score == score){
-								if(arrList[res].Diff > arrList[i].Diff){
-									res = i;
-								}
-							}else{
-								//do nothing
-							}
+						}else{
+							//do nothing
 						}
 					}
 				}
