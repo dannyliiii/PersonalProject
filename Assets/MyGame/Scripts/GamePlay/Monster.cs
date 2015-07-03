@@ -21,16 +21,19 @@ namespace Game{
 		// Use this for initialization
 		void Awake () {
 
-			animator.SetBool("die",false);
+//			animator.SetBool("die",false);
 
-			RuntimeAnimatorController ac = animator.runtimeAnimatorController;    //Get Animator controller
-			for(int i = 0; i< ac.animationClips.Length; i++)                 //For all animations
-			{
-				if(ac.animationClips[i].name == "SimpleDie")        //If it has the same name as your clip
-				{
-					animeTime = ac.animationClips[i].length;
-				}
-			}
+//			RuntimeAnimatorController ac = animator.runtimeAnimatorController;    //Get Animator controller
+//			for(int i = 0; i< ac.animationClips.Length; i++)                 //For all animations
+//			{
+//				if(ac.animationClips[i].name == "SimpleDie")        //If it has the same name as your clip
+//				{
+//					animeTime = ac.animationClips[i].length;
+//				}
+//			}
+			hp = hpTotal = 100;
+			hpLength = imageTrans.rect.width;
+			
 		}
 		
 		// Update is called once per frame
@@ -45,7 +48,11 @@ namespace Game{
 
 		public void ConfigMonster(int level){
 			Vector3 position = gameObject.transform.position;
-			height = GetComponent<MeshRenderer>().bounds.size.y;
+
+			GameObject robot2 = transform.Find("Robot2").gameObject;
+			height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
+
+//			height = GetComponent<MeshRenderer>().bounds.size.y;
 			imageTrans.position = new Vector3 (position.x, position.y + height * 0.6f , -1.0f);
 			//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
 			//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
@@ -58,9 +65,10 @@ namespace Game{
 //			Vector3 scale = rt.localScale + new Vector3((float)level, (float)level, (float)level );
 //			rt.localScale = scale;
 //			Debug.Log (rt.localScale);
-			Color randColor = new Color(Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), 1.0f);
-			gameObject.GetComponent<MeshRenderer> ().material.color = randColor;
-			Debug.Log (gameObject.GetComponent<MeshRenderer> ().material.color);
+
+//			Color randColor = new Color(Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), Random.Range(0.0f,1.0f), 1.0f);
+//			gameObject.GetComponent<MeshRenderer> ().material.color = randColor;
+//			Debug.Log (gameObject.GetComponent<MeshRenderer> ().material.color);
 			
 		}
 
@@ -84,9 +92,10 @@ namespace Game{
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
 			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 
+			Debug.Log (hp);
 			if (hp <= 0) {
 				//				Reset();
-				StartCoroutine(PlayAnimeAndWait(animeTime));
+//				StartCoroutine(PlayAnimeAndWait(animeTime));
 			}
 //			Debug.Log (hp);
 			Destroy (collision.gameObject);
