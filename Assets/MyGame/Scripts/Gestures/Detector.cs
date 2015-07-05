@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using Drawing;
 using System.Linq;
 using Game;
+using UnityEditor;
 
 public class Detector : MonoBehaviour {
 
@@ -50,6 +51,8 @@ public class Detector : MonoBehaviour {
 	int rhpMax = 100;
 	int timer = 40;
 
+	bool startScreen = true;
+
 	//gui scroll view
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
 	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
@@ -69,19 +72,25 @@ public class Detector : MonoBehaviour {
 
 		gs = new GUIStyle ();
 		gs.fontSize = 40;
-		
-		textureArr = new Texture2D[arrCount];
-		
-		for (int i = 0; i < arrCount; i ++) {
-			textureArr[i] = new Texture2D(512,512, TextureFormat.RGB24, false);
-			textureArr[i].wrapMode = TextureWrapMode.Clamp;
+
+
+		if (EditorApplication.currentScene == "SampleScene") {
+			startScreen = false;
+
+			textureArr = new Texture2D[arrCount];
+			
+			for (int i = 0; i < arrCount; i ++) {
+				textureArr [i] = new Texture2D (512, 512, TextureFormat.RGB24, false);
+				textureArr [i].wrapMode = TextureWrapMode.Clamp;
+			}
+
+
+			material1 = dataImagePlaneRL.GetComponent<Renderer> ().material;
+			material2 = dataImagePlaneRR.GetComponent<Renderer> ().material;
+			material3 = dataImagePlane.GetComponent<Renderer> ().material;
+			material4 = dataImagePlane2.GetComponent<Renderer> ().material;
+
 		}
-
-
-		material1 = dataImagePlaneRL.GetComponent<Renderer>().material;
-		material2 = dataImagePlaneRR.GetComponent<Renderer>().material;
-		material3 = dataImagePlane.GetComponent<Renderer>().material;
-		material4 = dataImagePlane2.GetComponent<Renderer>().material;
 
 		//to detect the position of joints in the latest frame
 		joints = new List<Vector4> ();
@@ -89,8 +98,8 @@ public class Detector : MonoBehaviour {
 			joints.Add(Vector4.zero);
 		}
 
-		if (controlMouse == false)
-			handCursor.gameObject.SetActive (false);
+//		if (controlMouse == false)
+//			handCursor.gameObject.SetActive (false);
 
 		rightHands = new List<Vector4> ();
 
@@ -112,7 +121,9 @@ public class Detector : MonoBehaviour {
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
 
-		DrawRealTimeHandsTracks ();
+		if (!startScreen) {
+			DrawRealTimeHandsTracks ();
+		}
 		
 	}
 
@@ -299,7 +310,9 @@ public class Detector : MonoBehaviour {
 	}
 
 	void OnGUI() {
-
+		if (startScreen) {
+			return;
+		}
 		if (LearningMachine.Pos.Count <= 0)
 			return;
 
@@ -336,7 +349,7 @@ public class Detector : MonoBehaviour {
 //		}
 //
 //		GUI.EndScrollView ();
-
+		
 		string str = "Detected gesture shows here.";
 		if(gesText != "")
 			str = gesText + " detected";
