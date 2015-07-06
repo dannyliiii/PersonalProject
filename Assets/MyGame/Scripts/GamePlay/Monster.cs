@@ -36,6 +36,9 @@ namespace Game{
 			hp = hpTotal = 100;
 			hpLength = imageTrans.rect.width;
 			anime = GetComponent<Animation> ();
+			anime ["monster1Idle"].wrapMode = WrapMode.Loop;
+			anime.Play("monster1Idle");
+			
 
 			animeTime = anime.GetClip("monster1Die").length;
 		}
