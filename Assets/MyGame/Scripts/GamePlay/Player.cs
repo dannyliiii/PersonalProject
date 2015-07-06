@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -71,11 +71,15 @@ namespace Game{
 			}
 			if (Input.GetKeyDown (KeyCode.B)) {
 				//				CastSpell();
-				CastSpell("hdel2");
+				CastSpell("HD Pool Entry Dive");
 			}
 			if (Input.GetKeyDown (KeyCode.C)) {
 				//				CastSpell();
-				CastSpell("hdel3");
+				CastSpell("High Dive Power-Up");
+			}
+			if (Input.GetKeyDown (KeyCode.D)) {
+				//				CastSpell();
+				CastSpell("hdel4");
 			}
 		}
 

@@ -158,15 +158,16 @@ namespace TemplateGesture{
 //					UnityEngine.Debug.Log(zy_score);
 				}
 				int planeCount = 1;
-
-				if((int)p.Plane == 0){
-					score = xy_score;
-				}
-				if((int)p.Plane == 1){
-					score = zx_score;
-				}
-				if((int)p.Plane == 2){
-					score = zy_score;
+				if(score != 2){
+					if((int)p.Plane == 0){
+						score = xy_score;
+					}
+					if((int)p.Plane == 1){
+						score = zx_score;
+					}
+					if((int)p.Plane == 2){
+						score = zy_score;
+					}
 				}
 //				bool xy = false;
 //				bool xz = false;
@@ -190,7 +191,7 @@ namespace TemplateGesture{
 //					score /= 2;
 //					xz = true;
 //				}
-//				//for testing
+				//for testing
 //				if(p.gestureName == "HD Pool Entry Dive"){
 //					UnityEngine.Debug.Log(p.gestureName);
 //					UnityEngine.Debug.Log(xy_score);

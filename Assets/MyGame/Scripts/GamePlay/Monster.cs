@@ -18,6 +18,7 @@ namespace Game{
 		public Animator animator;
 		float animeTime = 0;
 		Animation anime;
+		float respawnDelay = 0.4f;
 
 		// Use this for initialization
 		void Awake () {
@@ -82,9 +83,10 @@ namespace Game{
 //			Debug.Log("in play and wait");
 //			animator.SetBool("die",true);
 
-			yield return new WaitForSeconds(time + 0.5f);
+			yield return new WaitForSeconds(time + respawnDelay);
 
 			Destroy(gameObject);
+
 		}
 
 		void OnCollisionEnter(Collision collision) {

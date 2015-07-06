@@ -25,7 +25,7 @@ public class StartScreen : MonoBehaviour {
 	void Update () {
 		Debug.Log (Input.mousePosition);
 		AddPosition2List (Input.mousePosition);
-		DrawMousePositions ();
+//		DrawMousePositions ();
 	}
 
 	void LoadScene(string scene){

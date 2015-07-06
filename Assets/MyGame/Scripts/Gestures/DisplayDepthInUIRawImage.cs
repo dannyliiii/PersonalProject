@@ -1,25 +1,32 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Renderer))]
-public class DisplayDepth : MonoBehaviour {
+public class DisplayDepthInUIRawImage : MonoBehaviour {
 	
 	public DepthWrapper dw;
+	
 	private Texture2D tex;
+	RawImage[] img;
 	// Use this for initialization
 	void Start () {
 		tex = new Texture2D(320,240,TextureFormat.ARGB32,false);
-		GetComponent<Renderer>().material.mainTexture = tex;
+
+//		tex = new Texture2D(512,512, TextureFormat.RGB24, false);
+//		tex.wrapMode = TextureWrapMode.Clamp;
+
+		img = Camera.main.transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
+		img [0].texture = tex;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (dw.pollDepth())
-		{
-			tex.SetPixels32(convertDepthToColor(dw.depthImg));
-			//tex.SetPixels32(convertPlayersToCutout(dw.segmentations));
-			tex.Apply(false);
-		}
+//		if (dw.pollDepth())
+//		{
+//			tex.SetPixels32(convertDepthToColor(dw.depthImg));
+//			//tex.SetPixels32(convertPlayersToCutout(dw.segmentations));
+//			tex.Apply(false);
+//		}
 	}
 	
 	private Color32[] convertDepthToColor(short[] depthBuf)

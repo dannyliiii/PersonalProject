@@ -37,7 +37,10 @@ namespace Game{
 			IsLocked = locked;
 			num = n;
 		}
+	
+		public virtual void CastSpell(){
 
+		}
 //		void Start () {
 //			liveTime = 0.0f;
 //		}

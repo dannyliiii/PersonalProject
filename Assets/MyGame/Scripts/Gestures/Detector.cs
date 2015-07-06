@@ -53,6 +53,9 @@ public class Detector : MonoBehaviour {
 
 	bool startScreen = true;
 
+	Texture2D texture;
+	RawImage[] img;
+
 	//gui scroll view
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
 	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
@@ -65,7 +68,10 @@ public class Detector : MonoBehaviour {
 	}
 
 	void Awake () {
-		Debug.Log("detector awake");
+
+//		Object.DontDestroyOnLoad (gameObject);
+
+//		Debug.Log("detector awake");
 		kinect = devOrEmu.getKinect();
 
 		LoadTemplateGestureDetector ();
@@ -73,8 +79,8 @@ public class Detector : MonoBehaviour {
 		gs = new GUIStyle ();
 		gs.fontSize = 40;
 
-
-		if (EditorApplication.currentScene == "SampleScene") {
+//		UnityEngine.Debug.Log (EditorApplication.currentScene);
+		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/KinectSample.unity") {
 			startScreen = false;
 
 			textureArr = new Texture2D[arrCount];
@@ -89,7 +95,14 @@ public class Detector : MonoBehaviour {
 			material2 = dataImagePlaneRR.GetComponent<Renderer> ().material;
 			material3 = dataImagePlane.GetComponent<Renderer> ().material;
 			material4 = dataImagePlane2.GetComponent<Renderer> ().material;
+		}
 
+		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/StartScreen.unity") {
+			texture = new Texture2D(512,512, TextureFormat.RGB24, false);
+			texture.wrapMode = TextureWrapMode.Clamp;
+			
+			img = Camera.main.transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
+			img [0].texture = texture;
 		}
 
 		//to detect the position of joints in the latest frame
@@ -111,18 +124,21 @@ public class Detector : MonoBehaviour {
 
 		if (timer < 40)
 			timer++;
-
-		Debug.Log("detector update");
-		Debug.Log(num);
-		
-		if (num != -1)
-			DrawDataPerFrame (num);
+	
+		DrawDataPerFrame (num);
 
 		if(!KinectRecorder.IsRecording)
 			ProcessFrame ();
 
+//		UnityEngine.Debug.Log (startScreen);
 		if (!startScreen) {
 			DrawRealTimeHandsTracks ();
+		} else {
+			DrawRightHandTracksStartScreen();
+		}
+
+		if (Input.GetKeyDown (KeyCode.L)) {
+			Application.LoadLevel ("KinectSample");
 		}
 		
 	}
@@ -138,15 +154,28 @@ public class Detector : MonoBehaviour {
 	{
 		gesText = gesture;
 		playerClass.CastSpell(gesture);
+
+		switch (gesture){
+		case "s":
+			if(startScreen)
+				Application.LoadLevel ("KinectSample");
+			break;
+		default:
+			break;
+		}
 	}
 
 	void ProcessFrame()
 	{
-		if (kinect == null)
+		if (kinect == null) {
+			Debug.Log("kinect is null");
 			return;
+		}
+
 
 		if (kinect.pollSkeleton()){
 
+//			Debug.Log(Kinect.Constants.NuiSkeletonCount);
 			
 			// to record the first tracked player's right hand positon;
 			for (int i = 0; i < Kinect.Constants.NuiSkeletonCount; i++)
@@ -171,33 +200,33 @@ public class Detector : MonoBehaviour {
 					}
 
 
-					//control the mouse with right hand.
-					if(controlMouse && handCursor != null)
-					{
-						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
-						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
-						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
-
-//						if(handCursor.GetComponent<GUITexture>() == null)
-//						{
-//							float zDist = handCursor.transform.position.z - Camera.main.transform.position.z;
-//							vCursorPos.z = zDist;
-//							
-//							vCursorPos = Camera.main.ViewportToWorldPoint(vCursorPos);
+//					//control the mouse with right hand.
+//					if(controlMouse && handCursor != null)
+//					{
+//						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
+//						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
+//						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
+//
+////						if(handCursor.GetComponent<GUITexture>() == null)
+////						{
+////							float zDist = handCursor.transform.position.z - Camera.main.transform.position.z;
+////							vCursorPos.z = zDist;
+////							
+////							vCursorPos = Camera.main.ViewportToWorldPoint(vCursorPos);
+////						}
+//
+//						//interpolate the cursor position
+//						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
+//
+//						MouseControl.MouseMove(vCursorPos);
+//
+//						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
+//							MouseControl.MouseClick();
+//							timer = 0;
 //						}
-
-						//interpolate the cursor position
-						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
-
-						MouseControl.MouseMove(vCursorPos);
-
-						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
-							MouseControl.MouseClick();
-							timer = 0;
-						}
-					}
+//					}
 					
-
+					Debug.Log("adding joints to entry");
 					templateGestureDetector.Add(joints);
 					templateGestureDetector.LookForGesture();
 					break;
@@ -208,8 +237,23 @@ public class Detector : MonoBehaviour {
 		}
 	}
 
-
+	void DrawRightHandTracksStartScreen(){
+		texture = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
+			
+			// draw x,y
+			float x = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
+			float y = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
+			
+			texture.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
+		}
+		
+		texture.Apply ();
+		img [0].texture = texture;
+	}
 	void DrawRealTimeHandsTracks(){
+
+//		UnityEngine.Debug.Log (templateGestureDetector.Entries.Count);
 
 		material1.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
 		DestroyImmediate (material1.mainTexture);
@@ -238,9 +282,9 @@ public class Detector : MonoBehaviour {
 //
 //			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 //			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
-//			
-//			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
-//			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
+			
+			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
+			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
 
 		}
 
@@ -250,7 +294,8 @@ public class Detector : MonoBehaviour {
 	} 
 
 	void DrawDataPerFrame(int num){
-		Debug.Log (LearningMachine.Pos.Count);
+		if (num == -1)
+			return;
 		if (LearningMachine.Pos.Count <= 0)
 			return;
 		RecordedData data = LearningMachine.Pos [num];
