@@ -116,15 +116,6 @@ namespace Game{
 				return;
 			}
 
-//			//find the vector pointing from our position to the target
-//			_direction = (Target.position - transform.position).normalized;
-//			
-//			//create the rotation we need to be in to look at the target
-//			_lookRotation = Quaternion.LookRotation(_direction);
-//			
-//			//rotate us over time according to speed until we are in the required rotation
-//			transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * RotationSpeed);
-
 			Vector3 position = transform.position + new Vector3 (2.5f, 0.0f, 0.0f);
 			Vector3 toPosition = new Vector3 (plane.transform.position.x, plane.transform.position.y + 2.5f/*temp*/ * 0.5f, plane.transform.position.z);
 			GameObject proj =  Instantiate(/*projectile*/ spellsPrefabs[temp.num], position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
