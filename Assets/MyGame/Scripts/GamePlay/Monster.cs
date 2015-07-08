@@ -18,12 +18,12 @@ namespace Game{
 		public Animator animator;
 		float animeTime = 0;
 		Animation anime;
-		float respawnDelay = 0.4f;
+		float respawnDelay = 0.5f;
+		public GameObject dimond;
+		float speed = 8.0f;
 
 		// Use this for initialization
 		void Awake () {
-
-
 
 //			RuntimeAnimatorController ac = animator.runtimeAnimatorController;    //Get Animator controller
 //			for(int i = 0; i< ac.animationClips.Length; i++)                 //For all animations
@@ -95,7 +95,10 @@ namespace Game{
 		void OnCollisionEnter(Collision collision) {
 
 //			if (collision.gameObject.transform.name == "Projectile") {
-			SpellBehavior spellBehavior  = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
+			SpellBehavior spellBehavior = null;
+			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
+			if (spellBehavior == null)
+				return;
 			hp -= spellBehavior.spell.atk;
 			Vector2 posTemp = imageTransGreen.anchoredPosition;
 
@@ -103,10 +106,24 @@ namespace Game{
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
 			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 
+//			Vector2 oldVec = new Vector2 (posTemp.x , posTemp.y);	
+//			Vector3 newVec = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
+//			
+//			imageTransGreen.anchoredPosition = Vector2.Lerp (oldVec, newVec, 4 * Time.deltaTime);	
+			
+
 //			animator.SetBool("hit",true);
 			anime.Play("monster1Hit2");
 			Debug.Log (hp);
 			if (hp <= 0) {
+
+				Destroy(gameObject.GetComponent<CapsuleCollider>());
+
+				GameObject dim =  Instantiate(dimond, transform.position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
+				Rigidbody rb = dim.GetComponent<Rigidbody> ();
+				rb.velocity = (transform.up + new Vector3(Random.Range(-1.0f,1.0f),0,-0.3f)) * speed;
+
+
 				anime.Play("monster1Die");
 				StartCoroutine(PlayAnimeAndWait(animeTime));
 			}

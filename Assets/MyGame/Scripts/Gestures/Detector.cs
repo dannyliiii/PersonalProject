@@ -51,6 +51,9 @@ public class Detector : MonoBehaviour {
 	int rhpMax = 100;
 	int timer = 40;
 
+	public GameObject rightHand;
+	public GameObject leftHand;
+
 	bool startScreen = true;
 
 	Texture2D texture;
@@ -111,8 +114,11 @@ public class Detector : MonoBehaviour {
 			joints.Add(Vector4.zero);
 		}
 
-//		if (controlMouse == false)
-//			handCursor.gameObject.SetActive (false);
+		if (controlMouse == false) {
+			leftHand.SetActive (false);
+			rightHand.SetActive (false);
+			handCursor.gameObject.SetActive (false);
+		}
 
 		rightHands = new List<Vector4> ();
 
@@ -200,33 +206,42 @@ public class Detector : MonoBehaviour {
 					}
 
 
-//					//control the mouse with right hand.
-//					if(controlMouse && handCursor != null)
-//					{
-//						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
-//						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
-//						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
-//
-////						if(handCursor.GetComponent<GUITexture>() == null)
-////						{
-////							float zDist = handCursor.transform.position.z - Camera.main.transform.position.z;
-////							vCursorPos.z = zDist;
-////							
-////							vCursorPos = Camera.main.ViewportToWorldPoint(vCursorPos);
-////						}
-//
-//						//interpolate the cursor position
-//						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
-//
-//						MouseControl.MouseMove(vCursorPos);
-//
-//						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
-//							MouseControl.MouseClick();
-//							timer = 0;
-//						}
-//					}
+					//control the mouse with right hand.
+					if(controlMouse && handCursor != null && rightHand != null && leftHand != null)
+					{
+						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
+						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
+						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
+
+						float x = (joints[(int)NuiSkeletonPositionIndex.HandRight].x) * 10.0f;
+						float y = ((joints[(int)NuiSkeletonPositionIndex.HandRight].y) * 2) * 5.0f;
+
+						float xL = (joints[(int)NuiSkeletonPositionIndex.HandLeft].x) * 10.0f;
+						float yL = ((joints[(int)NuiSkeletonPositionIndex.HandLeft].y) * 2) * 5.0f;
 					
-					Debug.Log("adding joints to entry");
+//						if(handCursor.GetComponent<GUITexture>() == null)
+//						{
+//							float zDist = handCursor.transform.position.z - Camera.main.transform.position.z;
+//							vCursorPos.z = zDist;
+//							
+//							vCursorPos = Camera.main.ViewportToWorldPoint(vCursorPos);
+//						}
+
+						//interpolate the cursor position
+						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
+						rightHand.transform.position = UnityEngine.Vector3.Lerp(rightHand.transform.position, new UnityEngine.Vector3(x,y,rightHand.transform.position.z), 4 * Time.deltaTime);
+						leftHand.transform.position = UnityEngine.Vector3.Lerp(leftHand.transform.position, new UnityEngine.Vector3(xL,yL,leftHand.transform.position.z), 4 * Time.deltaTime);
+											
+
+						MouseControl.MouseMove(vCursorPos);
+
+						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
+							MouseControl.MouseClick();
+							timer = 0;
+						}
+					}
+					
+//					Debug.Log("adding joints to entry");
 					templateGestureDetector.Add(joints);
 					templateGestureDetector.LookForGesture();
 					break;

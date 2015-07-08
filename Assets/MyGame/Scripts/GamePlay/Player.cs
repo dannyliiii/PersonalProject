@@ -7,13 +7,14 @@ using System.Diagnostics;
 namespace Game{
 	public class Player : MonoBehaviour {
 
+		public GUIText dimondNum;
 		int lv;
 		int xp;
 		int hp;
 		int mp;
 		int atk;
 		int def;
-		int money;
+		public int dimond;
 		List<Spell> spells;
 	
 		public GameObject plane;
@@ -33,7 +34,7 @@ namespace Game{
 			mp = 100;
 			atk = 1;
 			def = 1;
-			money = 0;
+			dimond = 0;
 			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
@@ -79,8 +80,10 @@ namespace Game{
 			}
 			if (Input.GetKeyDown (KeyCode.D)) {
 				//				CastSpell();
-				CastSpell("hdel4");
+				CastSpell("hdel3");
 			}
+
+			dimondNum.text = dimond.ToString();
 		}
 
 		public void CastSpell(){
@@ -135,6 +138,10 @@ namespace Game{
 		}
 		
 		public void Dead(){
+
+		}
+
+		public void CollectDimond(){
 
 		}
 

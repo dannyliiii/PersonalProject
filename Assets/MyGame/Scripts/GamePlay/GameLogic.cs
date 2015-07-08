@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Game{
 	public class GameLogic : MonoBehaviour {
@@ -7,6 +8,7 @@ namespace Game{
 		public GameObject player;
 		public GameObject plane;
 		public GameObject monsterPrefab;
+		public GameObject cursor;
 		GameObject monster;
 		int level = 0;
 
@@ -23,8 +25,9 @@ namespace Game{
 				Debug.Log("a monster is destroied");
 				SpawnMonster(level++);
 			}
-		}
 
+		}
+		
 		void SpawnMonster(int level){
 			GameObject monster1 = monsterPrefab.transform.Find ("meshes").Find ("body").gameObject;
 			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
