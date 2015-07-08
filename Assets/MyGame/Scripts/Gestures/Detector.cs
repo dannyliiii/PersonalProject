@@ -53,6 +53,7 @@ public class Detector : MonoBehaviour {
 
 	public GameObject rightHand;
 	public GameObject leftHand;
+	public GameObject rhsp;
 
 	bool startScreen = true;
 
@@ -121,7 +122,7 @@ public class Detector : MonoBehaviour {
 		}
 
 		rightHands = new List<Vector4> ();
-
+		
 //		var playerScript: OtherScript = GetComponent(OtherScript); 
 
 	}
@@ -146,7 +147,7 @@ public class Detector : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.L)) {
 			Application.LoadLevel ("KinectSample");
 		}
-		
+
 	}
 
 	void LoadTemplateGestureDetector()
@@ -231,7 +232,10 @@ public class Detector : MonoBehaviour {
 						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
 						rightHand.transform.position = UnityEngine.Vector3.Lerp(rightHand.transform.position, new UnityEngine.Vector3(x,y,rightHand.transform.position.z), 4 * Time.deltaTime);
 						leftHand.transform.position = UnityEngine.Vector3.Lerp(leftHand.transform.position, new UnityEngine.Vector3(xL,yL,leftHand.transform.position.z), 4 * Time.deltaTime);
-											
+
+						UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
+						rhsp.transform.position = screenPosition;
+						Debug.Log (screenPosition);
 
 						MouseControl.MouseMove(vCursorPos);
 

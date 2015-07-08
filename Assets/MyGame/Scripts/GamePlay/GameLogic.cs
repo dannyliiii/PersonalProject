@@ -11,7 +11,8 @@ namespace Game{
 		public GameObject cursor;
 		GameObject monster;
 		int level = 0;
-
+		public GameObject rightHand;
+		public GameObject rightHandScreenPos;
 
 		// Use this for initialization
 		void Start () {
@@ -25,6 +26,11 @@ namespace Game{
 				Debug.Log("a monster is destroied");
 				SpawnMonster(level++);
 			}
+
+			Debug.Log ("Right hand");
+			UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
+			rightHandScreenPos.transform.position = screenPosition;
+			Debug.Log (screenPosition);
 
 		}
 		

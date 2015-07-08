@@ -4,6 +4,7 @@ using System;
 
 namespace Game{
 	public class Dimond : MonoBehaviour {
+//		public GameObject screenPos;
 		Player player;
 		Vector2 screenPosition;
 		// Use this for initialization
@@ -15,7 +16,9 @@ namespace Game{
 		
 		// Update is called once per frame
 		void Update () {
+			Debug.Log ("Diamond Pos");
 			Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+//			gameObject.transform.FindChild("ScreenPos").transform.position = screenPosition;
 			Debug.Log (screenPosition);
 		}
 
@@ -24,7 +27,7 @@ namespace Game{
 			if (other.gameObject.name == "RightHand" || other.gameObject.name == "LeftHand") {
 	//			Debug.Log("dimond collision if");
 				player.dimond ++;
-				Debug.Log("Dimond ++");
+//				Debug.Log("Dimond ++");
 				Destroy(gameObject);
 			}
 		}
