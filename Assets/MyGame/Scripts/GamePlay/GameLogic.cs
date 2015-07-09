@@ -6,6 +6,7 @@ namespace Game{
 	public class GameLogic : MonoBehaviour {
 
 		public GameObject player;
+		Player playerScript;
 		public GameObject plane;
 		public GameObject monsterPrefab;
 		public GameObject cursor;
@@ -13,11 +14,12 @@ namespace Game{
 		int level = 0;
 		public GameObject rightHand;
 		public GameObject rightHandScreenPos;
-
+		public GUITexture handGUI;
 		// Use this for initialization
 		void Start () {
 			SpawnMonster (level);
 
+			playerScript = player.GetComponent<Player>() as Player;
 		}
 		
 		// Update is called once per frame
@@ -27,10 +29,12 @@ namespace Game{
 				SpawnMonster(level++);
 			}
 
-			Debug.Log ("Right hand");
-			UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
-			rightHandScreenPos.transform.position = screenPosition;
-			Debug.Log (screenPosition);
+			HitTest ();
+
+//			Debug.Log ("Right hand");
+//			UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
+//			rightHandScreenPos.transform.position = screenPosition;
+//			Debug.Log (screenPosition);
 
 		}
 		
@@ -51,6 +55,32 @@ namespace Game{
 			monsterScript = monster.GetComponent<Monster>();
 			monsterScript.ConfigMonster (level);
 //			Debug.Log (monster.transform.localScale);
+		}
+
+		void HitTest() {
+			bool res = false;
+
+			GameObject[] go = GameObject.FindGameObjectsWithTag("Dimond");
+			List<int> removeList = new List<int> ();
+			List<GameObject> gol = new List<GameObject> ();
+			int i = 0;
+			foreach(var d in go){
+				gol.Add(d);
+				Vector3 pos = Camera.main.WorldToScreenPoint( d.transform.position );
+				if(handGUI.HitTest (pos)){
+					Debug.Log("hit");
+					removeList.Add(i);
+				}
+				i++;
+			}
+			if (i > 0) {
+				foreach (int r in removeList) {
+					Debug.Log (r);
+					playerScript.dimond++;
+					Destroy(go[r]);
+				}
+			}
+
 		}
 	}
 }

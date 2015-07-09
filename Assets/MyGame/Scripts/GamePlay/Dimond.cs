@@ -16,10 +16,10 @@ namespace Game{
 		
 		// Update is called once per frame
 		void Update () {
-			Debug.Log ("Diamond Pos");
-			Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
-//			gameObject.transform.FindChild("ScreenPos").transform.position = screenPosition;
-			Debug.Log (screenPosition);
+//			Debug.Log ("Diamond Pos");
+//			Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+////			gameObject.transform.FindChild("ScreenPos").transform.position = screenPosition;
+//			Debug.Log (screenPosition);
 		}
 
 		void OnTriggerEnter(Collider other ){

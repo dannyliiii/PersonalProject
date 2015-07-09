@@ -54,6 +54,7 @@ public class Detector : MonoBehaviour {
 	public GameObject rightHand;
 	public GameObject leftHand;
 	public GameObject rhsp;
+	public GUITexture GUIRH;
 
 	bool startScreen = true;
 
@@ -73,7 +74,7 @@ public class Detector : MonoBehaviour {
 
 	void Awake () {
 
-//		Object.DontDestroyOnLoad (gameObject);
+		Object.DontDestroyOnLoad (gameObject);
 
 //		Debug.Log("detector awake");
 		kinect = devOrEmu.getKinect();
@@ -99,9 +100,16 @@ public class Detector : MonoBehaviour {
 			material2 = dataImagePlaneRR.GetComponent<Renderer> ().material;
 			material3 = dataImagePlane.GetComponent<Renderer> ().material;
 			material4 = dataImagePlane2.GetComponent<Renderer> ().material;
+
+			if (!controlMouse) {
+				//			leftHand.SetActive (false);
+				//			rightHand.SetActive (false);
+				handCursor.gameObject.SetActive (false);
+			}
+
 		}
 
-		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/StartScreen.unity") {
+		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/StartScreen.unity" && img != null) {
 			texture = new Texture2D(512,512, TextureFormat.RGB24, false);
 			texture.wrapMode = TextureWrapMode.Clamp;
 			
@@ -115,11 +123,7 @@ public class Detector : MonoBehaviour {
 			joints.Add(Vector4.zero);
 		}
 
-		if (controlMouse == false) {
-			leftHand.SetActive (false);
-			rightHand.SetActive (false);
-			handCursor.gameObject.SetActive (false);
-		}
+
 
 		rightHands = new List<Vector4> ();
 		
@@ -144,7 +148,7 @@ public class Detector : MonoBehaviour {
 			DrawRightHandTracksStartScreen();
 		}
 
-		if (Input.GetKeyDown (KeyCode.L)) {
+		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
 			Application.LoadLevel ("KinectSample");
 		}
 
@@ -220,6 +224,9 @@ public class Detector : MonoBehaviour {
 						float xL = (joints[(int)NuiSkeletonPositionIndex.HandLeft].x) * 10.0f;
 						float yL = ((joints[(int)NuiSkeletonPositionIndex.HandLeft].y) * 2) * 5.0f;
 					
+
+						float xGUI = (joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f;
+						float yGUI = ((joints[(int)NuiSkeletonPositionIndex.HandRight].y) + 1) * 0.5f;
 //						if(handCursor.GetComponent<GUITexture>() == null)
 //						{
 //							float zDist = handCursor.transform.position.z - Camera.main.transform.position.z;
@@ -233,9 +240,12 @@ public class Detector : MonoBehaviour {
 						rightHand.transform.position = UnityEngine.Vector3.Lerp(rightHand.transform.position, new UnityEngine.Vector3(x,y,rightHand.transform.position.z), 4 * Time.deltaTime);
 						leftHand.transform.position = UnityEngine.Vector3.Lerp(leftHand.transform.position, new UnityEngine.Vector3(xL,yL,leftHand.transform.position.z), 4 * Time.deltaTime);
 
-						UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
-						rhsp.transform.position = screenPosition;
-						Debug.Log (screenPosition);
+						UnityEngine.Vector2 oldPos = GUIRH.transform.position;
+						GUIRH.transform.position = UnityEngine.Vector2.Lerp(oldPos, new UnityEngine.Vector2(xGUI, yGUI), 4 * Time.deltaTime);
+
+//						UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
+//						rhsp.transform.position = screenPosition;
+//						Debug.Log (screenPosition);
 
 						MouseControl.MouseMove(vCursorPos);
 
@@ -268,7 +278,7 @@ public class Detector : MonoBehaviour {
 		}
 		
 		texture.Apply ();
-		img [0].texture = texture;
+//		img [0].texture = texture;
 	}
 	void DrawRealTimeHandsTracks(){
 

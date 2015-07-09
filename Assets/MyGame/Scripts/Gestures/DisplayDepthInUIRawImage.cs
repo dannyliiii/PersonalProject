@@ -5,7 +5,8 @@ using UnityEngine.UI;
 public class DisplayDepthInUIRawImage : MonoBehaviour {
 	
 	public DepthWrapper dw;
-	
+	public RawImage depthImage;
+
 	private Texture2D tex;
 	RawImage[] img;
 	// Use this for initialization
@@ -15,17 +16,29 @@ public class DisplayDepthInUIRawImage : MonoBehaviour {
 //		tex = new Texture2D(512,512, TextureFormat.RGB24, false);
 //		tex.wrapMode = TextureWrapMode.Clamp;
 
-		img = Camera.main.transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
-		img [0].texture = tex;
+//		depthImage.texture = tex;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 //		if (dw.pollDepth())
 //		{
+//			tex = new Texture2D(320,240,TextureFormat.ARGB32,false);
+//
+////			Debug.Log("==================");
+////			int count = 0;
+////			foreach(var v in dw.depthImg){
+//////				Debug.Log(v);
+////				count++;
+////				if(count % 100 == 0){
+////					Debug.Log(v);
+////				}
+////			}
+//
 //			tex.SetPixels32(convertDepthToColor(dw.depthImg));
 //			//tex.SetPixels32(convertPlayersToCutout(dw.segmentations));
 //			tex.Apply(false);
+//
 //		}
 	}
 	

@@ -17,13 +17,14 @@ public class StartScreen : MonoBehaviour {
 
 		mousePositions = new Queue<Vector3>(50);
 		img = transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
+		
 		img [0].texture = texture;
-
+//		img [1].texture = texture;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (Input.mousePosition);
+//		Debug.Log (Input.mousePosition);
 		AddPosition2List (Input.mousePosition);
 //		DrawMousePositions ();
 	}
@@ -41,10 +42,13 @@ public class StartScreen : MonoBehaviour {
 			float y = 512 - p.y / Screen.height * 512;
 				
 			texture.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
+			
 		}
 
 		texture.Apply ();
-		img [0].texture = texture;
+//		img [0].texture = texture;
+//		img [1].texture = texture;
+		
 
 	}
 
