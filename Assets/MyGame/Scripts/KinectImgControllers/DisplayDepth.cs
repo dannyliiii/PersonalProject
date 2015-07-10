@@ -4,12 +4,14 @@ using System.Collections;
 [RequireComponent(typeof(Renderer))]
 public class DisplayDepth : MonoBehaviour {
 	
-	public DepthWrapper dw;
+	DepthWrapper dw;
 	private Texture2D tex;
 	// Use this for initialization
 	void Start () {
 		tex = new Texture2D(320,240,TextureFormat.ARGB32,false);
 		GetComponent<Renderer>().material.mainTexture = tex;
+		GameObject kp = GameObject.Find("KinectPrefab") as GameObject;
+		dw = kp.GetComponent("DepthWrapper") as DepthWrapper;
 	}
 	
 	// Update is called once per frame

@@ -25,7 +25,8 @@ namespace TemplateGesture{
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
 		private readonly int frameCount = 60;
-		
+
+		public bool oneHanded;
 
 		//change window size when change samplecount in learning machine
 		public TemplatedGestureDetector(int windowSize = 100){
@@ -107,8 +108,11 @@ namespace TemplateGesture{
 			if (Entries.Count <= 0)
 				return;
 
+//			if (!oneHanded) {
+//				Debug.Log ("two handed");
 			if (!IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (Entries.Select (e => e.TpfPosRight).ToList ()))
 				return;
+//			}
 
 			ResultList resList = LearningMachine.Match (Entries.Select (e => e.TpfPosLeft).ToList(),
 			                                            Entries.Select (e => e.TpfPosRight).ToList(),

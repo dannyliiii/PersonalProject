@@ -16,9 +16,9 @@ public class StartScreen : MonoBehaviour {
 		texture.wrapMode = TextureWrapMode.Clamp;
 
 		mousePositions = new Queue<Vector3>(50);
-		img = transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
+//		img = transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
 		
-		img [0].texture = texture;
+//		img [0].texture = texture;
 //		img [1].texture = texture;
 	}
 	

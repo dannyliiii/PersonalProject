@@ -56,11 +56,15 @@ public class Detector : MonoBehaviour {
 	public GameObject rhsp;
 	public GUITexture GUIRH;
 
+	Material planeMatTemp;
+	Texture2D planeTemp;
+
 	bool startScreen = true;
 
 	Texture2D texture;
 	RawImage[] img;
 
+	public bool oneHanded;
 	//gui scroll view
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
 	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
@@ -101,20 +105,28 @@ public class Detector : MonoBehaviour {
 			material3 = dataImagePlane.GetComponent<Renderer> ().material;
 			material4 = dataImagePlane2.GetComponent<Renderer> ().material;
 
-			if (!controlMouse) {
-				//			leftHand.SetActive (false);
-				//			rightHand.SetActive (false);
-				handCursor.gameObject.SetActive (false);
-			}
+//			if (!controlMouse) {
+//				//			leftHand.SetActive (false);
+//				//			rightHand.SetActive (false);
+//				handCursor.gameObject.SetActive (false);
+//			}
 
 		}
+//		Debug.Log(EditorApplication.currentScene);
+		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/StartScreen.unity" /**&& img != null**/) {
+			Debug.Log("In start screen");
 
-		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/StartScreen.unity" && img != null) {
+			planeMatTemp = GameObject.Find("Plane").GetComponent<MeshRenderer>().material;
+			planeTemp = new Texture2D(512,512, TextureFormat.RGB24, false);
+			planeMatTemp.SetTexture(0, planeTemp);
+
 			texture = new Texture2D(512,512, TextureFormat.RGB24, false);
 			texture.wrapMode = TextureWrapMode.Clamp;
 			
-			img = Camera.main.transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
-			img [0].texture = texture;
+//			img = Camera.main.transform.Find("Canvas").gameObject.GetComponentsInChildren<RawImage>(); 
+//			img [0].texture = texture;
+//			img[0].color = Color.black;
+//			texture = img[0].texture as Texture2D;
 		}
 
 		//to detect the position of joints in the latest frame
@@ -136,6 +148,7 @@ public class Detector : MonoBehaviour {
 		if (timer < 40)
 			timer++;
 	
+		templateGestureDetector.oneHanded = oneHanded;
 		DrawDataPerFrame (num);
 
 		if(!KinectRecorder.IsRecording)
@@ -164,7 +177,7 @@ public class Detector : MonoBehaviour {
 	void OnGestureDetected(string gesture)
 	{
 		gesText = gesture;
-		playerClass.CastSpell(gesture);
+
 
 		switch (gesture){
 		case "s":
@@ -172,6 +185,7 @@ public class Detector : MonoBehaviour {
 				Application.LoadLevel ("KinectSample");
 			break;
 		default:
+			playerClass.CastSpell(gesture);
 			break;
 		}
 	}
@@ -212,7 +226,7 @@ public class Detector : MonoBehaviour {
 
 
 					//control the mouse with right hand.
-					if(controlMouse && handCursor != null && rightHand != null && leftHand != null)
+					if(controlMouse && GUIRH != null/**&& handCursor!= null && rightHand != null && leftHand != null**/ )
 					{
 						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
 						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
@@ -236,9 +250,9 @@ public class Detector : MonoBehaviour {
 //						}
 
 						//interpolate the cursor position
-						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
-						rightHand.transform.position = UnityEngine.Vector3.Lerp(rightHand.transform.position, new UnityEngine.Vector3(x,y,rightHand.transform.position.z), 4 * Time.deltaTime);
-						leftHand.transform.position = UnityEngine.Vector3.Lerp(leftHand.transform.position, new UnityEngine.Vector3(xL,yL,leftHand.transform.position.z), 4 * Time.deltaTime);
+//						handCursor.transform.position = UnityEngine.Vector3.Lerp(handCursor.transform.position, vCursorPos, 4 * Time.deltaTime);
+//						rightHand.transform.position = UnityEngine.Vector3.Lerp(rightHand.transform.position, new UnityEngine.Vector3(x,y,rightHand.transform.position.z), 4 * Time.deltaTime);
+//						leftHand.transform.position = UnityEngine.Vector3.Lerp(leftHand.transform.position, new UnityEngine.Vector3(xL,yL,leftHand.transform.position.z), 4 * Time.deltaTime);
 
 						UnityEngine.Vector2 oldPos = GUIRH.transform.position;
 						GUIRH.transform.position = UnityEngine.Vector2.Lerp(oldPos, new UnityEngine.Vector2(xGUI, yGUI), 4 * Time.deltaTime);
@@ -249,10 +263,10 @@ public class Detector : MonoBehaviour {
 
 						MouseControl.MouseMove(vCursorPos);
 
-						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
-							MouseControl.MouseClick();
-							timer = 0;
-						}
+//						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
+//							MouseControl.MouseClick();
+//							timer = 0;
+//						}
 					}
 					
 //					Debug.Log("adding joints to entry");
@@ -267,17 +281,33 @@ public class Detector : MonoBehaviour {
 	}
 
 	void DrawRightHandTracksStartScreen(){
+//		Debug.Log ("drawing right hand");
 		texture = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		planeTemp = new Texture2D (512, 512, TextureFormat.RGB24, false);
+
+
+		planeMatTemp.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
+		DestroyImmediate (planeMatTemp.mainTexture);
+		DestroyImmediate (planeTemp);
+		planeTemp = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		planeMatTemp.SetTexture (0, planeTemp);
+
 		for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
 			
 			// draw x,y
 			float x = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 			float y = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
 			
-			texture.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
+//			texture.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
+			planeTemp.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
+			
+//			Debug.Log(new UnityEngine.Vector2(x,y));
+
+//			Texture tex = (Texture) AssetDatabase.LoadAssetAtPath("Assets/MyGame/Textures/Diamond.png", typeof(Texture));
+//			img [0].texture = tex;
 		}
-		
-		texture.Apply ();
+//		texture.Apply ();
+		planeTemp.Apply ();
 //		img [0].texture = texture;
 	}
 	void DrawRealTimeHandsTracks(){
@@ -381,6 +411,40 @@ public class Detector : MonoBehaviour {
 
 
 		currentData ++;
+	}
+
+	void OnLevelWasLoaded(int level) {
+		if (level == 1) {
+			print ("level 1 is loaded");
+
+			GUIRH = GameObject.Find("GUIHand").GetComponent<GUITexture>();
+			dataImagePlaneRR = GameObject.Find ("DataImagePlaneRR") as GameObject;
+			dataImagePlaneRL = GameObject.Find ("DataImagePlaneRL") as GameObject;
+
+			startScreen = false;
+		
+			textureArr = new Texture2D[arrCount];
+		
+			for (int i = 0; i < arrCount; i ++) {
+				textureArr [i] = new Texture2D (512, 512, TextureFormat.RGB24, false);
+				textureArr [i].wrapMode = TextureWrapMode.Clamp;
+			}
+		
+		
+			material1 = dataImagePlaneRL.GetComponent<Renderer> ().material;
+			material2 = dataImagePlaneRR.GetComponent<Renderer> ().material;
+//			material3 = dataImagePlane.GetComponent<Renderer> ().material;
+//			material4 = dataImagePlane2.GetComponent<Renderer> ().material;
+		
+			playerClass = GameObject.Find ("Player").GetComponent<Player>() as Player;
+			controlMouse = true;
+			if (!controlMouse) {
+				//			leftHand.SetActive (false);
+				//			rightHand.SetActive (false);
+//				handCursor.gameObject.SetActive (false);
+			}
+		}
+		
 	}
 
 	void OnGUI() {

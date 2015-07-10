@@ -126,88 +126,97 @@ namespace TemplateGesture{
 				double zx_score = 0;
 				double rL = radiance45 - Math.Atan2(tpll[0].Y - tpll[tpll.Count - 1].Y, tpll[0].X - tpll[tpll.Count - 1].X);
 				double rR = radiance45 - Math.Atan2(tplr[0].Y - tplr[tplr.Count - 1].Y, tplr[0].X - tplr[tplr.Count - 1].X);
-
-				if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
-					score = -4;
+				int planeCount = 1;
+				if(p.OnaHanded){
+					score = p.OneHandedMatch(tplr, threshold, minSize, 1);
 				}
 				else{
-//					if(l[(int)p.Plane] & r[(int)p.Plane]){
-					if(l & r){
-						if(p.IsLineL && p.IsLineR){
-							rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
-							rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
-							score = 2;
-//							UnityEngine.Debug.Log(p.gestureName);
-//							UnityEngine.Debug.Log(rL + rR);
-						}
-						else{
-							score = -5;
-						}
+					if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+						score = -4;
 					}
 					else{
-						xy_score = p.Match(tpll, tplr, threshold, minSize, 1);
-						zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
-						zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
+	//					if(l[(int)p.Plane] & r[(int)p.Plane]){
+						if(l & r){
+							if(p.IsLineL && p.IsLineR){
+								rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
+								rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
+								score = 2;
+	//							UnityEngine.Debug.Log(p.gestureName);
+	//							UnityEngine.Debug.Log(rL + rR);
+							}
+							else{
+								score = -5;
+							}
+						}
+						else{
+							xy_score = p.Match(tpll, tplr, threshold, minSize, 1);
+							zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2);
+							zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3);
+						}
 					}
-				}
 
-				if(p.gestureName == "hdel8"){
+//					if(p.gestureName == "hdel8"){
+//						UnityEngine.Debug.Log(p.gestureName);
+//	//					UnityEngine.Debug.Log(xy_score);
+//						UnityEngine.Debug.Log(zx_score);
+//	//					UnityEngine.Debug.Log(zy_score);
+//					}
+
+					if(score != 2){
+						if((int)p.Plane == 0){
+							score = xy_score;
+						}
+						if((int)p.Plane == 1){
+							score = zx_score;
+						}
+						if((int)p.Plane == 2){
+							score = zy_score;
+						}
+					}
+	//				bool xy = false;
+	//				bool xz = false;
+	//				bool yz = false;
+	//				if(xy_score >= minScore){
+	//					planeCount ++;
+	//					score += xy_score;
+	//					xy = true;
+	//				}
+	//
+	//				if(zy_score >= minScore){
+	//					planeCount ++;
+	//					score += zy_score;
+	//					score /= 2;
+	//					yz = true;
+	//				}
+	//
+	//				if(zx_score >= minScore){
+	//					planeCount ++;
+	//					score += zx_score;
+	//					score /= 2;
+	//					xz = true;
+	//				}
+					//for testing
+	//				if(p.gestureName == "HD Pool Entry Dive"){
+	//					UnityEngine.Debug.Log(p.gestureName);
+	//					UnityEngine.Debug.Log(xy_score);
+	//					UnityEngine.Debug.Log(zx_score);
+	//					UnityEngine.Debug.Log(zy_score);
+	//				}
+
+	//				if(zy_score > 0.8 && zx_score > 0.8)
+	//					UnityEngine.Debug.Log(zy_score);
+	//					UnityEngine.Debug.Log(zx_score);
+	//				if(score < zy_score)
+	//					score = zy_score;
+	//				if(score < zx_score)
+	//					score = zx_score;
+				}
+				if(p.gestureName == "s"){
 					UnityEngine.Debug.Log(p.gestureName);
-//					UnityEngine.Debug.Log(xy_score);
-					UnityEngine.Debug.Log(zx_score);
-//					UnityEngine.Debug.Log(zy_score);
+					UnityEngine.Debug.Log(score);
 				}
-				int planeCount = 1;
-				if(score != 2){
-					if((int)p.Plane == 0){
-						score = xy_score;
-					}
-					if((int)p.Plane == 1){
-						score = zx_score;
-					}
-					if((int)p.Plane == 2){
-						score = zy_score;
-					}
-				}
-//				bool xy = false;
-//				bool xz = false;
-//				bool yz = false;
-//				if(xy_score >= minScore){
-//					planeCount ++;
-//					score += xy_score;
-//					xy = true;
-//				}
-//
-//				if(zy_score >= minScore){
-//					planeCount ++;
-//					score += zy_score;
-//					score /= 2;
-//					yz = true;
-//				}
-//
-//				if(zx_score >= minScore){
-//					planeCount ++;
-//					score += zx_score;
-//					score /= 2;
-//					xz = true;
-//				}
-				//for testing
-//				if(p.gestureName == "HD Pool Entry Dive"){
-//					UnityEngine.Debug.Log(p.gestureName);
-//					UnityEngine.Debug.Log(xy_score);
-//					UnityEngine.Debug.Log(zx_score);
-//					UnityEngine.Debug.Log(zy_score);
-//				}
-
-//				if(zy_score > 0.8 && zx_score > 0.8)
-//					UnityEngine.Debug.Log(zy_score);
-//					UnityEngine.Debug.Log(zx_score);
-//				if(score < zy_score)
-//					score = zy_score;
-//				if(score < zx_score)
-//					score = zx_score;
+								
 				rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
-
 			}
 			return rl;
 		}
@@ -240,8 +249,11 @@ namespace TemplateGesture{
 				List<TimePointF> zx_pl = new List<TimePointF>();
 
 				rd.Plane = 0;
+				rd.OnaHanded = false;
 				while(reader.Read()){
-
+					if(reader.LocalName == "OneHanded"){
+						rd.OnaHanded = XmlConvert.ToBoolean(reader.GetAttribute("Value"));
+					}
 					if(reader.LocalName == "Plane"){
 						rd.Plane = (Plane)XmlConvert.ToSingle(reader.GetAttribute("Value"));
 					}
@@ -271,7 +283,8 @@ namespace TemplateGesture{
 						rd.ZX_LPoints.Add(new MyMath.Vector2(zx_p.X, zx_p.Y));
 						zx_pl.Add(zx_p);
 
-					}else if(reader.LocalName == "RightHandPoints"){
+					}
+					if(reader.LocalName == "RightHandPoints"){
 
 						MyMath.Vector2 rp = MyMath.Vector2.Zero;
 						rp.x = -XmlConvert.ToSingle(reader.GetAttribute("X"));
@@ -351,10 +364,6 @@ namespace TemplateGesture{
 
 				double correlationL = GetCorrelation(listPFL);
 				double correlationR = GetCorrelation(listPFR);
-				
-//				UnityEngine.Debug.Log(gesName);
-//				UnityEngine.Debug.Log(correlationL);
-//				UnityEngine.Debug.Log(correlationR);
 
 				if(Math.Abs(correlationL) > lineMin){
 					rd.IsLineL = true;

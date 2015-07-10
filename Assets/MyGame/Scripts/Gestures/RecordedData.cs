@@ -33,6 +33,7 @@ namespace TemplateGesture{
 		public List<Constrain> constrain;
 		double angleL;
 		double angleR;
+		bool oneHanded;
 
 		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
@@ -83,6 +84,11 @@ namespace TemplateGesture{
 		public double AngleR{
 			get{return angleR;}
 			set{angleR = value;}
+		}
+
+		public bool OnaHanded{
+			get{return oneHanded;}
+			set{oneHanded = value;}
 		}
 
 		public int Size{
@@ -212,6 +218,41 @@ namespace TemplateGesture{
 			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
 
 			return (scorel + scorer) * 0.5f;
+		}
+
+		public double OneHandedMatch(List<TimePointF> tpflr, float threshold, float minSize, int plane)
+		{
+			if (tpflr.Count < LearningMachine.sampleCount / 2)
+				return -1;
+			
+			//			if (!GoldenSectionExtension.IsLargeEnough(tpflr, minSize)|| !GoldenSectionExtension.IsLargeEnough(tpfll, minSize))
+			//				return -2;
+
+			List<PointF> pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+			
+			List<PointF> rdr;
+			
+			// 1: xy_plane 2: zy_plane 2: zx_plane
+			if (plane == 1) {
+				rdr = new List<PointF> (rpf);
+			} else if (plane == 2){
+				rdr = new List<PointF> (zy_rpf);
+			}
+			else{
+				rdr = new List<PointF> (zx_rpf);
+			}
+
+			double[] bestr = GoldenSection.GoldenSectionSearch(
+				pfr,                             // to rotate
+				rdr,                           // to match
+				GeotrigEx.Degrees2Radians(-45.0),   // lbound
+				GeotrigEx.Degrees2Radians(+45.0),   // ubound
+				GeotrigEx.Degrees2Radians(2.0)      // threshold
+				);
+			
+			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
+			
+			return scorer;
 		}
 		
 	}
