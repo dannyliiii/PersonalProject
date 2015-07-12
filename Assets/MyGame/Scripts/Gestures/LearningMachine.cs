@@ -71,16 +71,16 @@ namespace TemplateGesture{
 		{
 			int i = 0;
 
-//			bool[] l = new bool[3];
-//			bool[] r = new bool[3];
-//
-//
-//			l [0] = IsLine (tpll);
-//			l [1] = IsLine (zy_tpll);
-//			l [2] = IsLine (zx_tpll);
-//			r [0] = IsLine (tplr);
-//			r [1] = IsLine (zy_tpll);
-//			r [2] = IsLine (zx_tpll);
+			bool[] lList = new bool[3];
+			bool[] rList = new bool[3];
+
+
+			lList [0] = IsLine (tpll);
+			lList [1] = IsLine (zy_tpll);
+			lList [2] = IsLine (zx_tpll);
+			rList [0] = IsLine (tplr);
+			rList [1] = IsLine (zy_tpll);
+			rList [2] = IsLine (zx_tpll);
 
 			bool l = false;
 			bool r = false;
@@ -356,14 +356,31 @@ namespace TemplateGesture{
 				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);
 				List<PointF> listPFR = GoldenSectionExtension.ListTimePointF2ListPointF(pr);
 
+				List<PointF> listPFL_ZX = GoldenSectionExtension.ListTimePointF2ListPointF(zy_pl);
+				List<PointF> listPFR_ZX = GoldenSectionExtension.ListTimePointF2ListPointF(zy_pr);
+				List<PointF> listPFL_ZY = GoldenSectionExtension.ListTimePointF2ListPointF(zx_pl);
+				List<PointF> listPFR_ZY = GoldenSectionExtension.ListTimePointF2ListPointF(zx_pr);
+
 				double radiansL = radiance45 - Math.Atan2(listPFL[0].Y - listPFL[listPFL.Count - 1].Y, listPFL[0].X - listPFL[listPFL.Count - 1].X);
 				double radiansR = radiance45 - Math.Atan2(listPFR[0].Y - listPFR[listPFR.Count - 1].Y, listPFR[0].X - listPFR[listPFR.Count - 1].X);
+				double radiansL_ZX = radiance45 - Math.Atan2(listPFL[0].Y - listPFL[listPFL.Count - 1].Y, listPFL[0].X - listPFL[listPFL.Count - 1].X);
+				double radiansR_ZX = radiance45 - Math.Atan2(listPFR[0].Y - listPFR[listPFR.Count - 1].Y, listPFR[0].X - listPFR[listPFR.Count - 1].X);
+				double radiansL_ZY = radiance45 - Math.Atan2(listPFL[0].Y - listPFL[listPFL.Count - 1].Y, listPFL[0].X - listPFL[listPFL.Count - 1].X);
+				double radiansR_ZY = radiance45 - Math.Atan2(listPFR[0].Y - listPFR[listPFR.Count - 1].Y, listPFR[0].X - listPFR[listPFR.Count - 1].X);
 
 				listPFL = GeotrigEx.RotatePoints(listPFL, radiansL);
 				listPFR = GeotrigEx.RotatePoints(listPFR, radiansR);
+				listPFL_ZX = GeotrigEx.RotatePoints(listPFL_ZX, radiansL_ZX);
+				listPFR_ZX = GeotrigEx.RotatePoints(listPFR_ZX, radiansR_ZX);
+				listPFL_ZY = GeotrigEx.RotatePoints(listPFL_ZY, radiansL_ZY);
+				listPFR_ZY = GeotrigEx.RotatePoints(listPFR_ZY, radiansR_ZY);
 
 				double correlationL = GetCorrelation(listPFL);
 				double correlationR = GetCorrelation(listPFR);
+				double correlationL_ZX = GetCorrelation(listPFL_ZX);
+				double correlationR_ZX = GetCorrelation(listPFR_ZX);
+				double correlationL_ZY = GetCorrelation(listPFL_ZY);
+				double correlationR_ZY = GetCorrelation(listPFR_ZY);
 
 				if(Math.Abs(correlationL) > lineMin){
 					rd.IsLineL = true;
@@ -431,7 +448,7 @@ namespace TemplateGesture{
 			return res;
 		}
 
-		private bool IsLine(List<TimePointF> list){
+		private static bool IsLine(List<TimePointF> list){
 
 			bool res = false;
 			List<PointF> listP = GoldenSectionExtension.ListTimePointF2ListPointF(list);

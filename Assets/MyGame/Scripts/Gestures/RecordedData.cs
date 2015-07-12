@@ -30,10 +30,15 @@ namespace TemplateGesture{
 		Plane plane;
 		bool isLineL; // 0: false, 1: true
 		bool isLineR;
+		bool isLineL_xz; // 0: false, 1: true
+		bool isLineR_xz;
+		bool isLineL_yz; // 0: false, 1: true
+		bool isLineR_yz;
 		public List<Constrain> constrain;
 		double angleL;
 		double angleR;
 		bool oneHanded;
+		int linePlane;
 
 		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
