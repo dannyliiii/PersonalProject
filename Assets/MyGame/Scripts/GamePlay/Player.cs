@@ -8,13 +8,13 @@ namespace Game{
 	public class Player : MonoBehaviour {
 
 		public GUIText dimondNum;
-		int lv;
-		int xp;
+		public int lv;
+		public int xp;
 		int hp;
 		int mp;
 		int atk;
 		int def;
-		public int dimond;
+		public int diamond;
 		List<Spell> spells;
 	
 		public GameObject plane;
@@ -34,7 +34,7 @@ namespace Game{
 			mp = 100;
 			atk = 1;
 			def = 1;
-			dimond = 0;
+			diamond = 0;
 			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
@@ -63,7 +63,7 @@ namespace Game{
 				}
 			}
 		}
-
+		
 		void Update(){
 			//temp
 			if (Input.GetKeyDown (KeyCode.A)) {
@@ -83,7 +83,7 @@ namespace Game{
 				CastSpell("hdel3");
 			}
 
-			dimondNum.text = dimond.ToString();
+			dimondNum.text = diamond.ToString();
 		}
 
 		public void CastSpell(){
@@ -106,7 +106,7 @@ namespace Game{
 
 			Spell temp = null;
 
-			int pos = 0;
+//			int pos = 0;
 
 			foreach(var s in spell){
 				if(s.gesture == gesture){
@@ -123,10 +123,10 @@ namespace Game{
 			Vector3 toPosition = new Vector3 (plane.transform.position.x, plane.transform.position.y + 2.5f/*temp*/ * 0.5f, plane.transform.position.z);
 			GameObject proj =  Instantiate(/*projectile*/ spellsPrefabs[temp.num], position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
 			SpellBehavior spellBehavior = proj.GetComponent("SpellBehavior") as SpellBehavior;
-			spellBehavior.spell = temp;
-			if (spellBehavior.spell == null) {
-				spellBehavior.spell = new Spell ("test", 1, 10, 1, "", 0, false);
+			if (temp == null) {
+				temp = new Spell ("test", 1, 10, 1, "", 0, false);
 			}
+			spellBehavior.spell = temp;
 //			UnityEngine.Debug.Log (spellBehavior.spell.spellName);
 			Rigidbody rb = proj.GetComponent<Rigidbody> ();
 			Vector3 velDir = (toPosition - position).normalized;

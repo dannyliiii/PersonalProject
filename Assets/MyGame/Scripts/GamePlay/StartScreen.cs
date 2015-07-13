@@ -27,6 +27,9 @@ public class StartScreen : MonoBehaviour {
 //		Debug.Log (Input.mousePosition);
 		AddPosition2List (Input.mousePosition);
 //		DrawMousePositions ();
+//		if (Input.GetKeyDown (KeyCode.L)) {
+//			Application.LoadLevel ("KinectSample");
+//		}
 	}
 
 	void LoadScene(string scene){

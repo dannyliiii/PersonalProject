@@ -14,7 +14,7 @@ namespace Game{
 		float hpLength;
 		int hpTotal = 100;
 		float height; 
-		int count = 0;
+//		int count = 0;
 		public Animator animator;
 		float animeTime = 0;
 		Animation anime;
@@ -70,7 +70,7 @@ namespace Game{
 			hp = hpTotal;
 			hpLength = imageTrans.rect.width;
 			Debug.Log (level);
-			RectTransform rt = gameObject.GetComponent<RectTransform> ();
+//			RectTransform rt = gameObject.GetComponent<RectTransform> ();
 //			Debug.Log (rt.localScale);
 //			Vector3 scale = rt.localScale + new Vector3((float)level, (float)level, (float)level );
 //			rt.localScale = scale;
@@ -104,6 +104,9 @@ namespace Game{
 
 //			Debug.Log (hpLength * 0.1f);
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
+//			Vector2 oldPos = imageTransGreen.anchoredPosition;
+//			Vector2 newPos = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
+//			imageTransGreen.anchoredPosition = Vector2.Lerp (oldPos, newPos, 4 * Time.deltaTime);
 			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 
 //			Vector2 oldVec = new Vector2 (posTemp.x , posTemp.y);	
@@ -114,7 +117,7 @@ namespace Game{
 
 //			animator.SetBool("hit",true);
 			anime.Play("monster1Hit2");
-			Debug.Log (hp);
+//			Debug.Log (hp);
 			if (hp <= 0) {
 
 				Destroy(gameObject.GetComponent<CapsuleCollider>());

@@ -22,7 +22,7 @@ namespace Game{
 		public string gesture;
 		public bool IsLocked;
 		public int num;
-		private readonly float maxTime = 4.0f;
+//		private readonly float maxTime = 4.0f;
 		private float liveTime;
 
 		public Spell(){

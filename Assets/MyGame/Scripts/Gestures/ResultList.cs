@@ -13,7 +13,7 @@ namespace TemplateGesture{
 			private string name;
 			private double score;
 			private double radianceDiff = 0;
-			private bool xy, xz, yz;
+//			private bool xy, xz, yz;
 			private int plane;
 
 			public void SetScore(double s){
@@ -61,30 +61,31 @@ namespace TemplateGesture{
 				}
 			}
 
-			public bool XY{
-				get{
-					return xy;
-				}
-				set{
-					xy = value;
-				}
-			}
-			public bool XZ{
-				get{
-					return XZ;
-				}
-				set{
-					xz = value;
-				}
-			}
-			public bool YZ{
-				get{
-					return yz;
-				}
-				set{
-					yz = value;
-				}
-			}
+//			public bool XY{
+//				get{
+//					return xy;
+//				}
+//				set{
+//					xy = value;
+//				}
+//			}
+//			public bool XZ{
+//				get{
+//					return XZ;
+//				}
+//				set{
+//					xz = value;
+//				}
+//			}
+//			public bool YZ{
+//				get{
+//					return yz;
+//				}
+//				set{
+//					yz = value;
+//				}
+//			}
+
 			// sorts in descending order of Score
 			public int CompareTo(object obj)
 			{

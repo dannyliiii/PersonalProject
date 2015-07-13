@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Xml;
+using System;
 
 namespace Game{
 	public class GameLogic : MonoBehaviour {
@@ -15,17 +18,21 @@ namespace Game{
 		public GameObject rightHand;
 		public GameObject rightHandScreenPos;
 		public GUITexture handGUI;
+		string filePath = "Assets/MyGame/Configs/Save.data";
 		// Use this for initialization
 		void Start () {
-			SpawnMonster (level);
 
 			playerScript = player.GetComponent<Player>() as Player;
+			LoadSaveData ();
+			SpawnMonster (level);
+
+
 		}
 		
 		// Update is called once per frame
 		void Update () {
 			if (monster == null) {
-				Debug.Log("a monster is destroied");
+				UnityEngine.Debug.Log("a monster is destroied");
 				SpawnMonster(level++);
 			}
 
@@ -39,8 +46,8 @@ namespace Game{
 		}
 		
 		void SpawnMonster(int level){
-			GameObject monster1 = monsterPrefab.transform.Find ("meshes").Find ("body").gameObject;
-			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
+//			GameObject monster1 = monsterPrefab.transform.Find ("meshes").Find ("body").gameObject;
+//			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
 			
 //			GameObject robot2 = monsterPrefab.transform.Find("Robot2").gameObject;
 //			float height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
@@ -58,7 +65,7 @@ namespace Game{
 		}
 
 		void HitTest() {
-			bool res = false;
+//			bool res = false;
 
 			GameObject[] go = GameObject.FindGameObjectsWithTag("Dimond");
 			List<int> removeList = new List<int> ();
@@ -68,19 +75,81 @@ namespace Game{
 				gol.Add(d);
 				Vector3 pos = Camera.main.WorldToScreenPoint( d.transform.position );
 				if(handGUI.HitTest (pos)){
-					Debug.Log("hit");
+					UnityEngine.Debug.Log("hit");
 					removeList.Add(i);
 				}
 				i++;
 			}
 			if (i > 0) {
 				foreach (int r in removeList) {
-					Debug.Log (r);
-					playerScript.dimond++;
+					UnityEngine.Debug.Log (r);
+					playerScript.diamond++;
 					Destroy(go[r]);
 				}
 			}
-
 		}
+
+		bool LoadSaveData(){
+			XmlReader reader = new XmlTextReader(filePath);
+//			reader.WhitespaceHandling = WhitespaceHandling.None;
+			reader.MoveToContent();
+			bool success = true;
+			System.Diagnostics.Debug.Assert(reader.LocalName == "Save");
+			try{
+				while(reader.Read()){
+					if(reader.LocalName == "SceneLevel"){
+						string s = reader.ReadInnerXml();
+//						UnityEngine.Debug.Log(s);
+						bool res = int.TryParse(s.Trim(), out level);
+						if(!res){
+							UnityEngine.Debug.Log("SceneLevel load failed");	
+						}
+					}
+					if(reader.LocalName == "PlayerLevel"){
+						string s = reader.ReadInnerXml();
+//						UnityEngine.Debug.Log(s);
+						bool res = int.TryParse(s.Trim(), out playerScript.lv);
+						if(!res){
+							UnityEngine.Debug.Log("PlayerLevel load failed");	
+						}
+					}
+					if(reader.LocalName == "Diamond"){
+						string s = reader.ReadInnerXml();
+//						UnityEngine.Debug.Log(s);
+						bool res = int.TryParse(s.Trim(), out playerScript.diamond);
+						if(!res){
+							UnityEngine.Debug.Log("PlayerLevel load failed");	
+						}
+					}
+				}
+			}
+			catch (XmlException xex)
+			{
+				UnityEngine.Debug.Log(xex.Message);
+				success = false;
+			}
+			finally
+			{
+				if (reader != null)
+					reader.Close();
+			}
+			return success;
+		}
+
+		void OnDestroy() {
+			XmlDocument xmlDoc = new XmlDocument ();
+			xmlDoc.Load(filePath);
+			XmlNode root = xmlDoc.DocumentElement;
+			
+			XmlNode n1 = root.SelectSingleNode("SceneLevel");
+			n1.InnerText = level.ToString();
+			XmlNode n2 = root.SelectSingleNode("PlayerLevel");
+			n2.InnerText = playerScript.lv.ToString();
+			XmlNode n3 = root.SelectSingleNode("Diamond");
+			n3.InnerText = playerScript.diamond.ToString();
+			
+			xmlDoc.Save(filePath);
+		}
+
 	}
 }

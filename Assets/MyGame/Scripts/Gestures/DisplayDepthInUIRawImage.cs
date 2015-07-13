@@ -7,11 +7,11 @@ public class DisplayDepthInUIRawImage : MonoBehaviour {
 	public DepthWrapper dw;
 	public RawImage depthImage;
 
-	private Texture2D tex;
+//	private Texture2D tex;
 	RawImage[] img;
 	// Use this for initialization
 	void Start () {
-		tex = new Texture2D(320,240,TextureFormat.ARGB32,false);
+//		tex = new Texture2D(320,240,TextureFormat.ARGB32,false);
 
 //		tex = new Texture2D(512,512, TextureFormat.RGB24, false);
 //		tex.wrapMode = TextureWrapMode.Clamp;

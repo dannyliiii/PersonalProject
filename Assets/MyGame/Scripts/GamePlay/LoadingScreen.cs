@@ -30,6 +30,7 @@ public class LoadingScreen : MonoBehaviour {
 		AsyncOperation ao = Application.LoadLevelAsync (scene);
 		while (!ao.isDone) {
 			progress = (int)ao.progress * 100;
+//			Debug.Log(progress);
 			text.GetComponent<Text>().text = "Loading...." + progress + " %";
 			yield return null;
 		}

@@ -37,6 +37,10 @@ namespace TemplateGesture{
 		public List<Constrain> constrain;
 		double angleL;
 		double angleR;
+		double angleL_XZ;
+		double angleR_XZ;
+		double angleL_YZ;
+		double angleR_YZ;
 		bool oneHanded;
 		int linePlane;
 
@@ -52,6 +56,22 @@ namespace TemplateGesture{
 			get{return zy_rpf;}
 			set{zy_rpf = value;}
 		}
+		public bool IsLineL_YZ{
+			get{return isLineL_yz;}
+			set{isLineL_yz = value;}
+		}
+		public bool IsLineR_YZ{
+			get{return isLineR_yz;}
+			set{isLineR_yz = value;}
+		}
+		public double AngleL_YZ{
+			get{return angleL_YZ;}
+			set{angleL_YZ = value;}
+		}
+		public double AngleR_YZ{
+			get{return angleR_YZ;}
+			set{angleR_YZ = value;}
+		}
 		//----------------------- for the z-y plane ------------------
 
 		//----------------------- for the z-x plane ------------------
@@ -65,6 +85,22 @@ namespace TemplateGesture{
 		public List<PointF> ZX_RP{
 			get{return zx_rpf;}
 			set{zx_rpf = value;}
+		}
+		public bool IsLineL_XZ{
+			get{return isLineL_xz;}
+			set{isLineL_xz = value;}
+		}
+		public bool IsLineR_XZ{
+			get{return isLineR_xz;}
+			set{isLineR_xz = value;}
+		}
+		public double AngleL_XZ{
+			get{return angleL_XZ;}
+			set{angleL_XZ = value;}
+		}
+		public double AngleR_XZ{
+			get{return angleR_XZ;}
+			set{angleR_XZ = value;}
 		}
 		//----------------------- for the z-x plane ------------------
 

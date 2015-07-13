@@ -11,6 +11,7 @@ using Drawing;
 using System.Linq;
 using Game;
 using UnityEditor;
+using System.Xml;
 
 public class Detector : MonoBehaviour {
 
@@ -66,8 +67,9 @@ public class Detector : MonoBehaviour {
 
 	public bool oneHanded;
 	//gui scroll view
+	public bool gesScroll;
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
-	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
+//	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
 
 	enum TexArrEnum : int{
 		t1 = 0,
@@ -161,9 +163,9 @@ public class Detector : MonoBehaviour {
 			DrawRightHandTracksStartScreen();
 		}
 
-		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
-			Application.LoadLevel ("KinectSample");
-		}
+//		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
+//			Application.LoadLevel ("KinectSample");
+//		}
 
 	}
 
@@ -232,11 +234,11 @@ public class Detector : MonoBehaviour {
 						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
 						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
 
-						float x = (joints[(int)NuiSkeletonPositionIndex.HandRight].x) * 10.0f;
-						float y = ((joints[(int)NuiSkeletonPositionIndex.HandRight].y) * 2) * 5.0f;
+//						float x = (joints[(int)NuiSkeletonPositionIndex.HandRight].x) * 10.0f;
+//						float y = ((joints[(int)NuiSkeletonPositionIndex.HandRight].y) * 2) * 5.0f;
 
-						float xL = (joints[(int)NuiSkeletonPositionIndex.HandLeft].x) * 10.0f;
-						float yL = ((joints[(int)NuiSkeletonPositionIndex.HandLeft].y) * 2) * 5.0f;
+//						float xL = (joints[(int)NuiSkeletonPositionIndex.HandLeft].x) * 10.0f;
+//						float yL = ((joints[(int)NuiSkeletonPositionIndex.HandLeft].y) * 2) * 5.0f;
 					
 
 						float xGUI = (joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f;
@@ -458,22 +460,23 @@ public class Detector : MonoBehaviour {
 			gesCount = LearningMachine.Pos.Count;
 		}
 
-//		//show the list of gesture templates
-//		scrollPosition = GUI.BeginScrollView(new Rect(screenWidth * 0.05f, screenHeight * 0.65f , 100, 200), 
-//		                                     scrollPosition , 
-//		                                     new Rect(screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
-//		                    				 false, 
-//		                                     true);
-//
-//		for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
-//			if (GUI.Button(new Rect(screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos[i].gestureName)){
-//				currentData = 0;
-//				num = i;
-//			}
-//		}
-//
-//		GUI.EndScrollView();
-	
+		if (gesScroll) {
+			//show the list of gesture templates
+			scrollPosition = GUI.BeginScrollView (new Rect (screenWidth * 0.05f, screenHeight * 0.65f, 100, 200), 
+		                                     scrollPosition, 
+		                                     new Rect (screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
+		                    				 false, 
+		                                     true);
+
+			for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
+				if (GUI.Button (new Rect (screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos [i].gestureName)) {
+					currentData = 0;
+					num = i;
+				}
+			}
+
+			GUI.EndScrollView ();
+		}
 		//show the score
 //		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
 //		                                         scrollPositionText , 

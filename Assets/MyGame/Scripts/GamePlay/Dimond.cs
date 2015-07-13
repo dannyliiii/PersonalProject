@@ -11,7 +11,7 @@ namespace Game{
 		void Start () {
 			player = GameObject.Find("Player").GetComponent<Player>() as Player;
 
-			Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+//			Vector2 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
 		}
 		
 		// Update is called once per frame
@@ -26,7 +26,7 @@ namespace Game{
 	//		Debug.Log (other.gameObject.name);
 			if (other.gameObject.name == "RightHand" || other.gameObject.name == "LeftHand") {
 	//			Debug.Log("dimond collision if");
-				player.dimond ++;
+				player.diamond ++;
 //				Debug.Log("Dimond ++");
 				Destroy(gameObject);
 			}
