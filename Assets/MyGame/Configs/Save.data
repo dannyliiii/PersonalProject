@@ -1,32 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Save Date="Monday, June 08, 2015" TimeOfDay="11:24:27 AM">
-  <SceneLevel>68</SceneLevel>
+  <SceneLevel>75</SceneLevel>
   <PlayerLevel>1</PlayerLevel>
-<<<<<<< HEAD
-  <Diamond>508</Diamond>
-=======
-  <Diamond>500</Diamond>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
-  <Test>500</Test>
->>>>>>> origin/master
+  <Diamond>567</Diamond>
 </Save>

@@ -27,6 +27,7 @@ namespace Game{
 		Vector2 newPos;
 		int oldHp;
 		int newHp;
+		bool flag = true;
 
 		// Use this for initialization
 		void Awake () {
@@ -61,6 +62,19 @@ namespace Game{
 //			Debug.Log("==========");
 //			Debug.Log (oldHp);
 //			Debug.Log (newHp);
+
+			if (oldHp <= 0 && flag) {
+				flag = false;
+				Destroy(gameObject.GetComponent<CapsuleCollider>());
+				
+				GameObject dim =  Instantiate(dimond, transform.position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
+				Rigidbody rb = dim.GetComponent<Rigidbody> ();
+				rb.velocity = (transform.up + new Vector3(Random.Range(-1.0f,1.0f),0,-0.3f)) * speed;
+				
+				
+				anime.Play("monster1Die");
+				StartCoroutine(PlayAnimeAndWait(animeTime));
+			}
 		}
 
 		void LateUpdate(){
@@ -114,7 +128,7 @@ namespace Game{
 			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
 			if (spellBehavior == null)
 				return;
-			oldHp = hp;
+//			oldHp = hp;
 			newHp -= spellBehavior.spell.atk;
 //			newHp = hp;
 			if (newHp < 0)
@@ -141,18 +155,7 @@ namespace Game{
 //			animator.SetBool("hit",true);
 			anime.Play("monster1Hit2");
 //			Debug.Log (hp);
-			if (hp <= 0) {
 
-				Destroy(gameObject.GetComponent<CapsuleCollider>());
-
-				GameObject dim =  Instantiate(dimond, transform.position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
-				Rigidbody rb = dim.GetComponent<Rigidbody> ();
-				rb.velocity = (transform.up + new Vector3(Random.Range(-1.0f,1.0f),0,-0.3f)) * speed;
-
-
-				anime.Play("monster1Die");
-				StartCoroutine(PlayAnimeAndWait(animeTime));
-			}
 //			Debug.Log (hp);
 			Destroy (collision.gameObject);
 //			animator.SetBool("hit",false);
