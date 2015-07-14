@@ -33,7 +33,7 @@ namespace Game{
 		void Update () {
 			if (monster == null) {
 				UnityEngine.Debug.Log("a monster is destroied");
-				SpawnMonster(level++);
+				SpawnMonster(++level);
 			}
 
 			HitTest ();

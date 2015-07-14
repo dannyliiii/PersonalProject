@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 namespace Game{
 	public class Monster : MonoBehaviour {
@@ -21,6 +22,11 @@ namespace Game{
 		float respawnDelay = 0.5f;
 		public GameObject dimond;
 		float speed = 8.0f;
+		public Text healthText;
+		Vector2 oldPos;
+		Vector2 newPos;
+		int oldHp;
+		int newHp;
 
 		// Use this for initialization
 		void Awake () {
@@ -33,20 +39,28 @@ namespace Game{
 //					animeTime = ac.animationClips[i].length;
 //				}
 //			}
-			hp = hpTotal = 100;
+			oldHp = newHp = hp = hpTotal = 100;
+			healthText.text = hp.ToString() + "/" + hpTotal;
 			hpLength = imageTrans.rect.width;
 			anime = GetComponent<Animation> ();
 			anime ["monster1Idle"].wrapMode = WrapMode.Loop;
 			anime.Play("monster1Idle");
 			
-
+			oldPos = imageTransGreen.anchoredPosition;
 			animeTime = anime.GetClip("monster1Die").length;
+	
 		}
 		
 		// Update is called once per frame
 		void Update () {
 
-
+			imageTransGreen.anchoredPosition = Vector2.Lerp (oldPos, newPos, 0.1f);
+			oldPos = imageTransGreen.anchoredPosition;
+			oldHp = (int)Mathf.Lerp (oldHp, newHp, 0.1f);
+			healthText.text = oldHp.ToString() + "/" + hpTotal;
+//			Debug.Log("==========");
+//			Debug.Log (oldHp);
+//			Debug.Log (newHp);
 		}
 
 		void LateUpdate(){
@@ -67,8 +81,9 @@ namespace Game{
 			//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
 			//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
 			hpTotal = 100 + level * 10;
-			hp = hpTotal;
+			newHp = oldHp = hp = hpTotal;
 			hpLength = imageTrans.rect.width;
+			oldPos = imageTransGreen.anchoredPosition;
 			Debug.Log (level);
 //			RectTransform rt = gameObject.GetComponent<RectTransform> ();
 //			Debug.Log (rt.localScale);
@@ -99,21 +114,29 @@ namespace Game{
 			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
 			if (spellBehavior == null)
 				return;
-			hp -= spellBehavior.spell.atk;
-			Vector2 posTemp = imageTransGreen.anchoredPosition;
-
+			oldHp = hp;
+			newHp -= spellBehavior.spell.atk;
+//			newHp = hp;
+			if (newHp < 0)
+				newHp = 0;
+//			healthText.text = hp.ToString() + "/" + hpTotal;
+//			Vector2 posTemp = imageTransGreen.anchoredPosition;
+			oldPos = imageTransGreen.anchoredPosition;
+			newPos = new Vector2 (oldPos.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), oldPos.y);	
 //			Debug.Log (hpLength * 0.1f);
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
 //			Vector2 oldPos = imageTransGreen.anchoredPosition;
 //			Vector2 newPos = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 //			imageTransGreen.anchoredPosition = Vector2.Lerp (oldPos, newPos, 4 * Time.deltaTime);
-			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
+
+//			Vector2 pos = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
+
+//			imageTransGreen.anchoredPosition = pos / 2;
+//			Vector2.Lerp (posTemp, pos, 0.5f);
+//			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 
 //			Vector2 oldVec = new Vector2 (posTemp.x , posTemp.y);	
 //			Vector3 newVec = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
-//			
-//			imageTransGreen.anchoredPosition = Vector2.Lerp (oldVec, newVec, 4 * Time.deltaTime);	
-			
 
 //			animator.SetBool("hit",true);
 			anime.Play("monster1Hit2");
