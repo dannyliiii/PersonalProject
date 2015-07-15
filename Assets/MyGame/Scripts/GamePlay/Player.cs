@@ -7,6 +7,7 @@ using System.Diagnostics;
 namespace Game{
 	public class Player : MonoBehaviour {
 
+		public GUIText plusOne;
 		public GUIText dimondNum;
 		public int lv;
 		public int xp;
@@ -15,6 +16,7 @@ namespace Game{
 		int atk;
 		int def;
 		public int diamond;
+		public int diamondOld;
 		List<Spell> spells;
 	
 		public GameObject plane;
@@ -26,6 +28,10 @@ namespace Game{
 		private readonly int speed = 30;
 		List<Spell> spell = new List<Spell> ();
 		readonly string filePath = "Assets/MyGame/Configs/Spells.data";
+		private Color color = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		private Color colorO = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+		bool flag = true;
+		private int fs;
 
 		void Start(){
 			lv = 1;
@@ -34,7 +40,7 @@ namespace Game{
 			mp = 100;
 			atk = 1;
 			def = 1;
-			diamond = 0;
+			diamondOld = diamond = 0;
 			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
@@ -62,6 +68,7 @@ namespace Game{
 					}
 				}
 			}
+			fs = plusOne.fontSize;
 		}
 		
 		void Update(){
@@ -82,7 +89,22 @@ namespace Game{
 				//				CastSpell();
 				CastSpell("hdel3");
 			}
-
+			if (diamond > diamondOld) {
+//				plusOne.fontSize = fs * 2;
+				plusOne.color = Vector4.Lerp(plusOne.color, color, 0.1f);
+//				UnityEngine.Debug.Log(plusOne.color);
+				if(plusOne.color.a > 0.9f && flag){
+					diamondOld = diamond;
+					flag = false;
+				}
+			}
+			if (!flag) {
+				plusOne.color = Vector4.Lerp(plusOne.color, colorO, 0.05f);
+				if(plusOne.color.a < 0.1f && !flag){
+					plusOne.color = colorO;
+					flag = true;
+				}
+			}
 			dimondNum.text = diamond.ToString();
 		}
 

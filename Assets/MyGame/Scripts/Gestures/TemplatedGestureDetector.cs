@@ -126,9 +126,12 @@ namespace TemplateGesture{
 
 
 			int index = resList.Index;
-
+			bool flag = true;
 			if(resList.GetScore(index) > LearningMachine.MinScore){
-
+				flag = false;
+				RaiseGestureDetected(resList.GetName(index));
+			}
+			if (resList.GetName (index) == "s" && resList.GetScore (index) > LearningMachine.MinScoreOneHanded && flag) {
 				RaiseGestureDetected(resList.GetName(index));
 			}
 

@@ -7,7 +7,7 @@ using System;
 
 namespace Game{
 	public class GameLogic : MonoBehaviour {
-
+		
 		public GameObject player;
 		Player playerScript;
 		public GameObject plane;
@@ -36,6 +36,7 @@ namespace Game{
 				SpawnMonster(++level);
 			}
 
+
 			HitTest ();
 
 //			Debug.Log ("Right hand");
@@ -52,6 +53,7 @@ namespace Game{
 //			GameObject robot2 = monsterPrefab.transform.Find("Robot2").gameObject;
 //			float height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
 //			float height = monsterPrefab.GetComponent<MeshRenderer>().bounds.size.y;
+
 			monster =  Instantiate(monsterPrefab, 
 	                              new Vector3(plane.transform.position.x, plane.transform.position.y, plane.transform.position.z),
 		                          Quaternion.FromToRotation (-UnityEngine.Vector3.forward, -transform.forward)
@@ -117,6 +119,7 @@ namespace Game{
 						string s = reader.ReadInnerXml();
 //						UnityEngine.Debug.Log(s);
 						bool res = int.TryParse(s.Trim(), out playerScript.diamond);
+						playerScript.diamondOld = playerScript.diamond;
 						if(!res){
 							UnityEngine.Debug.Log("PlayerLevel load failed");	
 						}

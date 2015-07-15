@@ -45,7 +45,6 @@ public class StartScreen : MonoBehaviour {
 			float y = 512 - p.y / Screen.height * 512;
 				
 			texture.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
-			
 		}
 
 		texture.Apply ();

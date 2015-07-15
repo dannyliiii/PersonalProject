@@ -259,11 +259,8 @@ public class Detector : MonoBehaviour {
 						UnityEngine.Vector2 oldPos = GUIRH.transform.position;
 						GUIRH.transform.position = UnityEngine.Vector2.Lerp(oldPos, new UnityEngine.Vector2(xGUI, yGUI), 4 * Time.deltaTime);
 
-//						UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
-//						rhsp.transform.position = screenPosition;
-//						Debug.Log (screenPosition);
-
-						MouseControl.MouseMove(vCursorPos);
+						//move the mouse
+//						MouseControl.MouseMove(vCursorPos);
 
 //						if(templateGestureDetector.MouseClicked(joints, rightHands) && timer == 40){
 //							MouseControl.MouseClick();
@@ -284,13 +281,13 @@ public class Detector : MonoBehaviour {
 
 	void DrawRightHandTracksStartScreen(){
 //		Debug.Log ("drawing right hand");
-		texture = new Texture2D (512, 512, TextureFormat.RGB24, false);
-		planeTemp = new Texture2D (512, 512, TextureFormat.RGB24, false);
-
-
-		planeMatTemp.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
+//		texture = new Texture2D (512, 512, TextureFormat.RGB24, false);
+//		planeTemp = new Texture2D (512, 512, TextureFormat.RGB24, false);
+		
+//		planeMatTemp.SetTexture (0, new Texture2D(512,512, TextureFormat.RGB24, false));
 		DestroyImmediate (planeMatTemp.mainTexture);
 		DestroyImmediate (planeTemp);
+
 		planeTemp = new Texture2D (512, 512, TextureFormat.RGB24, false);
 		planeMatTemp.SetTexture (0, planeTemp);
 

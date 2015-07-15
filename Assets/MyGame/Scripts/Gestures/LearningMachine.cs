@@ -29,13 +29,18 @@ namespace TemplateGesture{
 		private static readonly double lineMin = 0.99;
 		private static double radiance45;
 		private static readonly float minScore = 0.8f;
+		private static readonly float minScoreOneHanded = 0.7f;
 
 		public static float MinScore{
 			get{
 				return minScore;
 			}
 		}
-
+		public static float MinScoreOneHanded{
+			get{
+				return minScoreOneHanded;
+			}
+		}
 		public static LearningMachine Instance{
 			get{
 				return instance;
