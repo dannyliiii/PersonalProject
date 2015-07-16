@@ -103,7 +103,7 @@ namespace TemplateGesture{
 			}
 		}
 
-		public void LookForGesture()
+		public void LookForGesture(int method)
 		{
 			if (Entries.Count <= 0)
 				return;
@@ -122,10 +122,16 @@ namespace TemplateGesture{
 			                                            Entries.Select (e => e.ZX_TpfPosRight).ToList(),
 			                                            entries.Last().constrain,
 			                                            Epsilon,
-			                                            MinimalSize);
+			                                            MinimalSize, method);
+			int index = 0;
+			if(method == 1){
+				index = resList.Index;
+			}else if(method == 2){
+				index = resList.IndexDTW;
+			}else{
+				index = resList.Index;
+			}
 
-
-			int index = resList.Index;
 			bool flag = true;
 			if(resList.GetScore(index) > LearningMachine.MinScore){
 				flag = false;

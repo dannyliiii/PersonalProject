@@ -210,9 +210,8 @@ namespace TemplateGesture{
 			zx_rpf = new List<PointF> ();
 			constrain = new List<Constrain>();
 		}
-		
 
-		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane)
+		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane, int method)
 		{
 			if (tpfll.Count < LearningMachine.sampleCount / 2)
 				return -1;
@@ -237,28 +236,43 @@ namespace TemplateGesture{
 				rdr = new List<PointF> (zx_rpf);
 				rdl = new List<PointF> (zx_lpf);
 			}
+			if(method == 1){
+				double[] bestl = GoldenSection.GoldenSectionSearch(
+					pfl,                             // to rotate
+					rdl,                           // to match
+					GeotrigEx.Degrees2Radians(-45.0),   // lbound
+					GeotrigEx.Degrees2Radians(+45.0),   // ubound
+					GeotrigEx.Degrees2Radians(2.0)      // threshold
+					);
+				
+				double scorel = 1.0 - bestl[0] / GoldenSection.HalfDiagonal;
 
-			double[] bestl = GoldenSection.GoldenSectionSearch(
-				pfl,                             // to rotate
-				rdl,                           // to match
-				GeotrigEx.Degrees2Radians(-45.0),   // lbound
-				GeotrigEx.Degrees2Radians(+45.0),   // ubound
-				GeotrigEx.Degrees2Radians(2.0)      // threshold
-				);
-			
-			double scorel = 1.0 - bestl[0] / GoldenSection.HalfDiagonal;
+				double[] bestr = GoldenSection.GoldenSectionSearch(
+					pfr,                             // to rotate
+					rdr,                           // to match
+					GeotrigEx.Degrees2Radians(-45.0),   // lbound
+					GeotrigEx.Degrees2Radians(+45.0),   // ubound
+					GeotrigEx.Degrees2Radians(2.0)      // threshold
+					);
+				
+				double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
+				return (scorel + scorer) * 0.5f;
+			}else if(method == 2){
 
-			double[] bestr = GoldenSection.GoldenSectionSearch(
-				pfr,                             // to rotate
-				rdr,                           // to match
-				GeotrigEx.Degrees2Radians(-45.0),   // lbound
-				GeotrigEx.Degrees2Radians(+45.0),   // ubound
-				GeotrigEx.Degrees2Radians(2.0)      // threshold
-				);
-			
-			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
+				int lengthA = pfl.Count;
+				int lengthB = rdl.Count;
+				
+				float[,] dMatrix = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthA, lengthB);
 
-			return (scorel + scorer) * 0.5f;
+				float[,] rMatrix = DynamicTimeWraping.GetDTWMatrix(dMatrix, lengthA, lengthB);
+				
+				List<UnityEngine.Vector2> path = DynamicTimeWraping.GetOptimalPath(rMatrix, lengthA, lengthB);
+
+				return rMatrix[(int)path[0].x, (int)path[0].y];
+			}else{
+				return 0;
+			}
+
 		}
 
 		public double OneHandedMatch(List<TimePointF> tpflr, float threshold, float minSize, int plane)

@@ -270,7 +270,7 @@ public class Detector : MonoBehaviour {
 					
 //					Debug.Log("adding joints to entry");
 					templateGestureDetector.Add(joints);
-					templateGestureDetector.LookForGesture();
+					templateGestureDetector.LookForGesture(1);
 					break;
 					
 				}

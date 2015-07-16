@@ -6,6 +6,8 @@ using UnityEngine;
 namespace TemplateGesture{
 	public class ResultList {
 
+		private readonly double max = double.MaxValue;
+
 		public class BestResult : IComparable
 		{
 			public static BestResult Empty = new BestResult(String.Empty, 0);
@@ -121,7 +123,7 @@ namespace TemplateGesture{
 			arrList.Add(r);
 		}
 
-		public void UpdateResult(int num, string name, double score, double diff, int plane){
+		public void UpdateResult(int num, string name, double score, double diff = 0, int plane = 1){
 			arrList [num].SetName (name);
 			arrList [num].SetScore(score);
 			arrList [num].SetRadianceDiff (diff);
@@ -237,7 +239,24 @@ namespace TemplateGesture{
 				return res;
 			}
 		}
-
+		public int IndexDTW{
+			get{
+				int res = -1;
+				if (arrList.Count > 0)
+				{
+					double score = max;
+					for(int i = 0; i < arrList.Count; i++){
+						if(arrList[i].Score < score){
+							res = i;
+							score = arrList[i].Score;
+						}else{
+							//do nothing
+						}
+					}
+				}
+				return res;
+			}
+		}
 		public double GetScore(string name){
 			foreach (var v in arrList) {
 				if(v.Name == name){
