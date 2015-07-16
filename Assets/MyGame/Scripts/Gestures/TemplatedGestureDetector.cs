@@ -24,7 +24,7 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly int frameCount = 60;
+		private readonly int frameCount = 100;
 
 		public bool oneHanded;
 
