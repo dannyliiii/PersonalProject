@@ -17,6 +17,7 @@ public class Detector : MonoBehaviour {
 
 	public Player playerClass;
 
+	public int method;
 	int arrCount = 8;
 	Material material1; 
 	Material material2; 
@@ -270,7 +271,7 @@ public class Detector : MonoBehaviour {
 					
 //					Debug.Log("adding joints to entry");
 					templateGestureDetector.Add(joints);
-					templateGestureDetector.LookForGesture(1);
+					templateGestureDetector.LookForGesture(method);
 					break;
 					
 				}
@@ -485,7 +486,7 @@ public class Detector : MonoBehaviour {
 //			GUI.Label(new Rect(screenWidth * 0.7f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetName(j));
 //			GUI.Label(new Rect(screenWidth * 0.75f, screenHeight * 0.05f + j * 40, 100, 20), LearningMachine.ResultList.GetScore(j).ToString());
 //		}
-//
+
 //		GUI.EndScrollView ();
 		
 		string str = "Detected gesture shows here.";

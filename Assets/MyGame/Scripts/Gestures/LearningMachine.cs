@@ -72,7 +72,7 @@ namespace TemplateGesture{
 		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, 
 		                               List<TimePointF> zy_tpll, List<TimePointF> zy_tplr, 
 		                               List<TimePointF> zx_tpll, List<TimePointF> zx_tplr, 
-		                               Constrain[]c, float threshold,float minSize, int method)
+		                               Constrain[]c, float threshold,float minSize, bool oneHanded, int method)
 		{
 			int i = 0;
 
@@ -85,10 +85,20 @@ namespace TemplateGesture{
 			rList [0] = IsLine (tplr);
 			rList [1] = IsLine (zy_tpll);
 			rList [2] = IsLine (zx_tpll);
-
+			UnityEngine.Debug.Log("=================");
 			foreach (RecordedData p in pos) {
 		
-				if(method == 1){
+				if(method == 2){
+					double score = 0;
+					if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+						score = -4;
+					}else{
+						score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
+					}
+					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
+					rl.UpdateResult(i++, p.gestureName, (float)score);
+				}
+				else{
 					double score = 0;
 					double xy_score = 0;
 					double zy_score = 0;
@@ -96,7 +106,8 @@ namespace TemplateGesture{
 					double rL = radiance45 - Math.Atan2(tpll[0].Y - tpll[tpll.Count - 1].Y, tpll[0].X - tpll[tpll.Count - 1].X);
 					double rR = radiance45 - Math.Atan2(tplr[0].Y - tplr[tplr.Count - 1].Y, tplr[0].X - tplr[tplr.Count - 1].X);
 					int planeCount = 1;
-					if(p.OnaHanded){
+
+					if(oneHanded && p.OnaHanded){
 						score = p.OneHandedMatch(tplr, threshold, minSize, method);
 					}
 					else{
@@ -135,17 +146,14 @@ namespace TemplateGesture{
 								score = zy_score;
 							}
 						}
+						UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
+						rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
+						
 					}
-					if(p.gestureName == "s"){
-						UnityEngine.Debug.Log(p.gestureName);
-						UnityEngine.Debug.Log(score);
-					}
-									
-					rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
-				}
-				else if(method == 2){
-					double score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
-					rl.UpdateResult(i++, p.gestureName, (float)score);
+//					if(p.gestureName == "s"){
+//						UnityEngine.Debug.Log(p.gestureName);
+//						UnityEngine.Debug.Log(score);
+//					}
 				}
 			}
 			return rl;
@@ -249,38 +257,6 @@ namespace TemplateGesture{
 
 				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
-
-//				//calculate the angles and variances
-//				List<double> angleR = new List<double> ();
-//				List<double> angleL = new List<double> ();
-//				
-//				double sumL = 0;
-//				double sumR = 0;
-//				for (int i = 1; i < pr.Count; i ++) {
-//
-//					double l = Math.Atan2(pr[0].Y - pr[i].Y, pr[0].X - pr[i].X);
-//					double r = Math.Atan2(pl[0].Y - pl[i].Y, pl[0].X - pl[i].X);
-//					l = RadianToDegree(l);
-//					r = RadianToDegree(r);
-//
-//					angleR.Add(r);
-//					angleL.Add(l);
-//					sumL += l;
-//					sumR += r;
-//				}
-//				double avgR = sumR / (pr.Count - 1);
-//				double avgL = sumL / (pl.Count - 1);
-//				
-//				double varianceSumR = 0;
-//				double varianceSumL = 0;
-//				for (int i = 0; i < angleR.Count; i++)
-//				{
-//					varianceSumR += (angleR[i] - avgR) * (angleR[i] - avgR);
-//					varianceSumL += (angleL[i] - avgL) * (angleL[i] - avgL);
-//				}
-//				
-//				double varianceR = varianceSumR / angleR.Count;
-//				double varianceL = varianceSumL / angleL.Count;
 			
 				//calculate the correlation
 				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);

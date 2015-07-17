@@ -140,14 +140,15 @@ namespace Game{
 				UnityEngine.Debug.Log("Spell has not been unlocked.");
 				return;
 			}
+			if (temp == null) {
+				temp = new Spell ("test", 1, 10, 1, "", 0, false);
+			}
 
 			Vector3 position = transform.position + new Vector3 (2.5f, 0.0f, 0.0f);
 			Vector3 toPosition = new Vector3 (plane.transform.position.x, plane.transform.position.y + 2.5f/*temp*/ * 0.5f, plane.transform.position.z);
 			GameObject proj =  Instantiate(/*projectile*/ spellsPrefabs[temp.num], position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
 			SpellBehavior spellBehavior = proj.GetComponent("SpellBehavior") as SpellBehavior;
-			if (temp == null) {
-				temp = new Spell ("test", 1, 10, 1, "", 0, false);
-			}
+
 			spellBehavior.spell = temp;
 //			UnityEngine.Debug.Log (spellBehavior.spell.spellName);
 			Rigidbody rb = proj.GetComponent<Rigidbody> ();

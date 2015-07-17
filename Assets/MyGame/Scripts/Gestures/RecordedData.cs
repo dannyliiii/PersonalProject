@@ -259,16 +259,25 @@ namespace TemplateGesture{
 				return (scorel + scorer) * 0.5f;
 			}else if(method == 2){
 
-				int lengthA = pfl.Count;
-				int lengthB = rdl.Count;
+				int lengthAL = pfl.Count;
+				int lengthBL = rdl.Count;
 				
-				float[,] dMatrix = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthA, lengthB);
+				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
 
-				float[,] rMatrix = DynamicTimeWraping.GetDTWMatrix(dMatrix, lengthA, lengthB);
+				float[,] rMatrixL = DynamicTimeWraping.GetDTWMatrix(dMatrixL, lengthAL, lengthBL);
 				
-				List<UnityEngine.Vector2> path = DynamicTimeWraping.GetOptimalPath(rMatrix, lengthA, lengthB);
+				List<UnityEngine.Vector2> pathL = DynamicTimeWraping.GetOptimalPath(rMatrixL, lengthAL, lengthBL);
 
-				return rMatrix[(int)path[0].x, (int)path[0].y];
+				int lengthAR = pfr.Count;
+				int lengthBR = rdr.Count;
+				
+				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+				
+				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
+				
+				List<UnityEngine.Vector2> path = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
+
+				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1]) * 0.5f;
 			}else{
 				return 0;
 			}

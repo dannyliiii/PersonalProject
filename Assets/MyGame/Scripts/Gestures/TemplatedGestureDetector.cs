@@ -24,7 +24,7 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly int frameCount = 100;
+		private readonly int frameCount = 70;
 
 		public bool oneHanded;
 
@@ -101,6 +101,8 @@ namespace TemplateGesture{
 				Entry entryToRemove = Entries[0];
 				Entries.Remove(entryToRemove);
 			}
+
+//			Debug.Log (Entries.Count);
 		}
 
 		public void LookForGesture(int method)
@@ -110,10 +112,12 @@ namespace TemplateGesture{
 
 //			if (!oneHanded) {
 //				Debug.Log ("two handed");
-			if (!IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (Entries.Select (e => e.TpfPosRight).ToList ()))
+			if (!IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
+//				Debug.Log("is not finished");
 				return;
+			}
 //			}
-
+//			Debug.Log("is finished");
 			ResultList resList = LearningMachine.Match (Entries.Select (e => e.TpfPosLeft).ToList(),
 			                                            Entries.Select (e => e.TpfPosRight).ToList(),
 			                                            Entries.Select (e => e.ZY_TpfPosLeft).ToList(),
@@ -122,36 +126,34 @@ namespace TemplateGesture{
 			                                            Entries.Select (e => e.ZX_TpfPosRight).ToList(),
 			                                            entries.Last().constrain,
 			                                            Epsilon,
-			                                            MinimalSize, method);
+			                                            MinimalSize, oneHanded, method);
 			int index = 0;
 			if(method == 1){
 				index = resList.Index;
+
+				bool flag = true;
+				if(resList.GetScore(index) > LearningMachine.MinScore){
+					flag = false;
+					RaiseGestureDetected(resList.GetName(index));
+				}
+				if (resList.GetName (index) == "s" && resList.GetScore (index) > LearningMachine.MinScoreOneHanded && flag) {
+					RaiseGestureDetected(resList.GetName(index));
+				}
+
 			}else if(method == 2){
 				index = resList.IndexDTW;
+				RaiseGestureDetected(resList.GetName(index));
+
 			}else{
 				index = resList.Index;
 			}
 
-			bool flag = true;
-			if(resList.GetScore(index) > LearningMachine.MinScore){
-				flag = false;
-				RaiseGestureDetected(resList.GetName(index));
-			}
-			if (resList.GetName (index) == "s" && resList.GetScore (index) > LearningMachine.MinScoreOneHanded && flag) {
-				RaiseGestureDetected(resList.GetName(index));
-			}
 
-//			int size = resList.Size();
-//			for (int i = 0; i < size; i ++) {
-//				UnityEngine.Debug.Log("============");
-//				UnityEngine.Debug.Log(resList.GetName(i));
-//				UnityEngine.Debug.Log(resList.GetScore(i));
-//			}
-				LearningMachine.ResultList.ResetList ();
-				//clear the point list
-				Entries.Clear();
-//			}		
 
+
+			LearningMachine.ResultList.ResetList ();
+			//clear the point list
+			Entries.Clear();
 		}
 
 		private void RaiseGestureDetected(string gesture)
@@ -211,7 +213,7 @@ namespace TemplateGesture{
 					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i].X, list [i].Y);
 					MyMath.Vector2 v3 = v1 - v2;
 	//				Debug.Log(v3.LengthSqr);
-					if (v3.LengthSqr < 0.001f) {
+					if (v3.LengthSqr < 0.002f) {
 						count ++;
 					}
 					listCount ++;
