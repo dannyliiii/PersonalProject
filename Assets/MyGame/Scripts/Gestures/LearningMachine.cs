@@ -88,25 +88,40 @@ namespace TemplateGesture{
 			UnityEngine.Debug.Log("=================");
 			foreach (RecordedData p in pos) {
 		
-				if(method == 2){
-					double score = 0;
-					if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
-						score = -4;
-					}else{
-						score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
+				double score = 0;
+				double xy_score = 0;
+				double zy_score = 0;
+				double zx_score = 0;
+				double rL = radiance45 - Math.Atan2(tpll[0].Y - tpll[tpll.Count - 1].Y, tpll[0].X - tpll[tpll.Count - 1].X);
+				double rR = radiance45 - Math.Atan2(tplr[0].Y - tplr[tplr.Count - 1].Y, tplr[0].X - tplr[tplr.Count - 1].X);
+				int planeCount = 1;
+				//checking constraints
+				if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+					score = -4;
+					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
+					rl.UpdateResult(i++, p.gestureName, (float)score);
+					continue;
+				}
+				//checking lines
+				if(p.IsLineL && p.IsLineR){
+					if(lList[0] & rList[0]){
+						rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
+						rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
+						score = 2;
 					}
+					else{
+						score = -5;
+					}
+					rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
+					continue;
+				}
+				// processing according to the method
+				if(method == 2){
+					score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
 					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
 					rl.UpdateResult(i++, p.gestureName, (float)score);
 				}
 				else{
-					double score = 0;
-					double xy_score = 0;
-					double zy_score = 0;
-					double zx_score = 0;
-					double rL = radiance45 - Math.Atan2(tpll[0].Y - tpll[tpll.Count - 1].Y, tpll[0].X - tpll[tpll.Count - 1].X);
-					double rR = radiance45 - Math.Atan2(tplr[0].Y - tplr[tplr.Count - 1].Y, tplr[0].X - tplr[tplr.Count - 1].X);
-					int planeCount = 1;
-
 					if(oneHanded && p.OnaHanded){
 						score = p.OneHandedMatch(tplr, threshold, minSize, method);
 					}
@@ -114,31 +129,13 @@ namespace TemplateGesture{
 						if( p.OnaHanded){
 							score  = -5;
 						}
-						else if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
-							score = -4;
-						}
 						else{
-		//					if(l[(int)p.Plane] & r[(int)p.Plane]){
-							if(lList[0] & rList[0]){
-								if(p.IsLineL && p.IsLineR){
-									rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
-									rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
-									score = 2;
-		//							UnityEngine.Debug.Log(p.gestureName);
-		//							UnityEngine.Debug.Log(rL + rR);
-								}
-								else{
-									score = -5;
-								}
-							}
-							else{
-								xy_score = p.Match(tpll, tplr, threshold, minSize, 1, method);
-								zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2, method);
-								zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3, method);
-							}
+							xy_score = p.Match(tpll, tplr, threshold, minSize, 1, method);
+							zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2, method);
+							zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3, method);
 						}
 
-						if(score != 2){
+						if(score != 2 && score != -5){
 							if((int)p.Plane == 0){
 								score = xy_score;
 							}
@@ -150,8 +147,7 @@ namespace TemplateGesture{
 							}
 						}
 						UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
-						rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
-						
+						rl.UpdateResult(i++, p.gestureName, (float)score);	
 					}
 //					if(p.gestureName == "s"){
 //						UnityEngine.Debug.Log(p.gestureName);
