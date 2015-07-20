@@ -43,6 +43,8 @@ namespace TemplateGesture{
 		double angleR_YZ;
 		bool oneHanded;
 		int linePlane;
+		double lengthL;
+		double lengthR;
 
 		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
@@ -104,6 +106,15 @@ namespace TemplateGesture{
 		}
 		//----------------------- for the z-x plane ------------------
 
+		//---------------------- start of getter/setter----------------
+		public double LengthL{
+			get{return lengthL;}
+			set{lengthL = value;}
+		}
+		public double LengthR{
+			get{return lengthR;}
+			set{lengthR = value;}
+		}
 		public Plane Plane{
 			get{return plane;}
 			set{plane = value;}
@@ -259,6 +270,9 @@ namespace TemplateGesture{
 				return (scorel + scorer) * 0.5f;
 			}else if(method == 2){
 
+				float gesLengthL = (float)GetLength(pfl);
+				float gesLengthR = (float)GetLength(pfr);
+
 				int lengthAL = pfl.Count;
 				int lengthBL = rdl.Count;
 				
@@ -268,6 +282,8 @@ namespace TemplateGesture{
 				
 				List<UnityEngine.Vector2> pathL = DynamicTimeWraping.GetOptimalPath(rMatrixL, lengthAL, lengthBL);
 
+//				float pathLengthL = DynamicTimeWraping.GetPathLength(dMatrixL, pathL);
+
 				int lengthAR = pfr.Count;
 				int lengthBR = rdr.Count;
 				
@@ -275,9 +291,11 @@ namespace TemplateGesture{
 				
 				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
 				
-				List<UnityEngine.Vector2> path = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
+				List<UnityEngine.Vector2> pathR = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
 
-				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1]) * 0.5f;
+//				float pathLengthR = DynamicTimeWraping.GetPathLength(dMatrixR, pathR);
+
+				return (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
 			}else{
 				return 0;
 			}
@@ -317,6 +335,14 @@ namespace TemplateGesture{
 			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
 			
 			return scorer;
+		}
+
+		public double GetLength(List<PointF> list){
+			double res = 0;
+			for (int i = 0; i < list.Count - 1; i ++) {
+				res += Math.Sqrt(Math.Pow((list[i].X - list[i+1].X),2) + Math.Pow((list[i].Y - list[i+1].Y),2));
+			}
+			return res;
 		}
 		
 	}

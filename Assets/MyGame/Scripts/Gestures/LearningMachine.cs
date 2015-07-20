@@ -111,7 +111,10 @@ namespace TemplateGesture{
 						score = p.OneHandedMatch(tplr, threshold, minSize, method);
 					}
 					else{
-						if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
+						if( p.OnaHanded){
+							score  = -5;
+						}
+						else if( p.constrain.Count > 0 && !GestureConstrains.MeetConstrains(c, p.constrain)){
 							score = -4;
 						}
 						else{
@@ -258,6 +261,13 @@ namespace TemplateGesture{
 				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
 			
+				rd.LengthL = rd.GetLength(rd.LP);
+				rd.LengthR = rd.GetLength(rd.RP);
+
+//				UnityEngine.Debug.Log(rd.gestureName);	
+//				UnityEngine.Debug.Log(rd.LengthL);
+//				UnityEngine.Debug.Log(rd.LengthR);
+
 				//calculate the correlation
 				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);
 				List<PointF> listPFR = GoldenSectionExtension.ListTimePointF2ListPointF(pr);

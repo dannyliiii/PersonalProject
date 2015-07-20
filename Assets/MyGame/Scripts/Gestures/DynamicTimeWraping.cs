@@ -99,26 +99,16 @@ namespace TemplateGesture{
 			
 			return res;
 		}
-		
-		
-//		static void Main(string[] args)
-//		{
-//			Vector2[] time_series_A = { new Vector2(-0.87f,-0.88f), new Vector2(-0.84f,-0.91f), new Vector2(-0.85f,-0.84f), new Vector2(-0.82f,-0.82f), new Vector2(-0.23f,-0.24f), 
-//				new Vector2(1.95f,1.92f), new Vector2(1.36f,1.41f), new Vector2(0.60f,0.51f), new Vector2(0.0f,0.03f), new Vector2(-0.29f,-0.18f)};
-//			Vector2[] time_series_B = { new Vector2(-0.60f,-0.46f), new Vector2(-0.65f,-0.62f), new Vector2(-0.71f,-0.68f), new Vector2(-0.58f,-0.63f), new Vector2(-0.17f,-0.32f), 
-//				new Vector2(0.77f,0.74f), new Vector2(1.94f,1.97f)};
-//			int lengthA = time_series_A.Length;
-//			int lengthB = time_series_B.Length;
-//			
-//			float[,] dMatrix = GetDistanceMatrix(time_series_A, time_series_B, lengthA, lengthB);
-//			
-//			float[,] rMatrix = GetDTWMatrix(dMatrix, lengthA, lengthB);
-//			
-//			List<Vector2> path = GetOptimalPath(rMatrix, lengthA, lengthB);
-//			
-//			foreach (var p in path) {
-//				Debug.Log(p.x.ToString() + " " + p.y.ToString());
-//			}
-//		}
+
+		public static float GetPathLength(float[,] dMat, List<UnityEngine.Vector2> path){
+			float res = 0;
+
+			foreach (var p in path) {
+				res += dMat[(int)p.x,(int)p.y];
+			}
+
+			return res;
+		}
+
 	}
 }

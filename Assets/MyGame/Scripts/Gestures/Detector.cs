@@ -187,6 +187,9 @@ public class Detector : MonoBehaviour {
 			if(startScreen)
 				Application.LoadLevel ("KinectSample");
 			break;
+		case "consolation":
+			playerClass.CastSpell("akdjjaslk");
+			break;
 		default:
 			playerClass.CastSpell(gesture);
 			break;

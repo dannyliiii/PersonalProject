@@ -24,7 +24,7 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly int frameCount = 70;
+		private readonly int frameCount = 50;
 
 		public bool oneHanded;
 
@@ -135,6 +135,9 @@ namespace TemplateGesture{
 				if(resList.GetScore(index) > LearningMachine.MinScore){
 					flag = false;
 					RaiseGestureDetected(resList.GetName(index));
+				}else{
+					flag = false;
+					RaiseGestureDetected("consolation");
 				}
 				if (resList.GetName (index) == "s" && resList.GetScore (index) > LearningMachine.MinScoreOneHanded && flag) {
 					RaiseGestureDetected(resList.GetName(index));
@@ -147,9 +150,6 @@ namespace TemplateGesture{
 			}else{
 				index = resList.Index;
 			}
-
-
-
 
 			LearningMachine.ResultList.ResetList ();
 			//clear the point list
