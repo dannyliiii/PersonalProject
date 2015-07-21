@@ -7,7 +7,8 @@ using System;
 
 namespace Game{
 	public class GameLogic : MonoBehaviour {
-		
+		public Canvas UICanvas;
+
 		public GameObject player;
 		Player playerScript;
 		public GameObject plane;
@@ -25,6 +26,8 @@ namespace Game{
 			playerScript = player.GetComponent<Player>() as Player;
 			LoadSaveData ();
 			SpawnMonster (level);
+
+			InitializeUI();
 
 
 		}
@@ -152,6 +155,15 @@ namespace Game{
 			n3.InnerText = playerScript.diamond.ToString();
 			
 			xmlDoc.Save(filePath);
+		}
+
+		void InitializeUI(){
+			Transform content = UICanvas.transform.FindChild("Content");
+			Transform panel = UICanvas.transform.FindChild("Panel");
+
+			RectTransform rtp =  panel.gameObject.GetComponent<RectTransform>();
+			rtp.sizeDelta = new Vector2(Screen.width * 0.1f, Screen.height);
+
 		}
 
 	}
