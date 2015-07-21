@@ -188,10 +188,12 @@ public class Detector : MonoBehaviour {
 				Application.LoadLevel ("KinectSample");
 			break;
 		case "consolation":
-			playerClass.CastSpell("akdjjaslk");
+			if(!startScreen)
+				playerClass.CastSpell("akdjjaslk");
 			break;
 		default:
-			playerClass.CastSpell(gesture);
+			if(!startScreen)
+				playerClass.CastSpell(gesture);
 			break;
 		}
 	}
@@ -234,9 +236,9 @@ public class Detector : MonoBehaviour {
 					//control the mouse with right hand.
 					if(controlMouse && GUIRH != null/**&& handCursor!= null && rightHand != null && leftHand != null**/ )
 					{
-						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
-						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
-						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
+//						UnityEngine.Vector3 vCursorPos = new UnityEngine.Vector3 ((joints[(int)NuiSkeletonPositionIndex.HandRight].x + 1) * 0.5f,
+//						                                                          (joints[(int)NuiSkeletonPositionIndex.HandRight].y + 1) * 0.5f,
+//						                                                          joints[(int)NuiSkeletonPositionIndex.HandRight].z);
 
 //						float x = (joints[(int)NuiSkeletonPositionIndex.HandRight].x) * 10.0f;
 //						float y = ((joints[(int)NuiSkeletonPositionIndex.HandRight].y) * 2) * 5.0f;

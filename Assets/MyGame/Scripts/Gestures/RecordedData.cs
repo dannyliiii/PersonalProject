@@ -302,7 +302,7 @@ namespace TemplateGesture{
 
 		}
 
-		public double OneHandedMatch(List<TimePointF> tpflr, float threshold, float minSize, int plane)
+		public double OneHandedMatch(List<TimePointF> tpflr, float threshold, float minSize, int plane, int method)
 		{
 			if (tpflr.Count < LearningMachine.sampleCount / 2)
 				return -1;
@@ -313,26 +313,46 @@ namespace TemplateGesture{
 			List<PointF> pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 			
 			List<PointF> rdr;
-			
+
+			double scorer = 0;
+
 			// 1: xy_plane 2: zy_plane 2: zx_plane
 			if (plane == 1) {
 				rdr = new List<PointF> (rpf);
-			} else if (plane == 2){
+			} else if (plane == 2) {
 				rdr = new List<PointF> (zy_rpf);
-			}
-			else{
+			} else {
 				rdr = new List<PointF> (zx_rpf);
 			}
 
-			double[] bestr = GoldenSection.GoldenSectionSearch(
+			if (method == 1) {
+				double[] bestr = GoldenSection.GoldenSectionSearch (
 				pfr,                             // to rotate
 				rdr,                           // to match
-				GeotrigEx.Degrees2Radians(-45.0),   // lbound
-				GeotrigEx.Degrees2Radians(+45.0),   // ubound
-				GeotrigEx.Degrees2Radians(2.0)      // threshold
+				GeotrigEx.Degrees2Radians (-45.0),   // lbound
+				GeotrigEx.Degrees2Radians (+45.0),   // ubound
+				GeotrigEx.Degrees2Radians (2.0)      // threshold
 				);
 			
-			double scorer = 1.0 - bestr[0] / GoldenSection.HalfDiagonal;
+				scorer = 1.0 - bestr [0] / GoldenSection.HalfDiagonal;
+			} else {
+				float gesLengthR = (float)GetLength(pfr);
+				
+				int lengthAR = pfr.Count;
+				int lengthBR = rdr.Count;
+				
+				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+				
+				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
+				
+				List<UnityEngine.Vector2> pathR = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
+				
+				//				float pathLengthR = DynamicTimeWraping.GetPathLength(dMatrixR, pathR);
+
+				Write2File(gestureName, rMatrixR, lengthAR, lengthBR);
+				
+				return rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR);
+			}
 			
 			return scorer;
 		}
@@ -343,6 +363,32 @@ namespace TemplateGesture{
 				res += Math.Sqrt(Math.Pow((list[i].X - list[i+1].X),2) + Math.Pow((list[i].Y - list[i+1].Y),2));
 			}
 			return res;
+		}
+
+		private void Write2File(string name, float[,] rMat, int lengthA, int lengthB){
+
+			string filePath = "Assets/MyGame/Temp/DTWRes.txt";
+			List<string> sList = new List<string> (); 
+			for (int i = 0; i < lengthB; i ++) {
+				string line = "";
+				for(int j = 0; j < lengthA; j ++){
+					line += rMat[i,j];
+					line += " ";
+				}
+				sList.Add(line);
+			}
+			try{
+				using (System.IO.StreamWriter file =
+				       new System.IO.StreamWriter(filePath)){
+					file.WriteLine("======================");
+					file.WriteLine(name);
+					foreach(var s in sList){
+						file.WriteLine(s);
+					}
+				}
+			}catch(Exception e){
+				UnityEngine.Debug.Log(e);
+			}
 		}
 		
 	}

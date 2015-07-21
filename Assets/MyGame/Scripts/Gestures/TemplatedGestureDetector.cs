@@ -24,7 +24,7 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly int frameCount = 50;
+		private readonly int frameCount = 65;
 
 		public bool oneHanded;
 
@@ -175,7 +175,6 @@ namespace TemplateGesture{
 			bool p1 = true;
 			if (rh.Count < frameCount)
 				return res;
-
 
 			MyMath.Vector2 v1 = new MyMath.Vector2(rh [rh.Count - 1].x, rh [rh.Count - 1].y);
 			for (int i = rh.Count-2; i > rh.Count - frameCount; i --) {

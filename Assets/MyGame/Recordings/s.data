@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="s" NumPts="244" Date="Friday, July 10, 2015" TimeOfDay="12:17:03 PM">
   <OneHanded Value="1" />
-  <Constrains Value="1" />
-  <Constrains Value="1" />
   <LeftHandPoints X="-0.361982435" Y="-0.5559268" Z="1.66922069" />
   <LeftHandPoints X="-0.361798" Y="-0.5559361" Z="1.66924739" />
   <LeftHandPoints X="-0.3616725" Y="-0.555905044" Z="1.66932142" />

@@ -103,27 +103,41 @@ namespace TemplateGesture{
 					continue;
 				}
 				//checking lines
-				if(p.IsLineL && p.IsLineR){
-					if(lList[0] & rList[0]){
-						rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
-						rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
-						score = 2;
-					}
-					else{
-						score = -5;
-					}
-					rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
-					continue;
-				}
+//				if(p.IsLineL && p.IsLineR){
+//					if(lList[0] & rList[0]){
+//						rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
+//						rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
+//						score = 2;
+//					}
+//					else{
+//						score = -5;
+//					}
+//					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
+//					rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
+//					continue;
+//				}
 				// processing according to the method
 				if(method == 2){
-					score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
+					if(oneHanded && p.OnaHanded){
+						if(p.OnaHanded)
+							score = p.OneHandedMatch(tplr, threshold, minSize, 1, method);
+						else{
+							score = -6;
+						}
+					}
+					else{
+						if(p.OnaHanded){
+							score  = -5;
+						}else{
+							score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
+						}
+					}
 					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
 					rl.UpdateResult(i++, p.gestureName, (float)score);
 				}
 				else{
 					if(oneHanded && p.OnaHanded){
-						score = p.OneHandedMatch(tplr, threshold, minSize, method);
+						score = p.OneHandedMatch(tplr, threshold, minSize, 1, method);
 					}
 					else{
 						if( p.OnaHanded){

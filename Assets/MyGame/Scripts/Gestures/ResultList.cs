@@ -246,9 +246,18 @@ namespace TemplateGesture{
 				{
 					double score = max;
 					for(int i = 0; i < arrList.Count; i++){
-						if(arrList[i].Score > 0 && arrList[i].Score < score){
+						if(arrList[i].Score > 0 && arrList[i].Score < score && arrList[i].Score != 2){
 							res = i;
 							score = arrList[i].Score;
+						}else if(arrList[i].Score == 2){
+							if(score != 2){
+								score = 2;
+								res = i;
+							}else{
+								if(arrList[res].Diff > arrList[i].Diff){
+									res = i;
+								}
+							}
 						}else{
 							//do nothing
 						}

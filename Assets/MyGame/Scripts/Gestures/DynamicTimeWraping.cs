@@ -25,15 +25,6 @@ namespace TemplateGesture{
 				}
 			}
 
-//			for (int i = 0; i < lengthB; i++)
-//			{
-//				for (int j = 0; j < lengthA; j++)
-//				{
-//					Debug.Log(dMatrix[i, j]);
-//					Debug.Log(" ");
-//				}
-//				Debug.Log("\n");
-//			}
 			return dMatrix;
 		}
 		public static float[,] GetDTWMatrix(float[,] dMatrix, int lengthA, int lengthB) {
@@ -59,17 +50,6 @@ namespace TemplateGesture{
 					
 				}
 			}
-			
-//			Debug.Log("===========");
-//			for (int i = 0; i < lengthB; i++)
-//			{
-//				for (int j = 0; j < lengthA; j++)
-//				{
-//					Debug.Log(rMatrix[i, j]);
-//					Debug.Log(" ");
-//				}
-//				Debug.Log("\n");
-//			}
 			
 			return rMatrix;
 		}
