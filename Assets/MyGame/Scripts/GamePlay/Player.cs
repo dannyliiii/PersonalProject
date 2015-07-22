@@ -17,7 +17,7 @@ namespace Game{
 		int def;
 		public int diamond;
 		public int diamondOld;
-		List<Spell> spells;
+//		List<Spell> spells;
 	
 		public GameObject plane;
 		public GameObject projectile;
@@ -40,7 +40,7 @@ namespace Game{
 			atk = 1;
 			def = 1;
 //			diamondOld = diamond = 0;
-			spells = new List<Spell>();
+//			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
 			upForce = new UnityEngine.Vector3 (0.0f, 100.0f, 0.0f);
@@ -164,8 +164,9 @@ namespace Game{
 
 		}
 
-		public void CollectDimond(){
-
+		public void UpgradeSpell(int num){
+			spell[num].lvl ++;
+			spell[num].atk *= 2;
 		}
 
 	}

@@ -38,6 +38,8 @@ namespace Game{
 		Vector3 panelOffPosition;
 		Vector3 contentOnPosition;
 		Vector3 contentOffPosition;
+		List<GameObject> buttons;
+		int currentButton = 0;
 
 		bool UIMoveLeft = false;
 		bool UIMoveRight = false;
@@ -54,8 +56,10 @@ namespace Game{
 			panel = UICanvas.transform.FindChild("Panel");
 			header = panel.FindChild("HeaderText");
 			contentPanel = content.FindChild("ContentPanel");
+			buttons = new List<GameObject>();
 
 			InitializeUI();
+			buttons[currentButton].GetComponent<Button>().Select();
 			initilized = true;
 		}
 		
@@ -75,6 +79,31 @@ namespace Game{
 
 			HitTest ();
 
+
+			if(Input.GetKeyDown(KeyCode.M)){
+				MoveUI(0);
+			}
+			if(Input.GetKeyDown(KeyCode.N)){
+				MoveUI(1);
+			}
+			if(Input.GetKeyDown(KeyCode.UpArrow)){
+				if(currentButton > 0){
+					buttons[--currentButton].GetComponent<Button>().Select();
+				}
+			}
+			if(Input.GetKeyDown(KeyCode.DownArrow)){
+				if(currentButton < buttons.Count - 1){
+					buttons[++currentButton].GetComponent<Button>().Select();
+				}
+//				UnityEngine.Debug.Log(currentButton);
+			}
+
+			if(Input.GetKeyDown(KeyCode.L)){
+
+				buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+
+			}
+
 			if (UIMoveLeft && !UIOn) {
 				rtPanel.position = Vector3.Lerp(rtPanel.position, panelOnPosition, 0.1f);
 				rtContent.position = Vector3.Lerp(rtContent.position, contentOnPosition, 0.1f);
@@ -84,7 +113,7 @@ namespace Game{
 					UIOn = true;
 					UIMoveLeft = false;
 				}
-				UnityEngine.Debug.Log("moving left");
+//				UnityEngine.Debug.Log("moving left");
 			}
 			if (UIMoveRight && UIOn) {
 				rtPanel.position = Vector3.Lerp(rtPanel.position, panelOffPosition, 0.1f);
@@ -95,7 +124,7 @@ namespace Game{
 					UIOn = false;
 					UIMoveRight = false;
 				}
-				UnityEngine.Debug.Log("moving right");	
+//				UnityEngine.Debug.Log("moving right");	
 			}
 
 		}
@@ -166,9 +195,9 @@ namespace Game{
 						playerScript.spell.Add(new Spell(name, attribute, damage, level, gesture, num, Islock));
 					}
 				}
-				UnityEngine.Debug.Log(playerScript.spell.Count);
+//				UnityEngine.Debug.Log(playerScript.spell.Count);
 			}
-
+			spellReader.Close();
 
 			XmlReader reader = new XmlTextReader(filePath);
 //			reader.WhitespaceHandling = WhitespaceHandling.None;
@@ -220,6 +249,7 @@ namespace Game{
 		}
 
 		void OnDestroy() {
+			//wrtie general data
 			XmlDocument xmlDoc = new XmlDocument ();
 			xmlDoc.Load(filePath);
 			XmlNode root = xmlDoc.DocumentElement;
@@ -230,8 +260,20 @@ namespace Game{
 			n2.InnerText = playerScript.lv.ToString();
 			XmlNode n3 = root.SelectSingleNode("Diamond");
 			n3.InnerText = playerScript.diamond.ToString();
-			
 			xmlDoc.Save(filePath);
+
+			//write spell data
+			XmlDocument xmlDocSpell = new XmlDocument ();
+			xmlDocSpell.Load(spellFilePath);
+			XmlNode rootSpell = xmlDocSpell.DocumentElement;
+			XmlNodeList xnl = rootSpell.ChildNodes;
+
+			for(int i = 0; i < xnl.Count; i ++){
+				XmlAttributeCollection xac = xnl.Item(i).Attributes;
+				xac.GetNamedItem("Level").Value = playerScript.spell[i].lvl.ToString();
+				xac.GetNamedItem("Damage").Value = playerScript.spell[i].atk.ToString();
+			}
+			xmlDocSpell.Save(spellFilePath);
 		}
 
 		void InitializeUI(){
@@ -252,11 +294,11 @@ namespace Game{
 //			UnityEngine.Debug.Log (rtContent.sizeDelta.x * 0.95f);
 			rtContentPanel = contentPanel.gameObject.GetComponent<RectTransform> ();
 			rtContentPanel.sizeDelta = new Vector2 (rtContent.sizeDelta.x * 0.95f, rtContent.sizeDelta.y);
-			UnityEngine.Debug.Log (rtContentPanel.sizeDelta.x);
+//			UnityEngine.Debug.Log (rtContentPanel.sizeDelta.x);
 //			rtContentPanel.position = new Vector3(rtPanel.position.x, rtPanel.position.y - rtHeader.sizeDelta.y * 0.5f, 1);
 
 			if (!initilized) {
-				UnityEngine.Debug.Log(playerScript.spell.Count);
+//				UnityEngine.Debug.Log(playerScript.spell.Count);
 //				UnityEngine.Debug.Log(playerScript.diamond);
 //				UnityEngine.Debug.Log(playerScript.lv);
 				foreach (var s in playerScript.spell){
@@ -266,9 +308,11 @@ namespace Game{
 					btnText[0].text = s.spellName;
 					btnText[1].text = s.lvl.ToString();
 					btnText[2].text = s.atk.ToString();
+					button.GetComponent<Button>().onClick.AddListener(delegate() { UpgradeSpell(currentButton); });
 //					LayoutElement leButton = button.GetComponent<LayoutElement> ();
 //					leButton.minWidth = rtContent.sizeDelta.x;
 //					leButton.minHeight = rtContent.sizeDelta.y * 0.1f;
+					buttons.Add(button);
 				}
 			}
 			panelOnPosition = rtPanel.position;
@@ -282,7 +326,7 @@ namespace Game{
 
 		public void MoveUI(int direction){
 
-			UnityEngine.Debug.Log("moving UI");
+//			UnityEngine.Debug.Log("moving UI");
 			//direction: 0.left, 1.right
 			if (direction == 0 && !UIOn) {
 				UIMoveLeft = true;
@@ -290,6 +334,16 @@ namespace Game{
 			if (direction == 1 && UIOn) {
 				UIMoveRight = true;
 			}
+		}
+
+		public void UpgradeSpell(int currentButton){
+//			UnityEngine.Debug.Log(currentButton);
+			playerScript.diamond -= playerScript.spell[currentButton].lvl;
+
+			playerScript.UpgradeSpell(currentButton);
+			Text[] btnText = buttons[currentButton].GetComponentsInChildren<Text>();
+			btnText[1].text = playerScript.spell[currentButton].lvl.ToString();
+			btnText[2].text = playerScript.spell[currentButton].atk.ToString();
 		}
 	}
 }
