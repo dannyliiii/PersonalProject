@@ -16,6 +16,7 @@ using System.Xml;
 public class Detector : MonoBehaviour {
 
 	public Player playerClass;
+	public GameLogic gameLogic;
 
 	public int method;
 	int arrCount = 8;
@@ -113,7 +114,6 @@ public class Detector : MonoBehaviour {
 //				//			rightHand.SetActive (false);
 //				handCursor.gameObject.SetActive (false);
 //			}
-
 		}
 //		Debug.Log(EditorApplication.currentScene);
 		if (EditorApplication.currentScene == "Assets/MyGame/Scenes/StartScreen.unity" /**&& img != null**/) {
@@ -143,7 +143,8 @@ public class Detector : MonoBehaviour {
 		rightHands = new List<Vector4> ();
 		
 //		var playerScript: OtherScript = GetComponent(OtherScript); 
-
+		if(gameLogic == null)
+			gameLogic = Camera.main.gameObject.GetComponent<GameLogic>() as GameLogic;
 	}
 
 	void Update () {
@@ -163,7 +164,7 @@ public class Detector : MonoBehaviour {
 		} else {
 			DrawRightHandTracksStartScreen();
 		}
-
+		
 //		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
 //			Application.LoadLevel ("KinectSample");
 //		}
@@ -190,6 +191,20 @@ public class Detector : MonoBehaviour {
 		case "consolation":
 			if(!startScreen)
 				playerClass.CastSpell("akdjjaslk");
+			break;
+		case "swipeRightTwoHands":
+			if(!startScreen){
+				gameLogic.MoveUI(0);
+				GUIRH.gameObject.SetActive(false);
+				oneHanded = true;
+			}
+			break;
+		case "SwipRightOneHand":
+			if(!startScreen){
+				gameLogic.MoveUI(1);
+				GUIRH.gameObject.SetActive(true);
+				oneHanded = false;
+			}
 			break;
 		default:
 			if(!startScreen)
@@ -442,6 +457,7 @@ public class Detector : MonoBehaviour {
 //			material4 = dataImagePlane2.GetComponent<Renderer> ().material;
 		
 			playerClass = GameObject.Find ("Player").GetComponent<Player>() as Player;
+			gameLogic = Camera.main.gameObject.GetComponent<GameLogic>() as GameLogic;
 			controlMouse = true;
 			if (!controlMouse) {
 				//			leftHand.SetActive (false);

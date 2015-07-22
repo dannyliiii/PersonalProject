@@ -118,7 +118,7 @@ namespace TemplateGesture{
 //				}
 				// processing according to the method
 				if(method == 2){
-					if(oneHanded && p.OnaHanded){
+					if(oneHanded){
 						if(p.OnaHanded)
 							score = p.OneHandedMatch(tplr, threshold, minSize, 1, method);
 						else{

@@ -6,6 +6,5 @@
   <Spell Name="LighteningBolt" Level="1" Damage="100" Attribute="3" Gesture="hdel3" Number="3" Lock="0"/>
   <Spell Name="SandStorm" Level="1" Damage="1" Attribute="4" Gesture="hdel5" Number="0" Lock="0"/>
   <Spell Name="IceLance" Level="1" Damage="1" Attribute="5" Gesture="hdel6" Number="0" Lock="0"/>
-  <Spell Name="IceLance" Level="1" Damage="1" Attribute="6" Gesture="hdel7" Number="0" Lock="0"/>
   <Spell Name="HolyLight" Level="1" Damage="1" Attribute="7" Gesture="hdel8" Number="0" Lock="0"/>
 </Spells>

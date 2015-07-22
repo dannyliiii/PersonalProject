@@ -21,13 +21,12 @@ namespace Game{
 	
 		public GameObject plane;
 		public GameObject projectile;
-		public GameObject spell2;
 		public GameObject[] spellsPrefabs;
 		private List<GameObject> projList;
 		private UnityEngine.Vector3 upForce;
 		private readonly int speed = 30;
-		List<Spell> spell = new List<Spell> ();
-		readonly string filePath = "Assets/MyGame/Configs/Spells.data";
+		public List<Spell> spell = new List<Spell> ();
+
 		private Color color = new Color(0.0f, 0.0f, 0.0f, 1.0f);
 		private Color colorO = new Color(0.0f, 0.0f, 0.0f, 0.0f);
 		bool flag = true;
@@ -40,7 +39,7 @@ namespace Game{
 			mp = 100;
 			atk = 1;
 			def = 1;
-			diamondOld = diamond = 0;
+//			diamondOld = diamond = 0;
 			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
@@ -48,26 +47,27 @@ namespace Game{
 
 			gameObject.transform.position = Camera.main.transform.position;
 
-			XmlTextReader reader = null;
-
-			reader = new XmlTextReader(filePath);
-			reader.WhitespaceHandling = WhitespaceHandling.None;
-			reader.MoveToContent();
-
-			if (reader != null) {
-				while (reader.Read()) {
-					if(reader.LocalName == "Spell"){
-						int level = XmlConvert.ToInt32(reader.GetAttribute("Level"));
-						int damage = XmlConvert.ToInt32(reader.GetAttribute("Damage"));
-						int attribute = XmlConvert.ToInt32(reader.GetAttribute("Attribute"));
-						string gesture = reader.GetAttribute("Gesture");
-						string name = reader.GetAttribute("Name");
-						bool Islock = XmlConvert.ToBoolean(reader.GetAttribute("Lock"));
-						int num = XmlConvert.ToInt32(reader.GetAttribute("Number"));
-						spell.Add(new Spell(name, attribute, damage, level, gesture, num, Islock));
-					}
-				}
-			}
+//			XmlTextReader reader = null;
+//
+//			reader = new XmlTextReader(filePath);
+//			reader.WhitespaceHandling = WhitespaceHandling.None;
+//			reader.MoveToContent();
+//
+//			if (reader != null) {
+//				while (reader.Read()) {
+//					if(reader.LocalName == "Spell"){
+//						int level = XmlConvert.ToInt32(reader.GetAttribute("Level"));
+//						int damage = XmlConvert.ToInt32(reader.GetAttribute("Damage"));
+//						int attribute = XmlConvert.ToInt32(reader.GetAttribute("Attribute"));
+//						string gesture = reader.GetAttribute("Gesture");
+//						string name = reader.GetAttribute("Name");
+//						bool Islock = XmlConvert.ToBoolean(reader.GetAttribute("Lock"));
+//						int num = XmlConvert.ToInt32(reader.GetAttribute("Number"));
+//						spell.Add(new Spell(name, attribute, damage, level, gesture, num, Islock));
+//					}
+//				}
+////				UnityEngine.Debug.Log(spell.Count);
+//			}
 			fs = plusOne.fontSize;
 		}
 		

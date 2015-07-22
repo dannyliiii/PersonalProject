@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
 using System;
+using UnityEngine.UI;
 
 namespace Game{
 	public class GameLogic : MonoBehaviour {
@@ -19,33 +20,83 @@ namespace Game{
 		public GameObject rightHand;
 		public GameObject rightHandScreenPos;
 		public GUITexture handGUI;
-		string filePath = "Assets/MyGame/Configs/Save.data";
+		readonly string filePath = "Assets/MyGame/Configs/Save.data";
+		readonly string spellFilePath = "Assets/MyGame/Configs/Spells.data";
+		Vector2 lastWindowSize;
+		public GameObject buttonPrefab;
+		bool initilized = false;
+
+		Transform content;
+		Transform panel;
+		Transform header;
+		Transform contentPanel;
+		RectTransform rtPanel;
+		RectTransform rtHeader;
+		RectTransform rtContent;
+		RectTransform rtContentPanel;
+		Vector3 panelOnPosition;
+		Vector3 panelOffPosition;
+		Vector3 contentOnPosition;
+		Vector3 contentOffPosition;
+
+		bool UIMoveLeft = false;
+		bool UIMoveRight = false;
+		public bool UIOn = false;
 		// Use this for initialization
 		void Start () {
 
 			playerScript = player.GetComponent<Player>() as Player;
 			LoadSaveData ();
 			SpawnMonster (level);
+			lastWindowSize = new Vector2 (Screen.width, Screen.height);
+
+			content = UICanvas.transform.FindChild("Content");
+			panel = UICanvas.transform.FindChild("Panel");
+			header = panel.FindChild("HeaderText");
+			contentPanel = content.FindChild("ContentPanel");
 
 			InitializeUI();
-
-
+			initilized = true;
 		}
 		
 		// Update is called once per frame
 		void Update () {
+
+			Vector2 thisWindowSize = new Vector2 (Screen.width, Screen.height);
+			if (lastWindowSize != thisWindowSize) {
+				lastWindowSize = thisWindowSize;
+				InitializeUI();
+			}
+
 			if (monster == null) {
 				UnityEngine.Debug.Log("a monster is destroied");
 				SpawnMonster(++level);
 			}
 
-
 			HitTest ();
 
-//			Debug.Log ("Right hand");
-//			UnityEngine.Vector2 screenPosition = Camera.main.WorldToScreenPoint(rightHand.transform.position);
-//			rightHandScreenPos.transform.position = screenPosition;
-//			Debug.Log (screenPosition);
+			if (UIMoveLeft && !UIOn) {
+				rtPanel.position = Vector3.Lerp(rtPanel.position, panelOnPosition, 0.1f);
+				rtContent.position = Vector3.Lerp(rtContent.position, contentOnPosition, 0.1f);
+				if(Mathf.Abs(rtPanel.position.x - panelOnPosition.x) < 5.0f && Mathf.Abs(rtContent.position.x - contentOnPosition.x) < 5.0f ){
+					rtPanel.position = panelOnPosition;
+					rtContent.position = contentOnPosition;
+					UIOn = true;
+					UIMoveLeft = false;
+				}
+				UnityEngine.Debug.Log("moving left");
+			}
+			if (UIMoveRight && UIOn) {
+				rtPanel.position = Vector3.Lerp(rtPanel.position, panelOffPosition, 0.1f);
+				rtContent.position = Vector3.Lerp(rtContent.position, contentOffPosition, 0.1f);
+				if(Mathf.Abs(rtPanel.position.x - panelOffPosition.x) < 5.0f && Mathf.Abs(rtContent.position.x - contentOffPosition.x) < 5.0f ){
+					rtPanel.position = panelOffPosition;
+					rtContent.position = contentOffPosition;
+					UIOn = false;
+					UIMoveRight = false;
+				}
+				UnityEngine.Debug.Log("moving right");	
+			}
 
 		}
 		
@@ -95,6 +146,30 @@ namespace Game{
 		}
 
 		bool LoadSaveData(){
+
+			XmlTextReader spellReader = null;
+			
+			spellReader = new XmlTextReader(spellFilePath);
+			spellReader.WhitespaceHandling = WhitespaceHandling.None;
+			spellReader.MoveToContent();
+			
+			if (spellReader != null) {
+				while (spellReader.Read()) {
+					if(spellReader.LocalName == "Spell"){
+						int level = XmlConvert.ToInt32(spellReader.GetAttribute("Level"));
+						int damage = XmlConvert.ToInt32(spellReader.GetAttribute("Damage"));
+						int attribute = XmlConvert.ToInt32(spellReader.GetAttribute("Attribute"));
+						string gesture = spellReader.GetAttribute("Gesture");
+						string name = spellReader.GetAttribute("Name");
+						bool Islock = XmlConvert.ToBoolean(spellReader.GetAttribute("Lock"));
+						int num = XmlConvert.ToInt32(spellReader.GetAttribute("Number"));
+						playerScript.spell.Add(new Spell(name, attribute, damage, level, gesture, num, Islock));
+					}
+				}
+				UnityEngine.Debug.Log(playerScript.spell.Count);
+			}
+
+
 			XmlReader reader = new XmlTextReader(filePath);
 //			reader.WhitespaceHandling = WhitespaceHandling.None;
 			reader.MoveToContent();
@@ -123,6 +198,8 @@ namespace Game{
 //						UnityEngine.Debug.Log(s);
 						bool res = int.TryParse(s.Trim(), out playerScript.diamond);
 						playerScript.diamondOld = playerScript.diamond;
+//						UnityEngine.Debug.Log(playerScript.diamond);
+						
 						if(!res){
 							UnityEngine.Debug.Log("PlayerLevel load failed");	
 						}
@@ -158,13 +235,61 @@ namespace Game{
 		}
 
 		void InitializeUI(){
-			Transform content = UICanvas.transform.FindChild("Content");
-			Transform panel = UICanvas.transform.FindChild("Panel");
 
-			RectTransform rtp =  panel.gameObject.GetComponent<RectTransform>();
-			rtp.sizeDelta = new Vector2(Screen.width * 0.1f, Screen.height);
+//			UnityEngine.Debug.Log("Initing");
+			rtPanel =  panel.gameObject.GetComponent<RectTransform>();
+			rtPanel.sizeDelta = new Vector2(Screen.width * 0.2f, Screen.height);
+
+			rtHeader = header.GetComponent<RectTransform> ();
+			rtHeader.sizeDelta = new Vector2 (rtPanel.sizeDelta.x, rtPanel.sizeDelta.y * 0.1f);
+			Text headerText = header.gameObject.GetComponent<Text> ();
+			headerText.fontSize = (int)(Screen.width * 0.02f);
+
+			rtContent = content.gameObject.GetComponent<RectTransform> ();
+			rtContent.sizeDelta = new Vector2 (rtPanel.sizeDelta.x, rtPanel.sizeDelta.y * 0.9f);
+			rtContent.position = new Vector3(rtPanel.position.x, rtPanel.position.y - rtHeader.sizeDelta.y * 0.5f, 1);
+
+//			UnityEngine.Debug.Log (rtContent.sizeDelta.x * 0.95f);
+			rtContentPanel = contentPanel.gameObject.GetComponent<RectTransform> ();
+			rtContentPanel.sizeDelta = new Vector2 (rtContent.sizeDelta.x * 0.95f, rtContent.sizeDelta.y);
+			UnityEngine.Debug.Log (rtContentPanel.sizeDelta.x);
+//			rtContentPanel.position = new Vector3(rtPanel.position.x, rtPanel.position.y - rtHeader.sizeDelta.y * 0.5f, 1);
+
+			if (!initilized) {
+				UnityEngine.Debug.Log(playerScript.spell.Count);
+//				UnityEngine.Debug.Log(playerScript.diamond);
+//				UnityEngine.Debug.Log(playerScript.lv);
+				foreach (var s in playerScript.spell){
+					GameObject button = Instantiate (buttonPrefab) as GameObject;
+					button.transform.SetParent (contentPanel);
+					Text[] btnText = button.GetComponentsInChildren<Text>();
+					btnText[0].text = s.spellName;
+					btnText[1].text = s.lvl.ToString();
+					btnText[2].text = s.atk.ToString();
+//					LayoutElement leButton = button.GetComponent<LayoutElement> ();
+//					leButton.minWidth = rtContent.sizeDelta.x;
+//					leButton.minHeight = rtContent.sizeDelta.y * 0.1f;
+				}
+			}
+			panelOnPosition = rtPanel.position;
+			contentOnPosition = rtContent.position;
+			rtPanel.position += new Vector3 (rtPanel.sizeDelta.x, 0, 0);
+			rtContent.position += new Vector3 (rtContent.sizeDelta.x, 0, 0);
+			panelOffPosition = rtPanel.position;
+			contentOffPosition = rtContent.position;
 
 		}
 
+		public void MoveUI(int direction){
+
+			UnityEngine.Debug.Log("moving UI");
+			//direction: 0.left, 1.right
+			if (direction == 0 && !UIOn) {
+				UIMoveLeft = true;
+			}
+			if (direction == 1 && UIOn) {
+				UIMoveRight = true;
+			}
+		}
 	}
 }
