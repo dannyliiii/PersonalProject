@@ -98,7 +98,7 @@ namespace Game{
 			newHp = oldHp = hp = hpTotal;
 			hpLength = imageTrans.rect.width;
 			oldPos = imageTransGreen.anchoredPosition;
-			Debug.Log (level);
+//			Debug.Log (level);
 //			RectTransform rt = gameObject.GetComponent<RectTransform> ();
 //			Debug.Log (rt.localScale);
 //			Vector3 scale = rt.localScale + new Vector3((float)level, (float)level, (float)level );

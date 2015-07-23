@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Gesture GesName="SwipUpOneHand" NumPts="124" Date="Wednesday, July 22, 2015" TimeOfDay="2:54:06 PM">
-  <Constrains Value="0" />
-  <Constrains Value="1" />
+  <OneHanded Value="1" />
   <LeftHandPoints X="-0.176322788" Y="-0.6146089" Z="1.83189416" />
   <LeftHandPoints X="-0.176225826" Y="-0.6146094" Z="1.8317945" />
   <LeftHandPoints X="-0.176125839" Y="-0.6146038" Z="1.83178627" />

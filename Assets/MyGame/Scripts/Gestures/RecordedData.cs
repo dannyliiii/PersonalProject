@@ -304,8 +304,8 @@ namespace TemplateGesture{
 
 		public double OneHandedMatch(List<TimePointF> tpflr, float threshold, float minSize, int plane, int method)
 		{
-			if (tpflr.Count < LearningMachine.sampleCount / 2)
-				return -1;
+//			if (tpflr.Count < LearningMachine.sampleCount / 2)
+//				return -1;
 			
 			//			if (!GoldenSectionExtension.IsLargeEnough(tpflr, minSize)|| !GoldenSectionExtension.IsLargeEnough(tpfll, minSize))
 			//				return -2;

@@ -14,7 +14,10 @@ namespace TemplateGesture{
 		public int MinimalPeriodBetweenGestures { get; set; }
 
 		readonly List<Entry> entries = new List<Entry>();
-		
+
+		readonly List<Entry> entriesForRec = new List<Entry>();
+		public bool record = false;
+
 		public event Action<string> OnGestureDetected;
 		
 		DateTime lastGestureDate = DateTime.Now;
@@ -24,7 +27,7 @@ namespace TemplateGesture{
 		public float Epsilon { get; set; }
 		public float MinimalScore { get; set; }
 		public float MinimalSize { get; set; }
-		private readonly int frameCount = 65;
+		private readonly int frameCount = 30;
 
 		public bool oneHanded;
 
@@ -38,6 +41,12 @@ namespace TemplateGesture{
 			MinimalSize = 0.1f;
 			LearningMachine.Initialize ();
 		}
+
+		public List<Entry> EntriesForRec
+		{
+			get { return entriesForRec; }
+		}
+
 		public List<Entry> Entries
 		{
 			get { return entries; }
@@ -83,7 +92,33 @@ namespace TemplateGesture{
 //				Debug.Log(v);
 //			}
 //			Debug.Log ("=========");
-			Entry newEntry = new Entry {PositionRight = posR, 
+
+			if (record) {
+				entries.Clear();
+				Entry recEntry = new Entry {PositionRight = posR, 
+					PositionLeft = posL,
+					Time = DateTime.Now,
+					TpfPosLeft = pl,
+					TpfPosRight = pr,
+					ZY_TpfPosLeft = zy_pl,
+					ZY_TpfPosRight = zy_pr,
+					ZX_TpfPosLeft = zx_pl,
+					ZX_TpfPosRight = zx_pr,
+					constrain = c};
+				EntriesForRec.Add (recEntry);
+
+				// Remove too old positions
+				if (EntriesForRec.Count > WindowSize)
+				{
+//					Entry entryToRemove = EntriesForRec[0];
+//					EntriesForRec.Remove(entryToRemove);
+					EntriesForRec.Clear();
+					record = false;
+				}
+
+
+			} else {
+				Entry newEntry = new Entry {PositionRight = posR, 
 										PositionLeft = posL,
 										Time = DateTime.Now,
 										TpfPosLeft = pl,
@@ -93,40 +128,56 @@ namespace TemplateGesture{
 										ZX_TpfPosLeft = zx_pl,
 										ZX_TpfPosRight = zx_pr,
 										constrain = c};
-			Entries.Add(newEntry);
-
-			// Remove too old positions
-			if (Entries.Count > WindowSize)
-			{
-				Entry entryToRemove = Entries[0];
-				Entries.Remove(entryToRemove);
+				Entries.Add (newEntry);
+				if(!oneHanded){
+					if (IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
+						record = true;
+						Debug.Log("Start");
+					}
+				}
+				else{
+					if (IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
+						record = true;
+						Debug.Log("Start");
+					}
+				}
+				// Remove too old positions
+				if (Entries.Count > WindowSize)
+				{
+					Entry entryToRemove = Entries[0];
+					Entries.Remove(entryToRemove);
+				}
 			}
-
 //			Debug.Log (Entries.Count);
 		}
 
 		public void LookForGesture(int method)
 		{
-			if (Entries.Count <= 0)
+			if (EntriesForRec.Count <= 0)
 				return;
 
-//			if (!oneHanded) {
-//				Debug.Log ("two handed");
-			if (!IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
-//				Debug.Log("is not finished");
-				return;
+			if (!oneHanded) {
+				if (!IsFinished (EntriesForRec.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (EntriesForRec.Select (e => e.TpfPosRight).ToList ())) {
+					return;
+				}
+			} else {
+				if (!IsFinished (EntriesForRec.Select (e => e.TpfPosRight).ToList ())) {
+					return;
+				}
 			}
-//			}
-//			Debug.Log("is finished");
-			ResultList resList = LearningMachine.Match (Entries.Select (e => e.TpfPosLeft).ToList(),
-			                                            Entries.Select (e => e.TpfPosRight).ToList(),
-			                                            Entries.Select (e => e.ZY_TpfPosLeft).ToList(),
-			                                            Entries.Select (e => e.ZY_TpfPosRight).ToList(),
-			                                            Entries.Select (e => e.ZX_TpfPosLeft).ToList(),
-			                                            Entries.Select (e => e.ZX_TpfPosRight).ToList(),
-			                                            entries.Last().constrain,
+
+			record = false;
+			Debug.Log("Finish");
+			ResultList resList = LearningMachine.Match (EntriesForRec.Select (e => e.TpfPosLeft).ToList(),
+			                                            EntriesForRec.Select (e => e.TpfPosRight).ToList(),
+			                                            EntriesForRec.Select (e => e.ZY_TpfPosLeft).ToList(),
+			                                            EntriesForRec.Select (e => e.ZY_TpfPosRight).ToList(),
+			                                            EntriesForRec.Select (e => e.ZX_TpfPosLeft).ToList(),
+			                                            EntriesForRec.Select (e => e.ZX_TpfPosRight).ToList(),
+			                                            EntriesForRec.Last().constrain,
 			                                            Epsilon,
 			                                            MinimalSize, oneHanded, method);
+
 			int index = 0;
 			if(method == 1){
 				index = resList.Index;
@@ -153,7 +204,8 @@ namespace TemplateGesture{
 
 			LearningMachine.ResultList.ResetList ();
 			//clear the point list
-			Entries.Clear();
+			EntriesForRec.Clear();
+//			Entries.Clear ();
 		}
 
 		private void RaiseGestureDetected(string gesture)
@@ -206,7 +258,7 @@ namespace TemplateGesture{
 			int count = 0;
 			int listCount = 0;
 		
-			if (list.Count > frameCount) {
+			if (list.Count >= frameCount) {
 				MyMath.Vector2 v1 = new MyMath.Vector2 (list [list.Count - 1].X, list [list.Count - 1].Y);
 				for (int i = list.Count - 2; i > 1; i --) {
 					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i].X, list [i].Y);
@@ -217,20 +269,20 @@ namespace TemplateGesture{
 					}
 					listCount ++;
 
-					if (count >= listCount) {
-						if (count > frameCount) {
+					if (listCount >= frameCount) {
+//						Debug.Log(123123123132);
+						if (listCount - count < 3) {
 							res = true;
 //							UnityEngine.Debug.Log ("Gesture Finished!");
 							break;
+						} else {
+							break;
 						}
-					} else {
-						break;
 					}
 				}
 			}
 //			Debug.Log (count);
 			return res;
 		}
-		
 	}
 }

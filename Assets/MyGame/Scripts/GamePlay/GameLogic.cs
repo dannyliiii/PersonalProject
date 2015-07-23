@@ -133,7 +133,7 @@ namespace Game{
 			}
 
 			if (lvUp.IsActive()) {
-				lvUp.color = Color.Lerp (lvUp.color, lvUpColorT, Time.deltaTime);
+				lvUp.color = Color.Lerp (lvUp.color, lvUpColorT, 0.05f);
 				if(lvUp.color.a < 0.1f){
 					lvUp.gameObject.SetActive(false);
 					lvUp.color = lvUpColorO;
@@ -363,8 +363,12 @@ namespace Game{
 		}
 
 		public void ButtonClick(){
-			if(currentButton > 0 && currentButton < buttons.Count)
-				buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+//			UnityEngine.Debug.Log("button clicked");
+//			UnityEngine.Debug.Log(currentButton);
+			if (currentButton >= 0 && currentButton < buttons.Count) {
+				buttons [currentButton].GetComponent<Button> ().onClick.Invoke ();
+//				UnityEngine.Debug.Log("button does been clicked");
+			}
 		}
 
 		public void MoveFocus(int direction){

@@ -18,6 +18,8 @@ public class Detector : MonoBehaviour {
 	public Player playerClass;
 	public GameLogic gameLogic;
 
+	public Text Status;
+
 	public int method;
 	int arrCount = 8;
 	Material material1; 
@@ -164,7 +166,12 @@ public class Detector : MonoBehaviour {
 		} else {
 			DrawRightHandTracksStartScreen();
 		}
-		
+
+		if (templateGestureDetector.record) {
+			Status.text = "Recording";
+		} else {
+			Status.text = "Waiting";
+		}
 //		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
 //			Application.LoadLevel ("KinectSample");
 //		}
@@ -218,6 +225,7 @@ public class Detector : MonoBehaviour {
 			break;
 		case "tick":
 			if(!startScreen){
+				Debug.Log("button clicked");
 				gameLogic.ButtonClick();
 			}
 			break;
@@ -361,14 +369,36 @@ public class Detector : MonoBehaviour {
 		textureArr[(int)TexArrEnum.t2] = new Texture2D (512, 512, TextureFormat.RGB24, false);
 		material2.SetTexture (0, textureArr[(int)TexArrEnum.t2]);
 
-		for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
-
-			// draw x,y
-			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
-			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.y  + 1) * 256);		
+		if (templateGestureDetector.record) {
+			for (int i = 0; i < templateGestureDetector.EntriesForRec.Count; i ++) {
 			
-			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
-			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
+				// draw x,y
+				float x = Mathf.Round ((-templateGestureDetector.EntriesForRec [i].PositionLeft.x + 1) * 256);
+				float y = Mathf.Round ((templateGestureDetector.EntriesForRec [i].PositionLeft.y + 1) * 256);		
+			
+				float xe = Mathf.Round ((-templateGestureDetector.EntriesForRec [i].PositionRight.x + 1) * 256);
+				float ye = Mathf.Round ((templateGestureDetector.EntriesForRec [i].PositionRight.y + 1) * 256);
+			
+				//			//draw x,z
+				//			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
+				//			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.z) * 256);
+				//
+				//			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
+				//			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
+			
+				textureArr [(int)TexArrEnum.t1].DrawFilledCircle ((int)x, (int)y, 3, Color.black);
+				textureArr [(int)TexArrEnum.t2].DrawFilledCircle ((int)xe, (int)ye, 3, Color.black);
+			
+			}
+		} else {
+			for (int i = 0; i < templateGestureDetector.Entries.Count; i ++) {
+
+				// draw x,y
+				float x = Mathf.Round ((-templateGestureDetector.Entries [i].PositionLeft.x + 1) * 256);
+				float y = Mathf.Round ((templateGestureDetector.Entries [i].PositionLeft.y + 1) * 256);		
+			
+				float xe = Mathf.Round ((-templateGestureDetector.Entries [i].PositionRight.x + 1) * 256);
+				float ye = Mathf.Round ((templateGestureDetector.Entries [i].PositionRight.y + 1) * 256);
 
 //			//draw x,z
 //			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
@@ -377,11 +407,11 @@ public class Detector : MonoBehaviour {
 //			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
 //			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
 			
-			textureArr[(int)TexArrEnum.t1].DrawFilledCircle( (int)x, (int)y, 3, Color.black);
-			textureArr[(int)TexArrEnum.t2].DrawFilledCircle( (int)xe, (int)ye, 3, Color.black);
+				textureArr [(int)TexArrEnum.t1].DrawFilledCircle ((int)x, (int)y, 3, Color.black);
+				textureArr [(int)TexArrEnum.t2].DrawFilledCircle ((int)xe, (int)ye, 3, Color.black);
 
+			}
 		}
-
 		textureArr[(int)TexArrEnum.t1].Apply ();
 		textureArr[(int)TexArrEnum.t2].Apply ();
 
@@ -479,6 +509,7 @@ public class Detector : MonoBehaviour {
 				//			rightHand.SetActive (false);
 //				handCursor.gameObject.SetActive (false);
 			}
+			Status = transform.Find("Canvas").FindChild("Status").GetComponent<Text>();
 		}
 		
 	}
@@ -494,23 +525,23 @@ public class Detector : MonoBehaviour {
 			gesCount = LearningMachine.Pos.Count;
 		}
 
-		if (gesScroll) {
-			//show the list of gesture templates
-			scrollPosition = GUI.BeginScrollView (new Rect (screenWidth * 0.05f, screenHeight * 0.65f, 100, 200), 
-		                                     scrollPosition, 
-		                                     new Rect (screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
-		                    				 false, 
-		                                     true);
-
-			for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
-				if (GUI.Button (new Rect (screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos [i].gestureName)) {
-					currentData = 0;
-					num = i;
-				}
-			}
-
-			GUI.EndScrollView ();
-		}
+//		if (gesScroll) {
+//			//show the list of gesture templates
+//			scrollPosition = GUI.BeginScrollView (new Rect (screenWidth * 0.05f, screenHeight * 0.65f, 100, 200), 
+//		                                     scrollPosition, 
+//		                                     new Rect (screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
+//		                    				 false, 
+//		                                     true);
+//
+//			for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
+//				if (GUI.Button (new Rect (screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos [i].gestureName)) {
+//					currentData = 0;
+//					num = i;
+//				}
+//			}
+//
+//			GUI.EndScrollView ();
+//		}
 		//show the score
 //		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
 //		                                         scrollPositionText , 

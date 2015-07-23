@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Spells SpellNums="8" Date="Monday, June 08, 2015" TimeOfDay="11:24:27 AM">
-  <Spell Name="SomeSpell1" Level="6" Damage="320" Attribute="0" Gesture="hdel1" Number="0" Lock="0" />
-  <Spell Name="SomeSpell2" Level="5" Damage="320" Attribute="1" Gesture="HD Pool Entry Dive" Number="1" Lock="0" />
-  <Spell Name="SomeSpell3" Level="3" Damage="160" Attribute="2" Gesture="High Dive Power-Up" Number="2" Lock="0" />
+  <Spell Name="SomeSpell1" Level="7" Damage="640" Attribute="0" Gesture="hdel1" Number="0" Lock="0" />
+  <Spell Name="SomeSpell2" Level="10" Damage="10240" Attribute="1" Gesture="HD Pool Entry Dive" Number="1" Lock="0" />
+  <Spell Name="SomeSpell3" Level="4" Damage="320" Attribute="2" Gesture="High Dive Power-Up" Number="2" Lock="0" />
   <Spell Name="SomeSpell4" Level="3" Damage="400" Attribute="3" Gesture="hdel3" Number="3" Lock="0" />
   <Spell Name="SomeSpell5" Level="2" Damage="2" Attribute="4" Gesture="hdel5" Number="0" Lock="0" />
-  <Spell Name="SomeSpell6" Level="4" Damage="8" Attribute="5" Gesture="hdel6" Number="0" Lock="0" />
-  <Spell Name="SomeSpell7" Level="1" Damage="1" Attribute="7" Gesture="hdel8" Number="0" Lock="0" />
+  <Spell Name="SomeSpell6" Level="5" Damage="16" Attribute="5" Gesture="hdel6" Number="0" Lock="0" />
+  <Spell Name="SomeSpell7" Level="12" Damage="2048" Attribute="7" Gesture="hdel8" Number="0" Lock="0" />
 </Spells>
