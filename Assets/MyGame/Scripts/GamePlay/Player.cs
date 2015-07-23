@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace Game{
 	public class Player : MonoBehaviour {
 
-		public GUIText plusOne;
+		public GUIText change;
 		public GUIText dimondNum;
 		public int lv;
 		public int xp;
@@ -68,7 +68,7 @@ namespace Game{
 //				}
 ////				UnityEngine.Debug.Log(spell.Count);
 //			}
-			fs = plusOne.fontSize;
+			fs = change.fontSize;
 		}
 		
 		void Update(){
@@ -89,19 +89,22 @@ namespace Game{
 				//				CastSpell();
 				CastSpell("hdel3");
 			}
-			if (diamond > diamondOld) {
-//				plusOne.fontSize = fs * 2;
-				plusOne.color = Vector4.Lerp(plusOne.color, color, 0.1f);
-//				UnityEngine.Debug.Log(plusOne.color);
-				if(plusOne.color.a > 0.9f && flag){
+			if (diamond != diamondOld) {
+				if(diamond > diamondOld)
+					change.text = "+" + (diamond - diamondOld).ToString();
+				else{
+					change.text = "-" + (diamondOld - diamond).ToString();
+				}
+				change.color = Vector4.Lerp(change.color, color, 0.1f);
+				if(change.color.a > 0.9f && flag){
 					diamondOld = diamond;
 					flag = false;
 				}
 			}
 			if (!flag) {
-				plusOne.color = Vector4.Lerp(plusOne.color, colorO, 0.05f);
-				if(plusOne.color.a < 0.1f && !flag){
-					plusOne.color = colorO;
+				change.color = Vector4.Lerp(change.color, colorO, 0.05f);
+				if(change.color.a < 0.1f && !flag){
+					change.color = colorO;
 					flag = true;
 				}
 			}

@@ -206,6 +206,21 @@ public class Detector : MonoBehaviour {
 				oneHanded = false;
 			}
 			break;
+		case "SwipDownOneHand":
+			if(!startScreen){
+				gameLogic.MoveFocus(1);
+			}
+			break;
+		case "SwipUpOneHand":
+			if(!startScreen){
+				gameLogic.MoveFocus(0);
+			}
+			break;
+		case "tick":
+			if(!startScreen){
+				gameLogic.ButtonClick();
+			}
+			break;
 		default:
 			if(!startScreen)
 				playerClass.CastSpell(gesture);

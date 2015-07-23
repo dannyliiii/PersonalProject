@@ -9,7 +9,9 @@ using UnityEngine.UI;
 namespace Game{
 	public class GameLogic : MonoBehaviour {
 		public Canvas UICanvas;
-
+		public Text lvUp;
+		Color lvUpColorO;
+		Color lvUpColorT;
 		public GameObject player;
 		Player playerScript;
 		public GameObject plane;
@@ -57,6 +59,9 @@ namespace Game{
 			header = panel.FindChild("HeaderText");
 			contentPanel = content.FindChild("ContentPanel");
 			buttons = new List<GameObject>();
+
+			lvUpColorO = lvUp.color;
+			lvUpColorT = new Color (lvUpColorO.r, lvUpColorO.g, lvUpColorO.b, 0);
 
 			InitializeUI();
 			buttons[currentButton].GetComponent<Button>().Select();
@@ -125,6 +130,14 @@ namespace Game{
 					UIMoveRight = false;
 				}
 //				UnityEngine.Debug.Log("moving right");	
+			}
+
+			if (lvUp.IsActive()) {
+				lvUp.color = Color.Lerp (lvUp.color, lvUpColorT, Time.deltaTime);
+				if(lvUp.color.a < 0.1f){
+					lvUp.gameObject.SetActive(false);
+					lvUp.color = lvUpColorO;
+				}
 			}
 
 		}
@@ -344,6 +357,31 @@ namespace Game{
 			Text[] btnText = buttons[currentButton].GetComponentsInChildren<Text>();
 			btnText[1].text = playerScript.spell[currentButton].lvl.ToString();
 			btnText[2].text = playerScript.spell[currentButton].atk.ToString();
+
+			lvUp.rectTransform.position = buttons [currentButton].transform.position - new Vector3 (rtContent.sizeDelta.x * 0.5f + lvUp.rectTransform.sizeDelta.x * 0.5f, 0, 0 );
+			lvUp.gameObject.SetActive(true);
+		}
+
+		public void ButtonClick(){
+			if(currentButton > 0 && currentButton < buttons.Count)
+				buttons[currentButton].GetComponent<Button>().onClick.Invoke();
+		}
+
+		public void MoveFocus(int direction){
+			//direction: 0.up, 1.down
+			if(direction == 0){
+				if(currentButton > 0){
+					buttons[--currentButton].GetComponent<Button>().Select();
+				}
+			}
+			else if(direction == 1){
+				if(currentButton < buttons.Count - 1){
+					buttons[++currentButton].GetComponent<Button>().Select();
+				}
+			}
+			else{
+				UnityEngine.Debug.Log("Unknown diereciton");
+			}
 		}
 	}
 }
