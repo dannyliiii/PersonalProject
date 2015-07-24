@@ -166,6 +166,8 @@ namespace TemplateGesture{
 				}
 			}
 
+			entriesForRec.RemoveRange (entriesForRec.Count - frameCount - 1, frameCount);
+
 			record = false;
 			Debug.Log("Finish");
 			ResultList resList = LearningMachine.Match (EntriesForRec.Select (e => e.TpfPosLeft).ToList(),

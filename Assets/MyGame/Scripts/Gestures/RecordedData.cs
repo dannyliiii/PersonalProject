@@ -18,6 +18,14 @@ namespace TemplateGesture{
 
 	public class RecordedData {
 		public string gestureName;
+
+		List<PointF> lpf_DTW;
+		List<PointF> rpf_DTW;
+//		double lengthL_DTW;
+//		double lengthR_DTW;
+//		List<MyMath.Vector2> lPoints_DTW;
+//		List<MyMath.Vector2> rPoints_DTW;
+
 		List<MyMath.Vector2> lPoints;
 		List<MyMath.Vector2> rPoints;
 		List<MyMath.Vector2> zy_lPoints;
@@ -45,6 +53,36 @@ namespace TemplateGesture{
 		int linePlane;
 		double lengthL;
 		double lengthR;
+
+
+		public List<PointF> LP_DTW{
+			get{return lpf_DTW;}
+			set{lpf_DTW = value;}
+		}
+		
+		public List<PointF> RP_DTW{
+			get{return rpf_DTW;}
+			set{rpf_DTW = value;}
+		}
+//		public List<MyMath.Vector2> LPoints_DTW
+//		{
+//			get { return lPoints_DTW; }
+//			set { lPoints_DTW = value; }
+//		}
+//		
+//		public List<MyMath.Vector2> RPoints_DTW
+//		{
+//			get { return rPoints_DTW; }
+//			set { rPoints_DTW = value; }
+//		}
+//		public double LengthL_DTW{
+//			get{return lengthL_DTW;}
+//			set{lengthL_DTW = value;}
+//		}
+//		public double LengthR_DTW{
+//			get{return lengthR_DTW;}
+//			set{lengthR_DTW = value;}
+//		}
 
 		//----------------------- for the z-y plane ------------------
 		List<PointF> zy_lpf;
@@ -224,14 +262,13 @@ namespace TemplateGesture{
 
 		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane, int method)
 		{
-			if (tpfll.Count < LearningMachine.sampleCount / 2)
-				return -1;
+//			if (tpfll.Count < LearningMachine.sampleCount / 2)
+//				return -1;
 
 			//			if (!GoldenSectionExtension.IsLargeEnough(tpflr, minSize)|| !GoldenSectionExtension.IsLargeEnough(tpfll, minSize))
 //				return -2;
 
-			List<PointF> pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
-			List<PointF> pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+			List<PointF> pfl, pfr; 
 
 			List<PointF> rdl, rdr;
 
@@ -248,6 +285,9 @@ namespace TemplateGesture{
 				rdl = new List<PointF> (zx_lpf);
 			}
 			if(method == 1){
+				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
+				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+
 				double[] bestl = GoldenSection.GoldenSectionSearch(
 					pfl,                             // to rotate
 					rdl,                           // to match
@@ -270,13 +310,22 @@ namespace TemplateGesture{
 				return (scorel + scorer) * 0.5f;
 			}else if(method == 2){
 
+				pfl = DynamicTimeWraping.DTWPack(tpfll, sampleCount);
+				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount);
+//				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
+//				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+
 				float gesLengthL = (float)GetLength(pfl);
 				float gesLengthR = (float)GetLength(pfr);
 
 				int lengthAL = pfl.Count;
-				int lengthBL = rdl.Count;
+				int lengthBL = lpf_DTW.Count;
 				
-				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
+				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,lpf_DTW, lengthAL, lengthBL);
+//				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
+				
+//				UnityEngine.Debug.Log (pfl[0]);
+//				UnityEngine.Debug.Log (lpf_DTW[0]);
 
 				float[,] rMatrixL = DynamicTimeWraping.GetDTWMatrix(dMatrixL, lengthAL, lengthBL);
 				
@@ -285,17 +334,27 @@ namespace TemplateGesture{
 //				float pathLengthL = DynamicTimeWraping.GetPathLength(dMatrixL, pathL);
 
 				int lengthAR = pfr.Count;
-				int lengthBR = rdr.Count;
+				int lengthBR = rpf_DTW.Count;
 				
-				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rpf_DTW, lengthAR, lengthBR);
+//				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
 				
 				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
 				
 				List<UnityEngine.Vector2> pathR = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
 
 //				float pathLengthR = DynamicTimeWraping.GetPathLength(dMatrixR, pathR);
+				UnityEngine.Debug.Log(gestureName);
+				UnityEngine.Debug.Log(rMatrixL[lengthBL - 1, lengthAL - 1]);
+				UnityEngine.Debug.Log(rMatrixR[lengthBR - 1, lengthAR - 1]);
 
-				return (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
+				float cl = Mathf.Max((float)lengthL, (float)gesLengthL);
+				float cr = Mathf.Max((float)lengthR, (float)gesLengthR);
+				UnityEngine.Debug.Log(cl);
+				UnityEngine.Debug.Log(cr);
+
+//				return (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
+				return (rMatrixL[lengthBL - 1, lengthAL - 1] / cl + rMatrixR[lengthBR - 1, lengthAR - 1] / cr) * 0.5f;
 			}else{
 				return 0;
 			}
@@ -310,7 +369,7 @@ namespace TemplateGesture{
 			//			if (!GoldenSectionExtension.IsLargeEnough(tpflr, minSize)|| !GoldenSectionExtension.IsLargeEnough(tpfll, minSize))
 			//				return -2;
 
-			List<PointF> pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+			List<PointF> pfr;
 			
 			List<PointF> rdr;
 
@@ -326,6 +385,9 @@ namespace TemplateGesture{
 			}
 
 			if (method == 1) {
+
+				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+				
 				double[] bestr = GoldenSection.GoldenSectionSearch (
 				pfr,                             // to rotate
 				rdr,                           // to match
@@ -335,7 +397,10 @@ namespace TemplateGesture{
 				);
 			
 				scorer = 1.0 - bestr [0] / GoldenSection.HalfDiagonal;
+
 			} else {
+
+				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount); 
 				float gesLengthR = (float)GetLength(pfr);
 				
 				int lengthAR = pfr.Count;
@@ -351,7 +416,7 @@ namespace TemplateGesture{
 
 				Write2File(gestureName, rMatrixR, lengthAR, lengthBR);
 				
-				return rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR);
+				scorer = rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR);
 			}
 			
 			return scorer;

@@ -225,7 +225,6 @@ public class Detector : MonoBehaviour {
 			break;
 		case "tick":
 			if(!startScreen){
-				Debug.Log("button clicked");
 				gameLogic.ButtonClick();
 			}
 			break;
@@ -525,23 +524,23 @@ public class Detector : MonoBehaviour {
 			gesCount = LearningMachine.Pos.Count;
 		}
 
-//		if (gesScroll) {
-//			//show the list of gesture templates
-//			scrollPosition = GUI.BeginScrollView (new Rect (screenWidth * 0.05f, screenHeight * 0.65f, 100, 200), 
-//		                                     scrollPosition, 
-//		                                     new Rect (screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
-//		                    				 false, 
-//		                                     true);
-//
-//			for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
-//				if (GUI.Button (new Rect (screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos [i].gestureName)) {
-//					currentData = 0;
-//					num = i;
-//				}
-//			}
-//
-//			GUI.EndScrollView ();
-//		}
+		if (gesScroll) {
+			//show the list of gesture templates
+			scrollPosition = GUI.BeginScrollView (new Rect (screenWidth * 0.05f, screenHeight * 0.65f, 100, 200), 
+		                                     scrollPosition, 
+		                                     new Rect (screenWidth * 0.05f, screenHeight * 0.05f, 80, gesCount * 40),
+		                    				 false, 
+		                                     true);
+
+			for (int i = 0; i < LearningMachine.Pos.Count; i ++) {
+				if (GUI.Button (new Rect (screenWidth * 0.05f, screenHeight * 0.05f + i * 40, 80, 30), LearningMachine.Pos [i].gestureName)) {
+					currentData = 0;
+					num = i;
+				}
+			}
+
+			GUI.EndScrollView ();
+		}
 		//show the score
 //		scrollPositionText = GUI.BeginScrollView(new Rect(screenWidth * 0.7f, screenHeight * 0.05f  , screenWidth * 0.1f, 200), 
 //		                                         scrollPositionText , 
@@ -558,7 +557,7 @@ public class Detector : MonoBehaviour {
 		
 		string str = "Detected gesture shows here.";
 		if(gesText != "")
-			str = gesText + " detected";
+			str = gesText;
 
 		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.01f , 200, 40), str, gs);	
 

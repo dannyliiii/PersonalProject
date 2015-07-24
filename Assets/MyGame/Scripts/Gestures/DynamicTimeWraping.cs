@@ -3,11 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Drawing;
-//using WobbrockLib;
-//using WobbrockLib.Extensions;
+using WobbrockLib;
+using WobbrockLib.Extensions;
 
 namespace TemplateGesture{
 	public class DynamicTimeWraping{
+
+		public static readonly double DiagonalD = Math.Sqrt(DX * DX + DX * DX);
+		public static readonly double HalfDiagonal = 0.5 * DiagonalD;
+		private static readonly double Phi = 0.5 * (-1.0 + Math.Sqrt(5.0)); // Golden Ratio
+		private const float DX = 250f;
+		public static readonly SizeF SquareSize = new SizeF(DX, DX);
+		public static readonly PointF Origin = new PointF(0f, 0f);
+		
+		static readonly float ReductionFactor = 0.5f * (-1 + (float)Math.Sqrt(5));
+		static readonly float Diagonal = (float)Math.Sqrt(2);
+
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{
 			return (float)(Math.Pow((a.X - b.X), 2) + Math.Pow((a.Y - b.Y), 2));
@@ -90,5 +101,37 @@ namespace TemplateGesture{
 			return res;
 		}
 
+		public static List<PointF> DTWPack(List<TimePointF> pos, int sampleCount){
+			
+			//			List<TimePointF> rawPoints = new List<TimePointF> (pos);
+			double I = GeotrigEx.PathLength (pos) / (sampleCount);
+			List<PointF> localPoints = TimePointF.ConvertList (SeriesEx.ResampleInSpace (pos, I));
+			//			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
+			//			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
+			localPoints = NormalizeTo (localPoints, 100);
+			localPoints = TranslateTo (localPoints, Origin);
+			
+			
+			return localPoints;
+		}
+
+		static List<PointF> TranslateTo (List<PointF> points, PointF dest){
+
+			List<PointF> res = new List<PointF> (points);
+			Vector2 movement = new Vector2(dest.X - res[0].X, dest.Y - res[0].Y);
+//			Debug.Log (movement);
+			for (int i =0; i < res.Count; i ++) {
+				Vector2 newP = new Vector2(res[i].X, res[i].Y) + movement;
+				res[i] = new PointF(newP.x, newP.y);
+			}
+
+			return res; 
+		}
+
+		static List<PointF> NormalizeTo (List<PointF> points, int size){
+			List<PointF> res = new List<PointF> (points);
+
+			return res;
+		}
 	}
 }

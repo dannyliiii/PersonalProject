@@ -227,7 +227,7 @@ namespace TemplateGesture{
 						if(arrList[i].Score > score){
 							res = i;
 							score = arrList[i].Score;
-						}else if(arrList[i].Score == score){
+						}else if(score == 2 && arrList[i].Score == score){
 							if(arrList[res].Diff > arrList[i].Diff){
 								res = i;
 							}

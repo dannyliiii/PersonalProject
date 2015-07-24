@@ -102,20 +102,6 @@ namespace TemplateGesture{
 					rl.UpdateResult(i++, p.gestureName, (float)score);
 					continue;
 				}
-				//checking lines
-//				if(p.IsLineL && p.IsLineR){
-//					if(lList[0] & rList[0]){
-//						rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
-//						rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
-//						score = 2;
-//					}
-//					else{
-//						score = -5;
-//					}
-//					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
-//					rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
-//					continue;
-//				}
 				// processing according to the method
 				if(method == 2){
 					if(oneHanded){
@@ -140,16 +126,36 @@ namespace TemplateGesture{
 						score = p.OneHandedMatch(tplr, threshold, minSize, 1, method);
 					}
 					else{
+
 						if( p.OnaHanded){
 							score  = -5;
 						}
 						else{
-							xy_score = p.Match(tpll, tplr, threshold, minSize, 1, method);
-							zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2, method);
-							zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3, method);
+							//checking lines
+							if(p.IsLineL && p.IsLineR){
+//								UnityEngine.Debug.Log(p.gestureName);
+//								
+//								UnityEngine.Debug.Log(p.IsLineL);
+//								UnityEngine.Debug.Log(p.IsLineR);
+								if(lList[0] & rList[0]){
+									rL = Math.Abs(GoldenSectionExtension.RadiansToDegree(rL) - p.AngleL);
+									rR = Math.Abs(GoldenSectionExtension.RadiansToDegree(rR) - p.AngleR);
+									score = 2;
+								}
+								else{
+									score = -7;
+								}
+								UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
+								rl.UpdateResult(i++, p.gestureName, (float)score, rL + rR, planeCount);
+								continue;
+							}else{
+								xy_score = p.Match(tpll, tplr, threshold, minSize, 1, method);
+								zy_score = p.Match(zy_tpll, zy_tplr, threshold, minSize, 2, method);
+								zx_score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 3, method);
+							}
 						}
 
-						if(score != 2 && score != -5){
+						if(score != 2 && score != -5 && score != -7){
 							if((int)p.Plane == 0){
 								score = xy_score;
 							}
@@ -262,6 +268,9 @@ namespace TemplateGesture{
 					}
 				}
 
+				rd.LP_DTW = DynamicTimeWraping.DTWPack(pl, LearningMachine.sampleCount);
+				rd.RP_DTW = DynamicTimeWraping.DTWPack(pr, LearningMachine.sampleCount);
+
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
 
@@ -271,8 +280,6 @@ namespace TemplateGesture{
 				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
 			
-				rd.LengthL = rd.GetLength(rd.LP);
-				rd.LengthR = rd.GetLength(rd.RP);
 
 //				UnityEngine.Debug.Log(rd.gestureName);	
 //				UnityEngine.Debug.Log(rd.LengthL);
@@ -321,6 +328,9 @@ namespace TemplateGesture{
 				}else{
 					rd.IsLineR = false;
 				}
+				UnityEngine.Debug.Log(gesName);
+				UnityEngine.Debug.Log(correlationL);
+				UnityEngine.Debug.Log(correlationR);
 
 				if(Math.Abs(correlationL_ZX) > lineMin){
 					rd.IsLineL_XZ = true;
@@ -413,7 +423,8 @@ namespace TemplateGesture{
 			listP = GeotrigEx.RotatePoints(listP, -radians);
 			
 			double correlation = GetCorrelation(listP);
-			
+			UnityEngine.Debug.Log(correlation);
+
 			if(Math.Abs(correlation) > lineMin){
 				res = true;
 			}
