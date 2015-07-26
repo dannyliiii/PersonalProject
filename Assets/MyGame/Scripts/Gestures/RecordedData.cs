@@ -353,8 +353,8 @@ namespace TemplateGesture{
 				UnityEngine.Debug.Log(cl);
 				UnityEngine.Debug.Log(cr);
 
-//				return (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
-				return (rMatrixL[lengthBL - 1, lengthAL - 1] / cl + rMatrixR[lengthBR - 1, lengthAR - 1] / cr) * 0.5f;
+				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1] ) * 0.5f;
+//				return (rMatrixL[lengthBL - 1, lengthAL - 1] / cl + rMatrixR[lengthBR - 1, lengthAR - 1] / cr) * 0.5f;
 			}else{
 				return 0;
 			}

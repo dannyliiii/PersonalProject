@@ -34,5 +34,10 @@ namespace MyMath{
 			}
 		}
 
+		public Vector2 MultiplyBy (Matrix2 mat){
+			float xTemp = x * mat.value[0,0] + y * mat.value[1,0];
+			float yTemp = x * mat.value[0,1] + y * mat.value[1,1];
+			return new Vector2 (xTemp,yTemp);
+		}
 	}
 }

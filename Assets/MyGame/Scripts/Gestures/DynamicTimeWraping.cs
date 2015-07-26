@@ -5,19 +5,13 @@ using System;
 using System.Drawing;
 using WobbrockLib;
 using WobbrockLib.Extensions;
+using MyMath;
 
 namespace TemplateGesture{
 	public class DynamicTimeWraping{
-
-		public static readonly double DiagonalD = Math.Sqrt(DX * DX + DX * DX);
-		public static readonly double HalfDiagonal = 0.5 * DiagonalD;
-		private static readonly double Phi = 0.5 * (-1.0 + Math.Sqrt(5.0)); // Golden Ratio
-		private const float DX = 250f;
-		public static readonly SizeF SquareSize = new SizeF(DX, DX);
+	
 		public static readonly PointF Origin = new PointF(0f, 0f);
-		
-		static readonly float ReductionFactor = 0.5f * (-1 + (float)Math.Sqrt(5));
-		static readonly float Diagonal = (float)Math.Sqrt(2);
+		static MyMath.Vector2 size = new MyMath.Vector2(500.0f, 500.0f);
 
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{
@@ -108,30 +102,73 @@ namespace TemplateGesture{
 			List<PointF> localPoints = TimePointF.ConvertList (SeriesEx.ResampleInSpace (pos, I));
 			//			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
 			//			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
-			localPoints = NormalizeTo (localPoints, 100);
+
+			localPoints = Normalize (localPoints);
 			localPoints = TranslateTo (localPoints, Origin);
-			
-			
+
 			return localPoints;
 		}
 
 		static List<PointF> TranslateTo (List<PointF> points, PointF dest){
 
 			List<PointF> res = new List<PointF> (points);
-			Vector2 movement = new Vector2(dest.X - res[0].X, dest.Y - res[0].Y);
+			MyMath.Vector2 movement = new MyMath.Vector2(dest.X - res[0].X, dest.Y - res[0].Y);
 //			Debug.Log (movement);
 			for (int i =0; i < res.Count; i ++) {
-				Vector2 newP = new Vector2(res[i].X, res[i].Y) + movement;
+				MyMath.Vector2 newP = new MyMath.Vector2(res[i].X, res[i].Y) + movement;
 				res[i] = new PointF(newP.x, newP.y);
 			}
 
 			return res; 
 		}
 
-		static List<PointF> NormalizeTo (List<PointF> points, int size){
+		static List<PointF> Normalize (List<PointF> points){
+
+			MyMath.Vector2 listSize = GetSize(points);
+			float x,y;
+			if(listSize.x > size.x){
+				x = size.x / listSize.x;
+			}else{
+				x = listSize.x / size.x;
+			}
+
+			if(listSize.y > size.y){
+				y = size.y / listSize.y;
+			}else{
+				y = listSize.y / size.y;
+			}
+			Matrix2 scale = new Matrix2(x, 0, 0, y);
+
 			List<PointF> res = new List<PointF> (points);
 
+			for(int i = 0; i < res.Count; i ++){
+				MyMath.Vector2 temp = new MyMath.Vector2(res[i].X, res[i].Y);
+				temp = temp.MultiplyBy(scale);
+				res[i] = new PointF(temp.x, temp.y);
+			}
+
 			return res;
+		}
+
+		static MyMath.Vector2 GetSize(List<PointF> points){
+			float left = points[0].X;
+			float right = points[0].X;
+			float top = points[0].Y;
+			float bottom = points[0].Y;
+			for(int i = 1; i < points.Count; i ++){
+				if(points[i].X > right){
+					right = points[i].X;
+				}else{
+					left = points[i].X;
+				}
+				if(points[i].Y > top){
+					top = points[i].Y;
+				}else{
+					bottom = points[i].Y;
+				}
+			}
+
+			return new MyMath.Vector2(Math.Abs(left - right), Math.Abs(top - bottom));
 		}
 	}
 }
