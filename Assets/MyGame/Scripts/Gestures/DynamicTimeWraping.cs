@@ -11,7 +11,9 @@ namespace TemplateGesture{
 	public class DynamicTimeWraping{
 	
 		public static readonly PointF Origin = new PointF(0f, 0f);
+		public static readonly MyMath.Vector3 Origin3D = new MyMath.Vector3(0f, 0f, 0f);
 		static MyMath.Vector2 size = new MyMath.Vector2(500.0f, 500.0f);
+		static MyMath.Vector3 size3D = new MyMath.Vector3(500.0f, 500.0f, 500.0f);
 
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{
@@ -170,5 +172,126 @@ namespace TemplateGesture{
 
 			return new MyMath.Vector2(Math.Abs(left - right), Math.Abs(top - bottom));
 		}
+
+		public static List<MyMath.Vector3> DTWPack3D(List<MyMath.Vector3> pos, int sampleCount){
+			
+			float I = PathLength(pos) / (sampleCount);
+			List<MyMath.Vector3> localPoints = Resample(pos, I);
+			
+			localPoints = Normalize3D (localPoints);
+			localPoints = TranslateTo3D (localPoints, Origin3D);
+			
+			return localPoints;
+		}
+
+		static float PathLength(List<MyMath.Vector3> list){
+			float res = 0;
+
+			for(int i = 1; i < list.Count; i++){
+				res += GetDistanceBetween2Vector3(list[i], list[i-1]);
+			}
+
+			return res;
+		}
+
+		static float GetDistanceBetween2Vector3(MyMath.Vector3 v1, MyMath.Vector3 v2){
+			float length = Mathf.Sqrt(Mathf.Pow((v2.x - v1.x),2) + Mathf.Pow((v2.x - v1.x),2) + Mathf.Pow((v2.x - v1.x),2));
+
+			return length;
+		}
+
+		static List<MyMath.Vector3> Resample(List<MyMath.Vector3> list, float I){
+			List<MyMath.Vector3> res = new List<MyMath.Vector3>(list);
+
+			float D = 0;
+			MyMath.Vector3 point = list[0];
+			for(int i = 1; i < res.Count; i ++){
+				float d = GetDistanceBetween2Vector3(list[i], list[i-1]);
+				if((D + d) >= I){
+
+				}
+			}
+
+			return res;
+		}
+
+		static List<MyMath.Vector3> TranslateTo3D (List<MyMath.Vector3> points, MyMath.Vector3 dest){
+			
+			List<MyMath.Vector3> res = new List<MyMath.Vector3> (points);
+			MyMath.Vector3 movement = new MyMath.Vector3(dest.x - res[0].x, dest.y - res[0].y, dest.z - res[0].z);
+			//			Debug.Log (movement);
+			for (int i =0; i < res.Count; i ++) {
+				MyMath.Vector3 newP = new MyMath.Vector3(res[i].x, res[i].y, res[i].z) + movement;
+				res[i] = newP;
+			}
+			
+			return res; 
+		}
+		
+		static List<MyMath.Vector3> Normalize3D (List<MyMath.Vector3> points){
+			
+			MyMath.Vector3 listSize = GetSize3D(points);
+			float x,y,z;
+			if(listSize.x > size3D.x){
+				x = size3D.x / listSize.x;
+			}else{
+				x = listSize.x / size3D.x;
+			}
+			
+			if(listSize.y > size3D.y){
+				y = size3D.y / listSize.y;
+			}else{
+				y = listSize.y / size3D.y;
+			}
+
+			if(listSize.z > size3D.z){
+				z = size3D.z / listSize.z;
+			}else{
+				z = listSize.z / size3D.z;
+			}
+
+			Matrix3 scale = new Matrix3(x, 0, 0,
+			                            0, y, 0,
+			                            0, 0, z);
+			
+			List<MyMath.Vector3> res = new List<MyMath.Vector3> (points);
+			
+			for(int i = 0; i < res.Count; i ++){
+				MyMath.Vector3 temp = new MyMath.Vector3(res[i].x, res[i].y, res[i].z);
+				temp = temp.MultiplyBy(scale);
+				res[i] = temp;
+			}
+			
+			return res;
+		}
+		
+		static MyMath.Vector3 GetSize3D(List<MyMath.Vector3> points){
+			float left = points[0].x;
+			float right = points[0].x;
+			float top = points[0].y;
+			float bottom = points[0].y;
+			float front = points[0].z;
+			float back = points[0].z;
+			for(int i = 1; i < points.Count; i ++){
+				if(points[i].x > right){
+					right = points[i].x;
+				}else{
+					left = points[i].x;
+				}
+				if(points[i].y > top){
+					top = points[i].y;
+				}else{
+					bottom = points[i].y;
+				}
+				if(points[i].z > front){
+					front = points[i].z;
+				}else{
+					back = points[i].z;
+				}
+			}
+			
+			return new MyMath.Vector3(Mathf.Abs(left - right), Mathf.Abs(top - bottom), Mathf.Abs(front - back));
+		}
+
 	}
 }

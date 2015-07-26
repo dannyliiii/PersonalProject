@@ -19,6 +19,9 @@ namespace TemplateGesture{
 	public class RecordedData {
 		public string gestureName;
 
+		List<MyMath.Vector3> points_3D_L;
+		List<MyMath.Vector3> points_3D_R;
+
 		List<PointF> lpf_DTW;
 		List<PointF> rpf_DTW;
 //		double lengthL_DTW;
@@ -54,7 +57,14 @@ namespace TemplateGesture{
 		double lengthL;
 		double lengthR;
 
-
+		public List<MyMath.Vector3> Points_3D_L{
+			get{return points_3D_L;}
+			set{points_3D_L = value;}
+		}
+		public List<MyMath.Vector3> Points_3D_R{
+			get{return points_3D_R;}
+			set{points_3D_R = value;}
+		}
 		public List<PointF> LP_DTW{
 			get{return lpf_DTW;}
 			set{lpf_DTW = value;}

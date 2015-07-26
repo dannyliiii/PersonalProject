@@ -240,6 +240,12 @@ namespace TemplateGesture{
 						rd.ZX_LPoints.Add(new MyMath.Vector2(zx_p.X, zx_p.Y));
 						zx_pl.Add(zx_p);
 
+						MyMath.Vector3 p3l = MyMath.Vector3.Zero;
+						p3l.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p3l.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						p3l.z = XmlConvert.ToSingle(reader.GetAttribute("Z"));
+						rd.Points_3D_L.Add(p3l);
+
 					}
 					if(reader.LocalName == "RightHandPoints"){
 
@@ -264,9 +270,14 @@ namespace TemplateGesture{
 						zx_pr.Add(zx_p);
 						rd.ZX_RPoints.Add(new MyMath.Vector2(zx_p.X, zx_p.Y));
 						
-
+						MyMath.Vector3 p3r = MyMath.Vector3.Zero;
+						p3r.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
+						p3r.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
+						p3r.z = XmlConvert.ToSingle(reader.GetAttribute("Z"));
+						rd.Points_3D_R.Add(p3r);
 					}
 				}
+
 
 				rd.LP_DTW = DynamicTimeWraping.DTWPack(pl, LearningMachine.sampleCount);
 				rd.RP_DTW = DynamicTimeWraping.DTWPack(pr, LearningMachine.sampleCount);
