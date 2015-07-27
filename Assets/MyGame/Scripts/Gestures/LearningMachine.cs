@@ -26,7 +26,7 @@ namespace TemplateGesture{
 		private static string folderPath = "Assets/MyGame/Recordings/";
 		private static ResultList rl = new ResultList();
 
-		private static readonly double lineMin = 0.99;
+		private static readonly double lineMin = 0.9;
 		private static double radiance45;
 		private static readonly float minScore = 0.8f;
 		private static readonly float minScoreOneHanded = 0.7f;
@@ -281,6 +281,16 @@ namespace TemplateGesture{
 
 				rd.LP_DTW = DynamicTimeWraping.DTWPack(pl, LearningMachine.sampleCount);
 				rd.RP_DTW = DynamicTimeWraping.DTWPack(pr, LearningMachine.sampleCount);
+//				rd.LP_DTW = DynamicTimeWraping.NormalizeDTW(pl);
+//				rd.RP_DTW = DynamicTimeWraping.NormalizeDTW(pr);
+
+//				UnityEngine.Debug.Log (gesName);
+//				UnityEngine.Debug.Log (rd.LP_DTW [0]);
+//				UnityEngine.Debug.Log (rd.LP_DTW [rd.LP_DTW.Count -1]);
+//				
+//				UnityEngine.Debug.Log (rd.RP_DTW [0]);
+//				UnityEngine.Debug.Log (rd.RP_DTW [rd.RP_DTW.Count -1]);
+				
 
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
@@ -292,9 +302,12 @@ namespace TemplateGesture{
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
 			
 
-//				UnityEngine.Debug.Log(rd.gestureName);	
-//				UnityEngine.Debug.Log(rd.LengthL);
-//				UnityEngine.Debug.Log(rd.LengthR);
+
+				rd.LengthL = DynamicTimeWraping.PathLength(rd.LP);
+				rd.LengthR = DynamicTimeWraping.PathLength(rd.RP);
+				UnityEngine.Debug.Log(rd.gestureName);	
+				UnityEngine.Debug.Log(rd.LengthL);
+				UnityEngine.Debug.Log(rd.LengthR);
 
 				//calculate the correlation
 				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);
@@ -339,9 +352,9 @@ namespace TemplateGesture{
 				}else{
 					rd.IsLineR = false;
 				}
-				UnityEngine.Debug.Log(gesName);
-				UnityEngine.Debug.Log(correlationL);
-				UnityEngine.Debug.Log(correlationR);
+//				UnityEngine.Debug.Log(gesName);
+//				UnityEngine.Debug.Log(correlationL);
+//				UnityEngine.Debug.Log(correlationR);
 
 				if(Math.Abs(correlationL_ZX) > lineMin){
 					rd.IsLineL_XZ = true;

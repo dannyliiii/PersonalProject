@@ -268,6 +268,9 @@ namespace TemplateGesture{
 			zx_lpf = new List<PointF> ();
 			zx_rpf = new List<PointF> ();
 			constrain = new List<Constrain>();
+
+			points_3D_L = new List<MyMath.Vector3>();
+			points_3D_R = new List<MyMath.Vector3>();
 		}
 
 		public double Match(List<TimePointF> tpfll, List<TimePointF> tpflr, float threshold, float minSize, int plane, int method)
@@ -320,19 +323,22 @@ namespace TemplateGesture{
 				return (scorel + scorer) * 0.5f;
 			}else if(method == 2){
 
-				pfl = DynamicTimeWraping.DTWPack(tpfll, sampleCount);
-				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount);
-//				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
-//				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+//				pfl = DynamicTimeWraping.NormalizeDTW(tpfll);
+//				pfr = DynamicTimeWraping.NormalizeDTW(tpflr);
+//				pfl = DynamicTimeWraping.DTWPack(tpfll, sampleCount);
+//				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount);
+				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
+				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 
-				float gesLengthL = (float)GetLength(pfl);
-				float gesLengthR = (float)GetLength(pfr);
+				float gesLengthL = (float)DynamicTimeWraping.PathLength(pfl);
+				float gesLengthR = (float)DynamicTimeWraping.PathLength(pfr);
 
 				int lengthAL = pfl.Count;
-				int lengthBL = lpf_DTW.Count;
+//				int lengthBL = lpf_DTW.Count;
+				int lengthBL = rdl.Count;
 				
-				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,lpf_DTW, lengthAL, lengthBL);
-//				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
+//				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,lpf_DTW, lengthAL, lengthBL);
+				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
 				
 //				UnityEngine.Debug.Log (pfl[0]);
 //				UnityEngine.Debug.Log (lpf_DTW[0]);
@@ -344,10 +350,11 @@ namespace TemplateGesture{
 //				float pathLengthL = DynamicTimeWraping.GetPathLength(dMatrixL, pathL);
 
 				int lengthAR = pfr.Count;
-				int lengthBR = rpf_DTW.Count;
+//				int lengthBR = rpf_DTW.Count;
+				int lengthBR = rdr.Count;
 				
-				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rpf_DTW, lengthAR, lengthBR);
-//				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+//				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rpf_DTW, lengthAR, lengthBR);
+				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
 				
 				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
 				
@@ -355,16 +362,17 @@ namespace TemplateGesture{
 
 //				float pathLengthR = DynamicTimeWraping.GetPathLength(dMatrixR, pathR);
 				UnityEngine.Debug.Log(gestureName);
+//				UnityEngine.Debug.Log(dMatrixL[lengthBL - 1, lengthAL - 1]);
+//				UnityEngine.Debug.Log(dMatrixR[lengthBR - 1, lengthAR - 1]);
+				
 				UnityEngine.Debug.Log(rMatrixL[lengthBL - 1, lengthAL - 1]);
 				UnityEngine.Debug.Log(rMatrixR[lengthBR - 1, lengthAR - 1]);
-
-				float cl = Mathf.Max((float)lengthL, (float)gesLengthL);
-				float cr = Mathf.Max((float)lengthR, (float)gesLengthR);
-				UnityEngine.Debug.Log(cl);
-				UnityEngine.Debug.Log(cr);
-
-				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1] ) * 0.5f;
+				UnityEngine.Debug.Log(gesLengthL);
+				UnityEngine.Debug.Log(gesLengthR);
+//				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1] ) * 0.5f;
 //				return (rMatrixL[lengthBL - 1, lengthAL - 1] / cl + rMatrixR[lengthBR - 1, lengthAR - 1] / cr) * 0.5f;
+				return (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
+				
 			}else{
 				return 0;
 			}
@@ -411,7 +419,7 @@ namespace TemplateGesture{
 			} else {
 
 				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount); 
-				float gesLengthR = (float)GetLength(pfr);
+				float gesLengthR = (float)DynamicTimeWraping.PathLength(pfr);
 				
 				int lengthAR = pfr.Count;
 				int lengthBR = rdr.Count;
@@ -432,13 +440,13 @@ namespace TemplateGesture{
 			return scorer;
 		}
 
-		public double GetLength(List<PointF> list){
-			double res = 0;
-			for (int i = 0; i < list.Count - 1; i ++) {
-				res += Math.Sqrt(Math.Pow((list[i].X - list[i+1].X),2) + Math.Pow((list[i].Y - list[i+1].Y),2));
-			}
-			return res;
-		}
+//		public double GetLength(List<PointF> list){
+//			double res = 0;
+//			for (int i = 0; i < list.Count - 1; i ++) {
+//				res += Math.Sqrt(Math.Pow((list[i].X - list[i+1].X),2) + Math.Pow((list[i].Y - list[i+1].Y),2));
+//			}
+//			return res;
+//		}
 
 		private void Write2File(string name, float[,] rMat, int lengthA, int lengthB){
 

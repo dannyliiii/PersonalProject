@@ -12,9 +12,11 @@ namespace TemplateGesture{
 	
 		public static readonly PointF Origin = new PointF(0f, 0f);
 		public static readonly MyMath.Vector3 Origin3D = new MyMath.Vector3(0f, 0f, 0f);
-		static MyMath.Vector2 size = new MyMath.Vector2(500.0f, 500.0f);
+		static MyMath.Vector2 size = new MyMath.Vector2(1f, 1f);
 		static MyMath.Vector3 size3D = new MyMath.Vector3(500.0f, 500.0f, 500.0f);
-
+		private const float DX = 250f;
+		public static readonly SizeF SquareSize = new SizeF(DX, DX);
+		
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{
 			return (float)(Math.Pow((a.X - b.X), 2) + Math.Pow((a.Y - b.Y), 2));
@@ -23,12 +25,12 @@ namespace TemplateGesture{
 		public static float[,] GetDistanceMatrix(List<PointF> time_series_A, List<PointF> time_series_B, int lengthA, int lengthB) {
 			
 			float[,] dMatrix = new float[lengthB, lengthA];
-			
 			for (int i = 0; i < lengthB; i++)
 			{
 				for (int j = 0; j < lengthA; j++)
 				{
-					dMatrix[i, j] = DistanceBetween2Pointf(time_series_A[j], time_series_B[i]);
+					dMatrix[i, j] = Mathf.Sqrt(DistanceBetween2Pointf(time_series_A[j], time_series_B[i]));
+
 				}
 			}
 
@@ -104,8 +106,41 @@ namespace TemplateGesture{
 			List<PointF> localPoints = TimePointF.ConvertList (SeriesEx.ResampleInSpace (pos, I));
 			//			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
 			//			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
+//			UnityEngine.Debug.Log ("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
+			localPoints = GeotrigEx.ScaleTo (localPoints, SquareSize);
+//			localPoints = Normalize (localPoints);
+//			localPoints = GeotrigEx.TranslateTo (localPoints, Origin, true);
+			
+			localPoints = TranslateTo (localPoints, Origin);
+			return localPoints;
+		}
 
-			localPoints = Normalize (localPoints);
+		public static List<PointF> NormalizeDTW(List<TimePointF> pos){
+			List<PointF> localPoints = new List<PointF> ();
+			foreach (var p in pos) {
+				localPoints.Add(new PointF(p.X, p.Y));
+			}
+
+			float minX = localPoints [0].X;
+			float maxX = localPoints [0].X;
+			float minY = localPoints [0].Y;
+			float maxY = localPoints [0].Y;
+			foreach (var lp in localPoints) {
+				if(lp.X > maxX)
+					maxX = lp.X;
+				if(lp.X < minX)
+					minX = lp.X;
+				if(lp.Y > maxY)
+					maxY = lp.Y;
+				if(lp.Y < minY)
+					minY = lp.Y;
+			}
+
+			for (int i = 0; i < localPoints.Count; i++) {
+				localPoints[i] = new PointF((localPoints[i].X - minX )/ (maxX - minX), (localPoints[i].Y - minY )/ (maxY - minY));
+			}
+
+//			localPoints = GeotrigEx.TranslateTo (localPoints, Origin, true);
 			localPoints = TranslateTo (localPoints, Origin);
 
 			return localPoints;
@@ -127,25 +162,38 @@ namespace TemplateGesture{
 		static List<PointF> Normalize (List<PointF> points){
 
 			MyMath.Vector2 listSize = GetSize(points);
+			UnityEngine.Debug.Log ("==========");	
+			UnityEngine.Debug.Log (listSize.x);
+			UnityEngine.Debug.Log (listSize.y);
 			float x,y;
 			if(listSize.x > size.x){
-				x = size.x / listSize.x;
-			}else{
 				x = listSize.x / size.x;
+			}else{
+				x = size.x / listSize.x;
 			}
 
 			if(listSize.y > size.y){
-				y = size.y / listSize.y;
-			}else{
 				y = listSize.y / size.y;
+			}else{
+				y = size.y / listSize.y;
 			}
 			Matrix2 scale = new Matrix2(x, 0, 0, y);
 
 			List<PointF> res = new List<PointF> (points);
+//			UnityEngine.Debug.Log ("===========");
+//			UnityEngine.Debug.Log (scale.value[0,0]);
+//			UnityEngine.Debug.Log (scale.value[0,1]);
+//			UnityEngine.Debug.Log (scale.value[1,0]);
+//			UnityEngine.Debug.Log (scale.value[1,1]);
 
 			for(int i = 0; i < res.Count; i ++){
 				MyMath.Vector2 temp = new MyMath.Vector2(res[i].X, res[i].Y);
+//				UnityEngine.Debug.Log ("~~~~~~~~~~~~~");
+//				UnityEngine.Debug.Log(temp.x);
+//				UnityEngine.Debug.Log(temp.y);
 				temp = temp.MultiplyBy(scale);
+//				UnityEngine.Debug.Log(temp.x);
+//				UnityEngine.Debug.Log(temp.y);
 				res[i] = new PointF(temp.x, temp.y);
 			}
 
@@ -170,12 +218,18 @@ namespace TemplateGesture{
 				}
 			}
 
+//			UnityEngine.Debug.Log ("~~~~~~~~~~~~~~~~~~~");
+//			UnityEngine.Debug.Log (left);
+//			UnityEngine.Debug.Log (right);
+//			UnityEngine.Debug.Log (top);
+//			UnityEngine.Debug.Log (bottom);
+
 			return new MyMath.Vector2(Math.Abs(left - right), Math.Abs(top - bottom));
 		}
 
 		public static List<MyMath.Vector3> DTWPack3D(List<MyMath.Vector3> pos, int sampleCount){
 			
-			float I = PathLength(pos) / (sampleCount);
+			float I = PathLength3D(pos) / (sampleCount);
 			List<MyMath.Vector3> localPoints = Resample(pos, I);
 			
 			localPoints = Normalize3D (localPoints);
@@ -184,13 +238,23 @@ namespace TemplateGesture{
 			return localPoints;
 		}
 
-		static float PathLength(List<MyMath.Vector3> list){
+		public static float PathLength3D(List<MyMath.Vector3> list){
 			float res = 0;
 
 			for(int i = 1; i < list.Count; i++){
 				res += GetDistanceBetween2Vector3(list[i], list[i-1]);
 			}
 
+			return res;
+		}
+
+		public static float PathLength(List<PointF> list){
+			float res = 0;
+			
+			for(int i = 1; i < list.Count; i++){
+				res += DistanceBetween2Pointf(list[i], list[i-1]);
+			}
+			
 			return res;
 		}
 
