@@ -17,7 +17,7 @@ public class Detector : MonoBehaviour {
 
 	public Player playerClass;
 	public GameLogic gameLogic;
-
+//	public Text sign;
 	public Text Status;
 
 	public int method;
@@ -167,11 +167,21 @@ public class Detector : MonoBehaviour {
 			DrawRightHandTracksStartScreen();
 		}
 
-		if (templateGestureDetector.record) {
-			Status.text = "Recording";
-		} else {
-			Status.text = "Waiting";
-		}
+		if (!startScreen) {
+			if (templateGestureDetector.record) {
+				Status.text = "Recording";
+			} else {
+				Status.text = "Waiting";
+			}
+		} 
+//		else {
+//			if (templateGestureDetector.record) {
+//				sign.text = "Recording";
+//			} else {
+//				sign.text = "Waiting";
+//			}
+//		}
+
 //		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
 //			Application.LoadLevel ("KinectSample");
 //		}
@@ -207,11 +217,11 @@ public class Detector : MonoBehaviour {
 			}
 			break;
 		case "SwipRightOneHand":
-			if(!startScreen){
-				gameLogic.MoveUI(1);
-				GUIRH.gameObject.SetActive(true);
-				oneHanded = false;
-			}
+//			if(!startScreen){
+//				gameLogic.MoveUI(1);
+//				GUIRH.gameObject.SetActive(true);
+//				oneHanded = false;
+//			}
 			break;
 		case "SwipDownOneHand":
 			if(!startScreen){
@@ -333,21 +343,34 @@ public class Detector : MonoBehaviour {
 
 		planeTemp = new Texture2D (512, 512, TextureFormat.RGB24, false);
 		planeMatTemp.SetTexture (0, planeTemp);
+		
+		if (templateGestureDetector.record) {
+			for (int i = 0; i < templateGestureDetector.EntriesForRec.Count; i ++) {
+				
+				// draw x,y
+				float xe = Mathf.Round ((-templateGestureDetector.EntriesForRec [i].PositionRight.x + 1) * 256);
+				float ye = Mathf.Round ((templateGestureDetector.EntriesForRec [i].PositionRight.y + 1) * 256);
+				
+				//			//draw x,z
+				//			float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionLeft.x + 1) * 256);
+				//			float y = Mathf.Round((templateGestureDetector.Entries[i].PositionLeft.z) * 256);
+				//
+				//			float xe = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
+				//			float ye = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.z) * 256);
 
-		for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
-			
-			// draw x,y
-			float x = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
-			float y = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
-			
-//			texture.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
-			planeTemp.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
-			
-//			Debug.Log(new UnityEngine.Vector2(x,y));
-
-//			Texture tex = (Texture) AssetDatabase.LoadAssetAtPath("Assets/MyGame/Textures/Diamond.png", typeof(Texture));
-//			img [0].texture = tex;
+				planeTemp.DrawFilledCircle ((int)xe, (int)ye, 3, Color.black);
+				
+			}
+		} else {
+			for (int i = 0; i < templateGestureDetector.Entries.Count ; i ++) {
+				// draw x,y
+				float x = Mathf.Round((-templateGestureDetector.Entries[i].PositionRight.x + 1) * 256);
+				float y = Mathf.Round((templateGestureDetector.Entries[i].PositionRight.y  + 1) * 256);
+				planeTemp.DrawFilledCircle( (int)x,  (int)y, 3, Color.black);
+			}
 		}
+
+
 //		texture.Apply ();
 		planeTemp.Apply ();
 //		img [0].texture = texture;
