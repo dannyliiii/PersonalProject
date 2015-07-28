@@ -197,8 +197,10 @@ namespace TemplateGesture{
 				}
 
 			}else if(method == 2){
-				index = resList.IndexDTW;
-				RaiseGestureDetected(resList.GetName(index));
+				if(resList.GetScore(index) < 1.5f){
+					index = resList.IndexDTW;
+					RaiseGestureDetected(resList.GetName(index));
+				}
 
 			}else{
 				index = resList.Index;

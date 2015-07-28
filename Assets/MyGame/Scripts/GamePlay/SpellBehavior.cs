@@ -7,6 +7,7 @@ namespace Game{
 		public Spell spell;
 		private readonly float maxTime = 4.0f;
 		private float liveTime;
+		public bool attack = true;
 
 		void Start () {
 			liveTime = 0.0f;

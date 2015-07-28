@@ -29,6 +29,8 @@ namespace Game{
 		int newHp;
 		bool flag = true;
 
+		public GameObject spell;
+
 		// Use this for initialization
 		void Awake () {
 
@@ -75,6 +77,7 @@ namespace Game{
 				anime.Play("monster1Die");
 				StartCoroutine(PlayAnimeAndWait(animeTime));
 			}
+
 		}
 
 		void LateUpdate(){
@@ -123,20 +126,22 @@ namespace Game{
 
 		void OnCollisionEnter(Collision collision) {
 
+
 //			if (collision.gameObject.transform.name == "Projectile") {
 			SpellBehavior spellBehavior = null;
 			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
 			if (spellBehavior == null)
 				return;
 //			oldHp = hp;
-			newHp -= spellBehavior.spell.atk;
+			if (!spellBehavior.attack) {
+				newHp -= spellBehavior.spell.atk;
 //			newHp = hp;
-			if (newHp < 0)
-				newHp = 0;
+				if (newHp < 0)
+					newHp = 0;
 //			healthText.text = hp.ToString() + "/" + hpTotal;
 //			Vector2 posTemp = imageTransGreen.anchoredPosition;
-			oldPos = imageTransGreen.anchoredPosition;
-			newPos = new Vector2 (oldPos.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), oldPos.y);	
+				oldPos = imageTransGreen.anchoredPosition;
+				newPos = new Vector2 (oldPos.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), oldPos.y);	
 //			Debug.Log (hpLength * 0.1f);
 //				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
 //			Vector2 oldPos = imageTransGreen.anchoredPosition;
@@ -153,17 +158,44 @@ namespace Game{
 //			Vector3 newVec = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
 
 //			animator.SetBool("hit",true);
-			anime.Play("monster1Hit2");
+				anime.Play ("monster1Hit2");
 //			Debug.Log (hp);
 
 //			Debug.Log (hp);
-			Destroy (collision.gameObject);
+				Destroy (collision.gameObject);
 //			animator.SetBool("hit",false);
+			} else {
+			
+			}
+				
 		}
 
 		public void Reset(){
 			hp = 100;
 			imageTransGreen.position = imageTrans.position;
+		}
+
+		public void Attack(){
+			anime.Play ("monster1Attack1");
+
+			GameObject monster1 = transform.Find ("meshes").Find ("body").gameObject;
+			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
+
+
+			Vector3 position = transform.position + new Vector3(0, height, 0);
+			Vector3 toPosition = Camera.main.transform.position;
+			GameObject proj =  Instantiate(/*projectile*/ spell, position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
+			SpellBehavior spellBehavior = proj.GetComponent("SpellBehavior") as SpellBehavior;
+			spellBehavior.attack = true;
+
+			Rigidbody rb = proj.GetComponent<Rigidbody> ();
+			Vector3 velDir = (toPosition - position).normalized - new Vector3(0, 1f, 0);
+			rb.velocity = velDir * speed;
+//			rb.AddForce (new Vector3(0, -100f, 0));
+			ParticleSystem ps = proj.GetComponent<ParticleSystem>();
+			ps.Play ();
+
+
 		}
 
 	}

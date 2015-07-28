@@ -140,6 +140,11 @@ namespace Game{
 				}
 			}
 
+			if (Input.GetKeyDown (KeyCode.Q)) {
+				monster.GetComponent<Monster>().Attack();
+//				playerScript.hp -= 10;
+			}
+
 		}
 		
 		void SpawnMonster(int level){

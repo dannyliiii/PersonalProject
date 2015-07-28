@@ -217,11 +217,11 @@ public class Detector : MonoBehaviour {
 			}
 			break;
 		case "SwipRightOneHand":
-//			if(!startScreen){
-//				gameLogic.MoveUI(1);
-//				GUIRH.gameObject.SetActive(true);
-//				oneHanded = false;
-//			}
+			if(!startScreen){
+				gameLogic.MoveUI(1);
+				GUIRH.gameObject.SetActive(true);
+				oneHanded = false;
+			}
 			break;
 		case "SwipDownOneHand":
 			if(!startScreen){

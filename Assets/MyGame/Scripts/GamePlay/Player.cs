@@ -7,11 +7,12 @@ using System.Diagnostics;
 namespace Game{
 	public class Player : MonoBehaviour {
 
+		public GUIBarScript healthbar;
 		public GUIText change;
 		public GUIText dimondNum;
 		public int lv;
 		public int xp;
-		int hp;
+		public int hp;
 		int mp;
 		int atk;
 		int def;
@@ -68,6 +69,7 @@ namespace Game{
 //				}
 ////				UnityEngine.Debug.Log(spell.Count);
 //			}
+			healthbar.totalHp = healthbar.currentHp = hp;
 			fs = change.fontSize;
 		}
 		
@@ -151,7 +153,7 @@ namespace Game{
 			Vector3 toPosition = new Vector3 (plane.transform.position.x, plane.transform.position.y + 2.5f/*temp*/ * 0.5f, plane.transform.position.z);
 			GameObject proj =  Instantiate(/*projectile*/ spellsPrefabs[temp.num], position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
 			SpellBehavior spellBehavior = proj.GetComponent("SpellBehavior") as SpellBehavior;
-
+			spellBehavior.attack = false;
 			spellBehavior.spell = temp;
 //			UnityEngine.Debug.Log (spellBehavior.spell.spellName);
 			Rigidbody rb = proj.GetComponent<Rigidbody> ();
@@ -172,5 +174,16 @@ namespace Game{
 			spell[num].atk *= 2;
 		}
 
+		void OnCollisionEnter(Collision collision) {
+			SpellBehavior spellBehavior = null;
+			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
+			if (spellBehavior == null)
+				return;
+			//			oldHp = hp;
+			if (spellBehavior.attack) {
+				hp -= 10;
+				Destroy (collision.gameObject);
+			}
+		}
 	}
 }

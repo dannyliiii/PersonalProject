@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Game;
 
 public class GUIBarScript : MonoBehaviour {
 
 	//Declare variables
 	public GameObject monster;
+	public GameObject player;
 
 	//for the CurrentValue, and the Value it will be after the update
 	private float CurrentValue;
@@ -43,7 +45,26 @@ public class GUIBarScript : MonoBehaviour {
 	private GradientColorKey[] gck;
 	private GradientAlphaKey[] gak;
 	private Color[] MaskPixels; 
-	
+
+	public int totalHp;
+	public int currentHp;
+
+	void Start(){
+//		currentHp = player.GetComponent<Player> ().hp;
+//		totalHp = player.GetComponent<Player> ().hp;
+//		Debug.Log(currentHp);
+//		Debug.Log(totalHp);
+	}
+
+	void Update(){
+		if (currentHp != player.GetComponent<Player> ().hp) {
+//			Debug.Log(currentHp);
+//			Debug.Log(totalHp);
+			currentHp = player.GetComponent<Player> ().hp;
+			Value = (float)currentHp / (float)totalHp;
+		}
+
+	}
 	//Stanard OnGUI Method
 	void OnGUI()
 	{
@@ -88,7 +109,8 @@ public class GUIBarScript : MonoBehaviour {
 			LabelStyle.fontSize = (int)TextSize;
 			LabelStyle.font = TextFont;
 
-			TextString = ((int)(Value * 100)).ToString() + "%";
+			TextString = currentHp.ToString() + "/" + totalHp.ToString();
+//			TextString = ((int)(Value * 100)).ToString() + "%";
 
 			GUI.Label(new Rect(Position.x + TextOffset.x,Position.y + TextOffset.y,ValueBar.width * ScaleSize,ValueBar.height * ScaleSize),TextString,LabelStyle);
 
