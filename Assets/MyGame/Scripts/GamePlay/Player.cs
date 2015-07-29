@@ -174,7 +174,7 @@ namespace Game{
 			spell[num].atk *= 2;
 		}
 
-		void OnCollisionEnter(Collision collision) {
+		void OnTriggerEnter(Collider collision) {
 			SpellBehavior spellBehavior = null;
 			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
 			if (spellBehavior == null)

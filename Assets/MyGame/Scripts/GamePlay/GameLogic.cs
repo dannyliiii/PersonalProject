@@ -46,6 +46,9 @@ namespace Game{
 		bool UIMoveLeft = false;
 		bool UIMoveRight = false;
 		public bool UIOn = false;
+
+		public GameObject canvasGO;
+		
 		// Use this for initialization
 		void Start () {
 
@@ -78,7 +81,7 @@ namespace Game{
 			}
 
 			if (monster == null) {
-				UnityEngine.Debug.Log("a monster is destroied");
+//				UnityEngine.Debug.Log("a monster is destroied");
 				SpawnMonster(++level);
 			}
 
@@ -145,6 +148,17 @@ namespace Game{
 //				playerScript.hp -= 10;
 			}
 
+			if (monster.GetComponent<Monster>().timer > 10) {
+				if(!UIOn)
+					monster.GetComponent<Monster>().Attack();
+
+				monster.GetComponent<Monster>().timer = 0;
+			}
+
+			if (playerScript.hp <= 0) {
+				GameOver();
+			}
+
 		}
 		
 		void SpawnMonster(int level){
@@ -178,14 +192,14 @@ namespace Game{
 				gol.Add(d);
 				Vector3 pos = Camera.main.WorldToScreenPoint( d.transform.position );
 				if(handGUI.HitTest (pos)){
-					UnityEngine.Debug.Log("hit");
+//					UnityEngine.Debug.Log("hit");
 					removeList.Add(i);
 				}
 				i++;
 			}
 			if (i > 0) {
 				foreach (int r in removeList) {
-					UnityEngine.Debug.Log (r);
+//					UnityEngine.Debug.Log (r);
 					playerScript.diamond++;
 					Destroy(go[r]);
 				}
@@ -391,6 +405,25 @@ namespace Game{
 			else{
 				UnityEngine.Debug.Log("Unknown diereciton");
 			}
+		}
+
+		public void GameOver(){
+			player.transform.Find ("HealthBar").gameObject.SetActive (false);
+			canvasGO.SetActive (true);
+			Time.timeScale =0;
+
+		}
+
+		public void Restart(){
+			SpawnMonster (1);
+			player.transform.Find ("HealthBar").gameObject.SetActive (true);
+			playerScript.hp = 100;
+			canvasGO.SetActive (false);
+			Time.timeScale =1;
+		}
+
+		public void Quit(){
+			Application.Quit();
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace Game{
 		bool flag = true;
 
 		public GameObject spell;
-
+		public float timer = 0;
 		// Use this for initialization
 		void Awake () {
 
@@ -78,6 +78,7 @@ namespace Game{
 				StartCoroutine(PlayAnimeAndWait(animeTime));
 			}
 
+			timer += Time.deltaTime;
 		}
 
 		void LateUpdate(){
@@ -124,8 +125,7 @@ namespace Game{
 
 		}
 
-		void OnCollisionEnter(Collision collision) {
-
+		void OnTriggerEnter(Collider collision) {
 
 //			if (collision.gameObject.transform.name == "Projectile") {
 			SpellBehavior spellBehavior = null;
@@ -176,11 +176,14 @@ namespace Game{
 		}
 
 		public void Attack(){
+
+			if (anime.isPlaying) {
+				anime.Stop();
+			}
 			anime.Play ("monster1Attack1");
 
 			GameObject monster1 = transform.Find ("meshes").Find ("body").gameObject;
 			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
-
 
 			Vector3 position = transform.position + new Vector3(0, height, 0);
 			Vector3 toPosition = Camera.main.transform.position;
@@ -189,8 +192,8 @@ namespace Game{
 			spellBehavior.attack = true;
 
 			Rigidbody rb = proj.GetComponent<Rigidbody> ();
-			Vector3 velDir = (toPosition - position).normalized - new Vector3(0, 1f, 0);
-			rb.velocity = velDir * speed;
+			Vector3 velDir = (toPosition - position);
+			rb.velocity = velDir;
 //			rb.AddForce (new Vector3(0, -100f, 0));
 			ParticleSystem ps = proj.GetComponent<ParticleSystem>();
 			ps.Play ();

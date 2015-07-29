@@ -30,7 +30,6 @@ namespace TemplateGesture{
 				for (int j = 0; j < lengthA; j++)
 				{
 					dMatrix[i, j] = Mathf.Sqrt(DistanceBetween2Pointf(time_series_A[j], time_series_B[i]));
-
 				}
 			}
 
