@@ -205,7 +205,7 @@ public class Detector : MonoBehaviour {
 			if(startScreen)
 				Application.LoadLevel ("KinectSample");
 			break;
-		case "consolation":
+		case "No Gesture Recognized":
 			if(!startScreen)
 				playerClass.CastSpell("akdjjaslk");
 			break;

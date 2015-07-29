@@ -130,13 +130,13 @@ namespace TemplateGesture{
 										constrain = c};
 				Entries.Add (newEntry);
 				if(!oneHanded){
-					if (IsFinished (Entries.Select (e => e.TpfPosLeft).ToList ()) && IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
+					if (IsFinished (Entries.Select (e => e.TpfPosLeft).ToList (), false) && IsFinished (Entries.Select (e => e.TpfPosRight).ToList (), false)) {
 						record = true;
 						Debug.Log("Start");
 					}
 				}
 				else{
-					if (IsFinished (Entries.Select (e => e.TpfPosRight).ToList ())) {
+					if (IsFinished (Entries.Select (e => e.TpfPosRight).ToList (), false)) {
 						record = true;
 						Debug.Log("Start");
 					}
@@ -157,11 +157,11 @@ namespace TemplateGesture{
 				return;
 
 			if (!oneHanded) {
-				if (!IsFinished (EntriesForRec.Select (e => e.TpfPosLeft).ToList ()) && !IsFinished (EntriesForRec.Select (e => e.TpfPosRight).ToList ())) {
+				if (!IsFinished (EntriesForRec.Select (e => e.TpfPosLeft).ToList (), false) && !IsFinished (EntriesForRec.Select (e => e.TpfPosRight).ToList (), false)) {
 					return;
 				}
 			} else {
-				if (!IsFinished (EntriesForRec.Select (e => e.TpfPosRight).ToList ())) {
+				if (!IsFinished (EntriesForRec.Select (e => e.TpfPosRight).ToList (), false)) {
 					return;
 				}
 			}
@@ -190,17 +190,21 @@ namespace TemplateGesture{
 					RaiseGestureDetected(resList.GetName(index));
 				}else{
 					flag = false;
-					RaiseGestureDetected("consolation");
+					RaiseGestureDetected("No Gesture Recognized");
 				}
 				if (resList.GetName (index) == "s" && resList.GetScore (index) > LearningMachine.MinScoreOneHanded && flag) {
 					RaiseGestureDetected(resList.GetName(index));
 				}
 
 			}else if(method == 2){
-				if(resList.GetScore(index) < 1.5f){
-					index = resList.IndexDTW;
+				index = resList.IndexDTW;
+				if(resList.GetScore(index) < 1.5f && resList.GetScore(index) > 0){
 					RaiseGestureDetected(resList.GetName(index));
+				}else{
+					RaiseGestureDetected("No Gesture Recognized");
 				}
+//				UnityEngine.Debug.Log("%^%&^£*(&!£*)(!*£_!*£");
+//				UnityEngine.Debug.Log(resList.GetScore(index));
 
 			}else{
 				index = resList.Index;
@@ -256,18 +260,19 @@ namespace TemplateGesture{
 		}
 
 		// to check if the gesture is finished
-		public bool IsFinished(List<TimePointF> list){
+		public bool IsFinished(List<TimePointF> list, bool all = false){
 
 			bool res = false;
 			int count = 0;
 			int listCount = 0;
-		
+			MyMath.Vector2 v1 = new MyMath.Vector2 (list [list.Count - 1].X, list [list.Count - 1].Y);
+	
 			if (list.Count >= frameCount) {
-				MyMath.Vector2 v1 = new MyMath.Vector2 (list [list.Count - 1].X, list [list.Count - 1].Y);
+
 				for (int i = list.Count - 2; i > 1; i --) {
 					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i].X, list [i].Y);
 					MyMath.Vector2 v3 = v1 - v2;
-	//				Debug.Log(v3.LengthSqr);
+					//				Debug.Log(v3.LengthSqr);
 					if (v3.LengthSqr < 0.002f) {
 						count ++;
 					}
@@ -283,6 +288,21 @@ namespace TemplateGesture{
 							break;
 						}
 					}
+				}
+			}
+			 if(all){
+				for (int i = list.Count - 2; i > 1; i --) {
+					MyMath.Vector2 v2 = new MyMath.Vector2 (list [i].X, list [i].Y);
+					MyMath.Vector2 v3 = v1 - v2;
+					//				Debug.Log(v3.LengthSqr);
+					if (v3.LengthSqr < 0.0001f) {
+						count ++;
+					}
+					listCount ++;
+				}
+				if (listCount - count < 5) {
+					//						Debug.Log(123123123132);
+					res = false;
 				}
 			}
 //			Debug.Log (count);
