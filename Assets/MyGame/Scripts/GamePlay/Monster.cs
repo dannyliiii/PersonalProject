@@ -95,7 +95,7 @@ namespace Game{
 //			height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
 
 //			height = GetComponent<MeshRenderer>().bounds.size.y;
-			imageTrans.position = new Vector3 (position.x, position.y + height , -1.0f);
+			imageTrans.position = new Vector3 (position.x, position.y + height , position.z);
 			//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
 			//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
 			hpTotal = 100 + level * 10;

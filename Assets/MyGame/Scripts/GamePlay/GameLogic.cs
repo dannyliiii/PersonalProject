@@ -70,9 +70,9 @@ namespace Game{
 			buttons[currentButton].GetComponent<Button>().Select();
 			initilized = true;
 		}
-		
 		// Update is called once per frame
 		void Update () {
+
 
 			Vector2 thisWindowSize = new Vector2 (Screen.width, Screen.height);
 			if (lastWindowSize != thisWindowSize) {
@@ -159,20 +159,31 @@ namespace Game{
 				GameOver();
 			}
 
+
+
 		}
 		
 		void SpawnMonster(int level){
 //			GameObject monster1 = monsterPrefab.transform.Find ("meshes").Find ("body").gameObject;
 //			float height = monster1.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
-			
-//			GameObject robot2 = monsterPrefab.transform.Find("Robot2").gameObject;
-//			float height = robot2.GetComponent<SkinnedMeshRenderer>().bounds.size.y;
+
 //			float height = monsterPrefab.GetComponent<MeshRenderer>().bounds.size.y;
 
+//			Vector3 position = new Vector3(Camera.main.transform.position.x - Camera.main.transform.forward.x,
+//			                               plane.transform.position.y,
+//			                               Camera.main.transform.position.z - Camera.main.transform.position.z);
+
+			Vector3 position = Camera.main.transform.position + Camera.main.transform.forward * 20;
+//			monster =  Instantiate(monsterPrefab, 
+//	                              new Vector3(plane.transform.position.x, plane.transform.position.y, plane.transform.position.z),
+//		                          Quaternion.FromToRotation (-UnityEngine.Vector3.forward, -transform.forward)
+//		                          ) as GameObject;
+			position.y = plane.transform.position.y;
+			Quaternion lookDirection = Camera.main.transform.rotation;
+
 			monster =  Instantiate(monsterPrefab, 
-	                              new Vector3(plane.transform.position.x, plane.transform.position.y, plane.transform.position.z),
-		                          Quaternion.FromToRotation (-UnityEngine.Vector3.forward, -transform.forward)
-		                          ) as GameObject;
+			                       position,
+			                       lookDirection) as GameObject;
 			Monster monsterScript;
 
 			monster.transform.Rotate (new Vector3 (0, 180, 0));
@@ -333,6 +344,7 @@ namespace Game{
 //				UnityEngine.Debug.Log(playerScript.spell.Count);
 //				UnityEngine.Debug.Log(playerScript.diamond);
 //				UnityEngine.Debug.Log(playerScript.lv);
+//				UICanvas.gameObject.SetActive(true);
 				foreach (var s in playerScript.spell){
 					GameObject button = Instantiate (buttonPrefab) as GameObject;
 					button.transform.SetParent (contentPanel);
@@ -425,5 +437,7 @@ namespace Game{
 		public void Quit(){
 			Application.Quit();
 		}
+
+
 	}
 }

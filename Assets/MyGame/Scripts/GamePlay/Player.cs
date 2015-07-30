@@ -44,7 +44,7 @@ namespace Game{
 //			spells = new List<Spell>();
 			
 			projList = new List<GameObject> ();
-			upForce = new UnityEngine.Vector3 (0.0f, 100.0f, 0.0f);
+			upForce = new UnityEngine.Vector3 (0.0f, 200.0f, 0.0f);
 
 			gameObject.transform.position = Camera.main.transform.position;
 
@@ -149,8 +149,11 @@ namespace Game{
 				temp = new Spell ("test", 1, 10, 1, "", 0, false);
 			}
 
-			Vector3 position = transform.position + new Vector3 (2.5f, 0.0f, 0.0f);
-			Vector3 toPosition = new Vector3 (plane.transform.position.x, plane.transform.position.y + 2.5f/*temp*/ * 0.5f, plane.transform.position.z);
+			Vector3 position = transform.position + transform.forward * 2;
+			GameObject[] monster = GameObject.FindGameObjectsWithTag("Monster");
+			Vector3 toPosition = monster[0].transform.position;
+			
+//			Vector3 toPosition = new Vector3 (plane.transform.position.x, plane.transform.position.y + 2.5f/*temp*/ * 0.5f, plane.transform.position.z);
 			GameObject proj =  Instantiate(/*projectile*/ spellsPrefabs[temp.num], position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
 			SpellBehavior spellBehavior = proj.GetComponent("SpellBehavior") as SpellBehavior;
 			spellBehavior.attack = false;
