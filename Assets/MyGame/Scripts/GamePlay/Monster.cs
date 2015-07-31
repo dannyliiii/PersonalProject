@@ -127,43 +127,24 @@ namespace Game{
 
 		void OnTriggerEnter(Collider collision) {
 
-//			if (collision.gameObject.transform.name == "Projectile") {
 			SpellBehavior spellBehavior = null;
 			spellBehavior = collision.gameObject.GetComponent("SpellBehavior") as SpellBehavior;
 			if (spellBehavior == null)
 				return;
-//			oldHp = hp;
+
 			if (!spellBehavior.attack) {
 				newHp -= spellBehavior.spell.atk;
-//			newHp = hp;
+
 				if (newHp < 0)
 					newHp = 0;
-//			healthText.text = hp.ToString() + "/" + hpTotal;
-//			Vector2 posTemp = imageTransGreen.anchoredPosition;
+
 				oldPos = imageTransGreen.anchoredPosition;
 				newPos = new Vector2 (oldPos.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), oldPos.y);	
-//			Debug.Log (hpLength * 0.1f);
-//				imageTransGreen.position = new Vector3 (posTemp.x - hpLength * 0.1f , posTemp.y, posTemp.z);	
-//			Vector2 oldPos = imageTransGreen.anchoredPosition;
-//			Vector2 newPos = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
-//			imageTransGreen.anchoredPosition = Vector2.Lerp (oldPos, newPos, 4 * Time.deltaTime);
 
-//			Vector2 pos = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
-
-//			imageTransGreen.anchoredPosition = pos / 2;
-//			Vector2.Lerp (posTemp, pos, 0.5f);
-//			imageTransGreen.anchoredPosition = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
-
-//			Vector2 oldVec = new Vector2 (posTemp.x , posTemp.y);	
-//			Vector3 newVec = new Vector2 (posTemp.x - hpLength * ((float)spellBehavior.spell.atk / (float)hpTotal), posTemp.y);	
-
-//			animator.SetBool("hit",true);
 				anime.Play ("monster1Hit2");
-//			Debug.Log (hp);
 
-//			Debug.Log (hp);
 				Destroy (collision.gameObject);
-//			animator.SetBool("hit",false);
+
 			} else {
 			
 			}
@@ -199,6 +180,12 @@ namespace Game{
 			ps.Play ();
 
 
+		}
+
+		void OnDestroy(){
+			if (Camera.main != null) {
+				Camera.main.GetComponent<GameLogic> ().MoveCamera ();
+			}
 		}
 
 	}
