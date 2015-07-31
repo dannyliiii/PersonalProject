@@ -17,7 +17,7 @@ namespace Game{
 		public GameObject plane;
 		public GameObject monsterPrefab;
 		public GameObject cursor;
-		GameObject monster;
+		public GameObject monster;
 		int level = 0;
 		public GameObject rightHand;
 		public GameObject rightHandScreenPos;
@@ -461,6 +461,8 @@ namespace Game{
 			cc.rotate = true;
 			cc.moveForward = true;
 			cc.moving = true;
+
+			GameObject.Find ("KinectPrefab").GetComponent<Detector> ().templateGestureDetector.ClearData ();
 		}
 	}
 }

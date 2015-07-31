@@ -330,6 +330,10 @@ namespace TemplateGesture{
 				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
 				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 
+				UnityEngine.Debug.Log("£££££££££££££££££££££££££££");
+				UnityEngine.Debug.Log(pfr[pfr.Count / 2]);
+				UnityEngine.Debug.Log("£££££££££££££££££££££££££££");
+
 				float gesLengthL = (float)DynamicTimeWraping.PathLength(pfl);
 				float gesLengthR = (float)DynamicTimeWraping.PathLength(pfr);
 

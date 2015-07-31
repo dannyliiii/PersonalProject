@@ -13,7 +13,7 @@ namespace TemplateGesture{
 		public static readonly PointF Origin = new PointF(0f, 0f);
 		public static readonly MyMath.Vector3 Origin3D = new MyMath.Vector3(0f, 0f, 0f);
 		static MyMath.Vector2 size = new MyMath.Vector2(1f, 1f);
-		static MyMath.Vector3 size3D = new MyMath.Vector3(500.0f, 500.0f, 500.0f);
+		static MyMath.Vector3 size3D = new MyMath.Vector3(1.0f, 1.0f, 1.0f);
 		private const float DX = 250f;
 		public static readonly SizeF SquareSize = new SizeF(DX, DX);
 		
@@ -231,8 +231,13 @@ namespace TemplateGesture{
 			float I = PathLength3D(pos) / (sampleCount);
 			List<MyMath.Vector3> localPoints = Resample(pos, I);
 			
-			localPoints = Normalize3D (localPoints);
-			localPoints = TranslateTo3D (localPoints, Origin3D);
+//			localPoints = Normalize3D (localPoints);
+
+			MyMath.Vector3 size = GetSize3D (localPoints);
+			localPoints = ScaleTo3D (localPoints, size);
+
+			MyMath.Vector3 centrod = GetCentroidPoint3D(localPoints);
+			localPoints = TranslateTo3D (localPoints, Origin3D, centrod);
 			
 			return localPoints;
 		}
@@ -278,10 +283,11 @@ namespace TemplateGesture{
 			return res;
 		}
 
-		static List<MyMath.Vector3> TranslateTo3D (List<MyMath.Vector3> points, MyMath.Vector3 dest){
-			
+		static List<MyMath.Vector3> TranslateTo3D (List<MyMath.Vector3> points, MyMath.Vector3 dest, MyMath.Vector3 centroid){
+
+			MyMath.Vector3 moveVector = dest - centroid;
 			List<MyMath.Vector3> res = new List<MyMath.Vector3> (points);
-			MyMath.Vector3 movement = new MyMath.Vector3(dest.x - res[0].x, dest.y - res[0].y, dest.z - res[0].z);
+			MyMath.Vector3 movement = new MyMath.Vector3(moveVector.x - res[0].x, moveVector.y - res[0].y, moveVector.z - res[0].z);
 			//			Debug.Log (movement);
 			for (int i =0; i < res.Count; i ++) {
 				MyMath.Vector3 newP = new MyMath.Vector3(res[i].x, res[i].y, res[i].z) + movement;
@@ -356,5 +362,46 @@ namespace TemplateGesture{
 			return new MyMath.Vector3(Mathf.Abs(left - right), Mathf.Abs(top - bottom), Mathf.Abs(front - back));
 		}
 
+		static MyMath.Vector3 GetCentroidPoint3D(List<MyMath.Vector3> points){
+			int n = points.Count;
+			float x = 0;
+			float y = 0;
+			float z = 0;
+			foreach (var p in points) {
+				x += p.x;
+				y += p.y;
+				z += p.z;
+			}
+
+			return new MyMath.Vector3 (x / n, y / n, z / n);
+		}
+
+		static List<MyMath.Vector3> ScaleTo3D(List<MyMath.Vector3> points, MyMath.Vector3 size){
+			List<MyMath.Vector3> res = new List<MyMath.Vector3> ();
+			float xMutiplier = size.x / size3D.x;
+			float yMutiplier = size.y / size3D.y;
+			float zMutiplier = size.z / size3D.z;
+			for (int i = 0; i < points.Count; i ++) {
+				res.Add(new MyMath.Vector3(points[i].x * xMutiplier,
+									       points[i].y * yMutiplier,
+									       points[i].z * zMutiplier));
+			}
+
+			return res;
+		}
+
+		public static float[,] GetDistanceMatrix3D(List<MyMath.Vector3> time_series_A, List<MyMath.Vector3> time_series_B, int lengthA, int lengthB) {
+			
+			float[,] dMatrix = new float[lengthB, lengthA];
+			for (int i = 0; i < lengthB; i++)
+			{
+				for (int j = 0; j < lengthA; j++)
+				{
+					dMatrix[i, j] = Mathf.Sqrt(GetDistanceBetween2Vector3(time_series_A[j], time_series_B[i]));
+				}
+			}
+			
+			return dMatrix;
+		}
 	}
 }

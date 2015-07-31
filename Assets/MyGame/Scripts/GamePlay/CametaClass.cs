@@ -20,6 +20,8 @@ namespace Game{
 
 		public bool moving = false;
 
+		public GameObject depthPlane;
+
 		void Start () {
 		
 

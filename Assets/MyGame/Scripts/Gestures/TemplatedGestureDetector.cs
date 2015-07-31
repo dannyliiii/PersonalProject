@@ -308,5 +308,11 @@ namespace TemplateGesture{
 //			Debug.Log (count);
 			return res;
 		}
+
+		public void ClearData(){
+			entries.Clear();
+			entriesForRec.Clear ();
+			record = false;
+		}
 	}
 }

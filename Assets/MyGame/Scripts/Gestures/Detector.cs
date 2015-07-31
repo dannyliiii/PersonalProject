@@ -16,7 +16,7 @@ using System.Xml;
 public class Detector : MonoBehaviour {
 
 	public Player playerClass;
-	public GameLogic gameLogic;
+	GameLogic gameLogic;
 //	public Text sign;
 	public Text Status;
 
@@ -38,7 +38,7 @@ public class Detector : MonoBehaviour {
 	public GameObject dataImagePlaneRR;
 
 	public int player = 0;
-	TemplatedGestureDetector templateGestureDetector;
+	public TemplatedGestureDetector templateGestureDetector;
 	public SkeletonWrapper sw;
 
 	private int currentData = 0;
@@ -56,9 +56,9 @@ public class Detector : MonoBehaviour {
 	int rhpMax = 100;
 	int timer = 40;
 
-	public GameObject rightHand;
-	public GameObject leftHand;
-	public GameObject rhsp;
+//	public GameObject rightHand;
+//	public GameObject leftHand;
+//	public GameObject rhsp;
 	public GUITexture GUIRH;
 
 	Material planeMatTemp;
@@ -157,8 +157,12 @@ public class Detector : MonoBehaviour {
 		templateGestureDetector.oneHanded = oneHanded;
 		DrawDataPerFrame (num);
 
-		if(!KinectRecorder.IsRecording)
+		if (!KinectRecorder.IsRecording)
+
+		if (gameLogic.monster != null || !gameLogic.cc.moving) {
 			ProcessFrame ();
+		}
+
 
 //		UnityEngine.Debug.Log (startScreen);
 		if (!startScreen) {
