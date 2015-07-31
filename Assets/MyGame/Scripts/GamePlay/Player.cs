@@ -187,6 +187,6 @@ namespace Game{
 				hp -= 10;
 				Destroy (collision.gameObject);
 			}
-		}
+		}	
 	}
 }

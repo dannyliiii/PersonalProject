@@ -48,7 +48,12 @@ namespace Game{
 		public bool UIOn = false;
 
 		public GameObject canvasGO;
-		
+
+		public GameObject[] terrains;
+		int terrain = 0;
+		int terrainOld = 0;
+
+		public CametaClass cc;
 		// Use this for initialization
 		void Start () {
 
@@ -73,6 +78,7 @@ namespace Game{
 		// Update is called once per frame
 		void Update () {
 
+			MoveTerrain ();
 
 			Vector2 thisWindowSize = new Vector2 (Screen.width, Screen.height);
 			if (lastWindowSize != thisWindowSize) {
@@ -80,7 +86,7 @@ namespace Game{
 				InitializeUI();
 			}
 
-			if (monster == null) {
+			if (monster == null && !cc.moving) {
 //				UnityEngine.Debug.Log("a monster is destroied");
 				SpawnMonster(++level);
 			}
@@ -148,18 +154,18 @@ namespace Game{
 //				playerScript.hp -= 10;
 			}
 
-			if (monster.GetComponent<Monster>().timer > 10) {
-				if(!UIOn)
-					monster.GetComponent<Monster>().Attack();
+			if (monster != null) {
+				if (monster.GetComponent<Monster> ().timer > 10) {
+					if (!UIOn)
+						monster.GetComponent<Monster> ().Attack ();
 
-				monster.GetComponent<Monster>().timer = 0;
+					monster.GetComponent<Monster> ().timer = 0;
+				}
 			}
 
 			if (playerScript.hp <= 0) {
 				GameOver();
 			}
-
-
 
 		}
 		
@@ -189,11 +195,9 @@ namespace Game{
 			monster.transform.Rotate (new Vector3 (0, 180, 0));
 			monsterScript = monster.GetComponent<Monster>();
 			monsterScript.ConfigMonster (level);
-//			Debug.Log (monster.transform.localScale);
 		}
 
 		void HitTest() {
-//			bool res = false;
 
 			GameObject[] go = GameObject.FindGameObjectsWithTag("Dimond");
 			List<int> removeList = new List<int> ();
@@ -203,14 +207,12 @@ namespace Game{
 				gol.Add(d);
 				Vector3 pos = Camera.main.WorldToScreenPoint( d.transform.position );
 				if(handGUI.HitTest (pos)){
-//					UnityEngine.Debug.Log("hit");
 					removeList.Add(i);
 				}
 				i++;
 			}
 			if (i > 0) {
 				foreach (int r in removeList) {
-//					UnityEngine.Debug.Log (r);
 					playerScript.diamond++;
 					Destroy(go[r]);
 				}
@@ -238,7 +240,6 @@ namespace Game{
 						playerScript.spell.Add(new Spell(name, attribute, damage, level, gesture, num, Islock));
 					}
 				}
-//				UnityEngine.Debug.Log(playerScript.spell.Count);
 			}
 			spellReader.Close();
 
@@ -251,7 +252,6 @@ namespace Game{
 				while(reader.Read()){
 					if(reader.LocalName == "SceneLevel"){
 						string s = reader.ReadInnerXml();
-//						UnityEngine.Debug.Log(s);
 						bool res = int.TryParse(s.Trim(), out level);
 						if(!res){
 							UnityEngine.Debug.Log("SceneLevel load failed");	
@@ -259,7 +259,6 @@ namespace Game{
 					}
 					if(reader.LocalName == "PlayerLevel"){
 						string s = reader.ReadInnerXml();
-//						UnityEngine.Debug.Log(s);
 						bool res = int.TryParse(s.Trim(), out playerScript.lv);
 						if(!res){
 							UnityEngine.Debug.Log("PlayerLevel load failed");	
@@ -267,11 +266,8 @@ namespace Game{
 					}
 					if(reader.LocalName == "Diamond"){
 						string s = reader.ReadInnerXml();
-//						UnityEngine.Debug.Log(s);
 						bool res = int.TryParse(s.Trim(), out playerScript.diamond);
 						playerScript.diamondOld = playerScript.diamond;
-//						UnityEngine.Debug.Log(playerScript.diamond);
-						
 						if(!res){
 							UnityEngine.Debug.Log("PlayerLevel load failed");	
 						}
@@ -321,7 +317,6 @@ namespace Game{
 
 		void InitializeUI(){
 
-//			UnityEngine.Debug.Log("Initing");
 			rtPanel =  panel.gameObject.GetComponent<RectTransform>();
 			rtPanel.sizeDelta = new Vector2(Screen.width * 0.2f, Screen.height);
 
@@ -438,6 +433,34 @@ namespace Game{
 			Application.Quit();
 		}
 
+		void MoveTerrain(){
 
+			if (player.transform.position.z >= terrains [terrain].transform.position.z + 500) {
+				if(terrain == 0)
+					terrain = 1;
+				else
+					terrain = 0;
+			} else {
+				return;
+			}
+
+			if (terrain != terrainOld) {
+				int t = terrain;
+				if (t == 0) {
+					terrains [t + 1].transform.position = terrains [t].transform.position + new Vector3 (0, 0, 500);
+				} else {
+					terrains [t - 1].transform.position = terrains [t].transform.position + new Vector3 (0, 0, 500);
+				}
+				terrainOld = terrain;
+			}else{
+				return;
+			}
+		}
+
+		public void MoveCamera(){
+			cc.rotate = true;
+			cc.moveForward = true;
+			cc.moving = true;
+		}
 	}
 }
