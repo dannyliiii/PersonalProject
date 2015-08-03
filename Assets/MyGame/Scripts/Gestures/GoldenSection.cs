@@ -12,7 +12,7 @@ namespace TemplateGesture{
 		public static readonly double DiagonalD = Math.Sqrt(DX * DX + DX * DX);
 		public static readonly double HalfDiagonal = 0.5 * DiagonalD;
 		private static readonly double Phi = 0.5 * (-1.0 + Math.Sqrt(5.0)); // Golden Ratio
-		private const float DX = 250f;
+		private const float DX = 1f;
 		public static readonly SizeF SquareSize = new SizeF(DX, DX);
 		public static readonly PointF Origin = new PointF(0f, 0f);
 

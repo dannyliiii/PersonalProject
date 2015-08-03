@@ -12,10 +12,10 @@ namespace TemplateGesture{
 	
 		public static readonly PointF Origin = new PointF(0f, 0f);
 		public static readonly MyMath.Vector3 Origin3D = new MyMath.Vector3(0f, 0f, 0f);
-		static MyMath.Vector2 size = new MyMath.Vector2(1f, 1f);
+		static MyMath.Vector2 size2D = new MyMath.Vector2(1f, 1f);
 		static MyMath.Vector3 size3D = new MyMath.Vector3(1.0f, 1.0f, 1.0f);
 		private const float DX = 250f;
-		public static readonly SizeF SquareSize = new SizeF(DX, DX);
+		public static readonly SizeF SquareSize = new SizeF(1f, 1f);
 		
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{
@@ -106,10 +106,11 @@ namespace TemplateGesture{
 			//			double radians = GeotrigEx.Angle (GeotrigEx.Centroid (localPoints), localPoints [0], false);
 			//			localPoints = GeotrigEx.RotatePoints (localPoints, -radians);
 //			UnityEngine.Debug.Log ("¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬¬");
-			localPoints = GeotrigEx.ScaleTo (localPoints, SquareSize);
+//			localPoints = GeotrigEx.ScaleTo (localPoints, SquareSize);
 //			localPoints = Normalize (localPoints);
 //			localPoints = GeotrigEx.TranslateTo (localPoints, Origin, true);
-			
+			MyMath.Vector2 v2 = GetSize (localPoints);
+			localPoints = ScaleTo (localPoints, v2);
 			localPoints = TranslateTo (localPoints, Origin);
 			return localPoints;
 		}
@@ -165,16 +166,16 @@ namespace TemplateGesture{
 			UnityEngine.Debug.Log (listSize.x);
 			UnityEngine.Debug.Log (listSize.y);
 			float x,y;
-			if(listSize.x > size.x){
-				x = listSize.x / size.x;
+			if(listSize.x > size2D.x){
+				x = listSize.x / size2D.x;
 			}else{
-				x = size.x / listSize.x;
+				x = size2D.x / listSize.x;
 			}
 
-			if(listSize.y > size.y){
-				y = listSize.y / size.y;
+			if(listSize.y > size2D.y){
+				y = listSize.y / size2D.y;
 			}else{
-				y = size.y / listSize.y;
+				y = size2D.y / listSize.y;
 			}
 			Matrix2 scale = new Matrix2(x, 0, 0, y);
 
@@ -207,64 +208,80 @@ namespace TemplateGesture{
 			for(int i = 1; i < points.Count; i ++){
 				if(points[i].X > right){
 					right = points[i].X;
-				}else{
+				}else if(points[i].X < left){
 					left = points[i].X;
 				}
 				if(points[i].Y > top){
 					top = points[i].Y;
-				}else{
+				}else if (points[i].Y < bottom){
 					bottom = points[i].Y;
 				}
 			}
 
-//			UnityEngine.Debug.Log ("~~~~~~~~~~~~~~~~~~~");
-//			UnityEngine.Debug.Log (left);
-//			UnityEngine.Debug.Log (right);
-//			UnityEngine.Debug.Log (top);
-//			UnityEngine.Debug.Log (bottom);
-
 			return new MyMath.Vector2(Math.Abs(left - right), Math.Abs(top - bottom));
-		}
-
-		public static List<MyMath.Vector3> DTWPack3D(List<MyMath.Vector3> pos, int sampleCount){
-			
-			float I = PathLength3D(pos) / (sampleCount);
-			List<MyMath.Vector3> localPoints = Resample(pos, I);
-			
-//			localPoints = Normalize3D (localPoints);
-
-			MyMath.Vector3 size = GetSize3D (localPoints);
-			localPoints = ScaleTo3D (localPoints, size);
-
-			MyMath.Vector3 centrod = GetCentroidPoint3D(localPoints);
-			localPoints = TranslateTo3D (localPoints, Origin3D, centrod);
-			
-			return localPoints;
-		}
-
-		public static float PathLength3D(List<MyMath.Vector3> list){
-			float res = 0;
-
-			for(int i = 1; i < list.Count; i++){
-				res += GetDistanceBetween2Vector3(list[i], list[i-1]);
-			}
-
-			return res;
 		}
 
 		public static float PathLength(List<PointF> list){
 			float res = 0;
 			
 			for(int i = 1; i < list.Count; i++){
-				res += DistanceBetween2Pointf(list[i], list[i-1]);
+				res += Mathf.Sqrt(DistanceBetween2Pointf(list[i], list[i-1]));
 			}
 			
 			return res;
 		}
 
-		static float GetDistanceBetween2Vector3(MyMath.Vector3 v1, MyMath.Vector3 v2){
-			float length = Mathf.Sqrt(Mathf.Pow((v2.x - v1.x),2) + Mathf.Pow((v2.x - v1.x),2) + Mathf.Pow((v2.x - v1.x),2));
 
+		public static List<MyMath.Vector3> DTWPack3D(List<MyMath.Vector3> pos, int sampleCount){
+			
+//			float I = PathLength3D(pos) / (sampleCount);
+//			List<MyMath.Vector3> localPoints = Resample(pos, I);
+			
+//			localPoints = Normalize3D (localPoints);
+
+			List<MyMath.Vector3> localPoints = new List<MyMath.Vector3> (pos);
+			MyMath.Vector3 size = GetSize3D (localPoints);
+			localPoints = ScaleTo3D (localPoints, size);
+
+			MyMath.Vector3 centroid = GetCentroidPoint3D(localPoints);
+			localPoints = TranslateTo3D (localPoints, Origin3D, centroid);
+			
+			return localPoints;
+		}
+
+		public static float PathLength3D(List<MyMath.Vector3> list){
+			float res = 0;
+//			List<UnityEngine.Vector3> listTemp = new List<UnityEngine.Vector3>();
+//			foreach(var p in list){
+//				listTemp.Add(new UnityEngine.Vector3(p.x, p.y, p.z));
+//			}
+//			UnityEngine.Debug.Log("==========");
+			for(int i = 1; i < list.Count; i++){
+				float length = GetDistanceBetween2Vector3(list[i], list[i-1]);
+//				UnityEngine.Debug.Log(length);
+				if(length > 1){
+					UnityEngine.Debug.Log("~~~~~ERROR~~~~~");
+					UnityEngine.Debug.Log(list[i].x);
+					UnityEngine.Debug.Log(list[i].y);
+					UnityEngine.Debug.Log(list[i].z);
+					UnityEngine.Debug.Log(list[i-1].x);
+					UnityEngine.Debug.Log(list[i-1].y);
+					UnityEngine.Debug.Log(list[i-1].z);
+				}
+				res += length;
+			}
+
+//			for (int i = 1; i < listTemp.Count; i++) {
+//				res += UnityEngine.Vector3.Distance(listTemp[i], listTemp[i-1]);
+//			}
+
+			return res;
+		}
+
+		
+		static float GetDistanceBetween2Vector3(MyMath.Vector3 v1, MyMath.Vector3 v2){
+			float length = Mathf.Sqrt(Mathf.Pow((v2.x - v1.x),2) + Mathf.Pow((v2.y - v1.y),2) + Mathf.Pow((v2.z - v1.z),2));
+		
 			return length;
 		}
 
@@ -287,10 +304,10 @@ namespace TemplateGesture{
 
 			MyMath.Vector3 moveVector = dest - centroid;
 			List<MyMath.Vector3> res = new List<MyMath.Vector3> (points);
-			MyMath.Vector3 movement = new MyMath.Vector3(moveVector.x - res[0].x, moveVector.y - res[0].y, moveVector.z - res[0].z);
+//			MyMath.Vector3 movement = new MyMath.Vector3(moveVector.x - res[0].x, moveVector.y - res[0].y, moveVector.z - res[0].z);
 			//			Debug.Log (movement);
 			for (int i =0; i < res.Count; i ++) {
-				MyMath.Vector3 newP = new MyMath.Vector3(res[i].x, res[i].y, res[i].z) + movement;
+				MyMath.Vector3 newP = res[i] + moveVector;
 				res[i] = newP;
 			}
 			
@@ -334,27 +351,29 @@ namespace TemplateGesture{
 			return res;
 		}
 		
-		static MyMath.Vector3 GetSize3D(List<MyMath.Vector3> points){
+		public static MyMath.Vector3 GetSize3D(List<MyMath.Vector3> points){
 			float left = points[0].x;
 			float right = points[0].x;
 			float top = points[0].y;
 			float bottom = points[0].y;
 			float front = points[0].z;
 			float back = points[0].z;
+
 			for(int i = 1; i < points.Count; i ++){
+				
 				if(points[i].x > right){
 					right = points[i].x;
-				}else{
+				}else if(points[i].x < left){
 					left = points[i].x;
 				}
 				if(points[i].y > top){
 					top = points[i].y;
-				}else{
+				}else if(points[i].y < bottom){
 					bottom = points[i].y;
 				}
 				if(points[i].z > front){
 					front = points[i].z;
-				}else{
+				}else if(points[i].z < back){
 					back = points[i].z;
 				}
 			}
@@ -378,14 +397,36 @@ namespace TemplateGesture{
 
 		static List<MyMath.Vector3> ScaleTo3D(List<MyMath.Vector3> points, MyMath.Vector3 size){
 			List<MyMath.Vector3> res = new List<MyMath.Vector3> ();
-			float xMutiplier = size.x / size3D.x;
-			float yMutiplier = size.y / size3D.y;
-			float zMutiplier = size.z / size3D.z;
+			float xMutiplier = size3D.x / size.x;
+			float yMutiplier = size3D.y / size.y;
+			float zMutiplier = size3D.z / size.z;
+//			UnityEngine.Debug.Log("~~~~~~~~~~~~");
+//			UnityEngine.Debug.Log (size.x);
+//			UnityEngine.Debug.Log (size.y);
+//			UnityEngine.Debug.Log (size.z);
+//			UnityEngine.Debug.Log (xMutiplier);
+//			UnityEngine.Debug.Log (yMutiplier);
+//			UnityEngine.Debug.Log (zMutiplier);
+
 			for (int i = 0; i < points.Count; i ++) {
 				res.Add(new MyMath.Vector3(points[i].x * xMutiplier,
 									       points[i].y * yMutiplier,
 									       points[i].z * zMutiplier));
 			}
+
+			return res;
+		}
+
+		static List<PointF> ScaleTo(List<PointF> points, MyMath.Vector2 size){
+			List<PointF> res = new List<PointF> ();
+			float xMutiplier = size2D.x / size.x;
+			float yMutiplier = size2D.y / size.y;
+			
+			for (int i = 0; i < points.Count; i ++) {
+				res.Add(new PointF(points[i].X * xMutiplier,
+				                           points[i].Y * yMutiplier));
+			}
+
 
 			return res;
 		}
@@ -397,7 +438,7 @@ namespace TemplateGesture{
 			{
 				for (int j = 0; j < lengthA; j++)
 				{
-					dMatrix[i, j] = Mathf.Sqrt(GetDistanceBetween2Vector3(time_series_A[j], time_series_B[i]));
+					dMatrix[i, j] = GetDistanceBetween2Vector3(time_series_A[j], time_series_B[i]);
 				}
 			}
 			

@@ -66,12 +66,11 @@ namespace TemplateGesture{
 			foreach (string file in Directory.GetFiles(folderPath, "*.data"))
 				LoadGestureNew (file);
 		}
-
-
-
+		
 		public static ResultList Match(List<TimePointF> tpll, List<TimePointF> tplr, 
 		                               List<TimePointF> zy_tpll, List<TimePointF> zy_tplr, 
 		                               List<TimePointF> zx_tpll, List<TimePointF> zx_tplr, 
+		                               List<MyMath.Vector3> l_3d, List<MyMath.Vector3> r_3d,
 		                               Constrain[]c, float threshold,float minSize, bool oneHanded, int method)
 		{
 			int i = 0;
@@ -117,6 +116,17 @@ namespace TemplateGesture{
 						}else{
 							score = p.Match(zx_tpll, zx_tplr, threshold, minSize, 1, method);
 						}
+					}
+					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
+					rl.UpdateResult(i++, p.gestureName, (float)score);
+				}else if(method == 3){
+					p.Match3D(l_3d, r_3d, oneHanded);
+					if(oneHanded && !p.OnaHanded){
+						score = -6;
+					}else if(!oneHanded && p.OnaHanded){
+						score  = -5;
+					}else{
+						score = p.Match3D(l_3d, r_3d, oneHanded);
 					}
 					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
 					rl.UpdateResult(i++, p.gestureName, (float)score);
@@ -205,6 +215,9 @@ namespace TemplateGesture{
 				List<TimePointF> zx_pr = new List<TimePointF>();
 				List<TimePointF> zx_pl = new List<TimePointF>();
 
+				List<MyMath.Vector3> tempL_3D = new List<MyMath.Vector3>();
+				List<MyMath.Vector3> tempR_3D = new List<MyMath.Vector3>();
+
 				rd.Plane = 0;
 				rd.OnaHanded = false;
 				while(reader.Read()){
@@ -244,7 +257,7 @@ namespace TemplateGesture{
 						p3l.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p3l.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						p3l.z = XmlConvert.ToSingle(reader.GetAttribute("Z"));
-						rd.Points_3D_L.Add(p3l);
+						tempL_3D.Add(p3l);
 
 					}
 					if(reader.LocalName == "RightHandPoints"){
@@ -274,9 +287,22 @@ namespace TemplateGesture{
 						p3r.x = XmlConvert.ToSingle(reader.GetAttribute("X"));
 						p3r.y = XmlConvert.ToSingle(reader.GetAttribute("Y"));
 						p3r.z = XmlConvert.ToSingle(reader.GetAttribute("Z"));
-						rd.Points_3D_R.Add(p3r);
+						tempR_3D.Add(p3r);
 					}
 				}
+
+				rd.Points_3D_L = DynamicTimeWraping.DTWPack3D(tempL_3D, LearningMachine.sampleCount);
+				rd.Points_3D_R = DynamicTimeWraping.DTWPack3D(tempR_3D, LearningMachine.sampleCount);
+
+				rd.LengthL_3D = DynamicTimeWraping.PathLength3D(rd.Points_3D_L);
+				rd.LengthR_3D = DynamicTimeWraping.PathLength3D(rd.Points_3D_R);
+
+				MyMath.Vector3 sizeL = DynamicTimeWraping.GetSize3D(rd.Points_3D_L);
+				MyMath.Vector3 sizeR = DynamicTimeWraping.GetSize3D(rd.Points_3D_R);
+
+//				UnityEngine.Debug.Log(rd.gestureName);	
+//				UnityEngine.Debug.Log(rd.LengthL_3D);
+//				UnityEngine.Debug.Log(rd.LengthR_3D);
 
 
 				rd.LP_DTW = DynamicTimeWraping.DTWPack(pl, LearningMachine.sampleCount);
@@ -284,13 +310,6 @@ namespace TemplateGesture{
 //				rd.LP_DTW = DynamicTimeWraping.NormalizeDTW(pl);
 //				rd.RP_DTW = DynamicTimeWraping.NormalizeDTW(pr);
 
-//				UnityEngine.Debug.Log (gesName);
-//				UnityEngine.Debug.Log (rd.LP_DTW [0]);
-//				UnityEngine.Debug.Log (rd.LP_DTW [rd.LP_DTW.Count -1]);
-//				
-//				UnityEngine.Debug.Log (rd.RP_DTW [0]);
-//				UnityEngine.Debug.Log (rd.RP_DTW [rd.RP_DTW.Count -1]);
-				
 
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
@@ -303,11 +322,11 @@ namespace TemplateGesture{
 			
 
 
-				rd.LengthL = DynamicTimeWraping.PathLength(rd.LP);
-				rd.LengthR = DynamicTimeWraping.PathLength(rd.RP);
-				UnityEngine.Debug.Log(rd.gestureName);	
-				UnityEngine.Debug.Log(rd.LengthL);
-				UnityEngine.Debug.Log(rd.LengthR);
+				rd.LengthL = DynamicTimeWraping.PathLength(rd.LP_DTW);
+				rd.LengthR = DynamicTimeWraping.PathLength(rd.RP_DTW);
+//				UnityEngine.Debug.Log(rd.gestureName);	
+//				UnityEngine.Debug.Log(rd.LengthL);
+//				UnityEngine.Debug.Log(rd.LengthR);
 
 				//calculate the correlation
 				List<PointF> listPFL = GoldenSectionExtension.ListTimePointF2ListPointF(pl);
@@ -447,7 +466,7 @@ namespace TemplateGesture{
 			listP = GeotrigEx.RotatePoints(listP, -radians);
 			
 			double correlation = GetCorrelation(listP);
-			UnityEngine.Debug.Log(correlation);
+//			UnityEngine.Debug.Log(correlation);
 
 			if(Math.Abs(correlation) > lineMin){
 				res = true;

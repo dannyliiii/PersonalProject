@@ -176,33 +176,37 @@ namespace TemplateGesture{
 			                                            EntriesForRec.Select (e => e.ZY_TpfPosRight).ToList(),
 			                                            EntriesForRec.Select (e => e.ZX_TpfPosLeft).ToList(),
 			                                            EntriesForRec.Select (e => e.ZX_TpfPosRight).ToList(),
+			                                            EntriesForRec.Select (e => e.PositionLeft).ToList(),
+			                                            EntriesForRec.Select (e => e.PositionRight).ToList(),		                           
 			                                            EntriesForRec.Last().constrain,
 			                                            Epsilon,
 			                                            MinimalSize, oneHanded, method);
 
 			int index = 0;
-			if(method == 1){
+			if (method == 1) {
 				index = resList.Index;
 
 				bool flag = true;
-				if(resList.GetScore(index) > LearningMachine.MinScore){
+				if (resList.GetScore (index) > LearningMachine.MinScore) {
 					flag = false;
-					RaiseGestureDetected(resList.GetName(index));
-				}else{
+					RaiseGestureDetected (resList.GetName (index));
+				} else {
 					flag = false;
-					RaiseGestureDetected("No Gesture Recognized");
+					RaiseGestureDetected ("No Gesture Recognized");
 				}
 				if (resList.GetName (index) == "s" && resList.GetScore (index) > LearningMachine.MinScoreOneHanded && flag) {
-					RaiseGestureDetected(resList.GetName(index));
+					RaiseGestureDetected (resList.GetName (index));
 				}
 
-			}else if(method == 2){
+			} else if (method == 2 || method == 3) {
 				index = resList.IndexDTW;
-				if(resList.GetScore(index) < 1.5f && resList.GetScore(index) > 0){
-					RaiseGestureDetected(resList.GetName(index));
-				}else{
-					RaiseGestureDetected("No Gesture Recognized");
-				}
+				RaiseGestureDetected (resList.GetName (index));
+				
+//				if (resList.GetScore (index) < 1.5f && resList.GetScore (index) > 0) {
+//					RaiseGestureDetected (resList.GetName (index));
+//				} else {
+//					RaiseGestureDetected ("No Gesture Recognized");
+//				}
 //				UnityEngine.Debug.Log("%^%&^£*(&!£*)(!*£_!*£");
 //				UnityEngine.Debug.Log(resList.GetScore(index));
 

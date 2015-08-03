@@ -56,7 +56,17 @@ namespace TemplateGesture{
 		int linePlane;
 		double lengthL;
 		double lengthR;
+		double lengthL_3D;
+		double lengthR_3D;
 
+		public double LengthL_3D{
+			get{return lengthL_3D;}
+			set{lengthL_3D = value;}
+		}
+		public double LengthR_3D{
+			get{return lengthR_3D;}
+			set{lengthR_3D = value;}
+		} 
 		public List<MyMath.Vector3> Points_3D_L{
 			get{return points_3D_L;}
 			set{points_3D_L = value;}
@@ -325,14 +335,14 @@ namespace TemplateGesture{
 
 //				pfl = DynamicTimeWraping.NormalizeDTW(tpfll);
 //				pfr = DynamicTimeWraping.NormalizeDTW(tpflr);
-//				pfl = DynamicTimeWraping.DTWPack(tpfll, sampleCount);
-//				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount);
-				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
-				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+				pfl = DynamicTimeWraping.DTWPack(tpfll, sampleCount);
+				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount);
+//				pfl = GoldenSection.DollarOnePack (tpfll, sampleCount);
+//				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 
-				UnityEngine.Debug.Log("£££££££££££££££££££££££££££");
-				UnityEngine.Debug.Log(pfr[pfr.Count / 2]);
-				UnityEngine.Debug.Log("£££££££££££££££££££££££££££");
+//				UnityEngine.Debug.Log("£££££££££££££££££££££££££££");
+//				UnityEngine.Debug.Log(pfr[pfr.Count / 2]);
+//				UnityEngine.Debug.Log("£££££££££££££££££££££££££££");
 
 				float gesLengthL = (float)DynamicTimeWraping.PathLength(pfl);
 				float gesLengthR = (float)DynamicTimeWraping.PathLength(pfr);
@@ -341,8 +351,8 @@ namespace TemplateGesture{
 //				int lengthBL = lpf_DTW.Count;
 				int lengthBL = rdl.Count;
 				
-//				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,lpf_DTW, lengthAL, lengthBL);
-				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
+				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,lpf_DTW, lengthAL, lengthBL);
+//				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix(pfl,rdl, lengthAL, lengthBL);
 				
 //				UnityEngine.Debug.Log (pfl[0]);
 //				UnityEngine.Debug.Log (lpf_DTW[0]);
@@ -357,8 +367,8 @@ namespace TemplateGesture{
 //				int lengthBR = rpf_DTW.Count;
 				int lengthBR = rdr.Count;
 				
-//				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rpf_DTW, lengthAR, lengthBR);
-				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rpf_DTW, lengthAR, lengthBR);
+//				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
 				
 				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
 				
@@ -420,25 +430,27 @@ namespace TemplateGesture{
 			
 				scorer = 1.0 - bestr [0] / GoldenSection.HalfDiagonal;
 
-			} else {
+			}else {
 
-//				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount); 
-				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
+				pfr = DynamicTimeWraping.DTWPack(tpflr, sampleCount); 
+//				pfr = GoldenSection.DollarOnePack (tpflr, sampleCount); 
 				
 				float gesLengthR = (float)DynamicTimeWraping.PathLength(pfr);
 				
 				int lengthAR = pfr.Count;
-				int lengthBR = rdr.Count;
+
+//				int lengthBR = rdr.Count;
+				int lengthBR = rpf_DTW.Count;
+
 				
-				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+//				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rdr, lengthAR, lengthBR);
+				float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix(pfr,rpf_DTW, lengthAR, lengthBR);
 				
 				float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, lengthAR, lengthBR);
 				
 				List<UnityEngine.Vector2> pathR = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
 				
 				//				float pathLengthR = DynamicTimeWraping.GetPathLength(dMatrixR, pathR);
-
-				Write2File(gestureName, rMatrixR, lengthAR, lengthBR);
 			
 				UnityEngine.Debug.Log(rMatrixR[lengthBR - 1, lengthAR - 1]);
 				UnityEngine.Debug.Log(lengthR);
@@ -449,6 +461,44 @@ namespace TemplateGesture{
 			return scorer;
 		}
 
+		public double Match3D(List<MyMath.Vector3> listL, List<MyMath.Vector3> listR, bool oneHanded){
+
+			double score = 0;
+
+			List<MyMath.Vector3> packedR = DynamicTimeWraping.DTWPack3D (listR, LearningMachine.sampleCount);
+			
+			float gesLenthR = DynamicTimeWraping.PathLength3D (packedR);
+			
+			float[,] dMatrixR = DynamicTimeWraping.GetDistanceMatrix3D(packedR, points_3D_R, packedR.Count, points_3D_R.Count);
+			
+			float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, packedR.Count, points_3D_R.Count );
+
+			if (!oneHanded) {
+				List<MyMath.Vector3> packedL = DynamicTimeWraping.DTWPack3D (listL, LearningMachine.sampleCount);
+
+				float gesLenthL = DynamicTimeWraping.PathLength3D (packedL);
+				
+				float[,] dMatrixL = DynamicTimeWraping.GetDistanceMatrix3D(packedL, points_3D_L,  packedL.Count, points_3D_L.Count);
+				
+				float[,] rMatrixL = DynamicTimeWraping.GetDTWMatrix(dMatrixL, packedL.Count, points_3D_L.Count);
+
+//				UnityEngine.Debug.Log(rMatrixL[packedL.Count - 1, points_3D_L.Count - 1]);
+//				UnityEngine.Debug.Log(rMatrixR[packedR.Count - 1, points_3D_R.Count - 1]);
+//				score = (rMatrixL[packedL.Count - 1, points_3D_L.Count - 1] + rMatrixR[packedR.Count - 1, points_3D_R.Count - 1] ) * 0.5f;
+				score = (rMatrixL[points_3D_L.Count - 1, packedL.Count - 1] / (lengthL_3D + gesLenthL) 
+				         + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR) 
+				         ) * 0.5f;
+
+				return score;
+			}
+
+			score = rMatrixR[packedR.Count - 1, points_3D_R.Count - 1] / (lengthR_3D + gesLenthR);
+
+//			if (gestureName == "hdel1") {
+//				Write2File (gestureName, dMatrixR, packedR.Count, points_3D_R.Count);
+//			}
+			return score;
+		}
 //		public double GetLength(List<PointF> list){
 //			double res = 0;
 //			for (int i = 0; i < list.Count - 1; i ++) {

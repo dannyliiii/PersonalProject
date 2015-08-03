@@ -183,9 +183,9 @@ namespace Game{
 		}
 
 		void OnDestroy(){
-			if (Camera.main != null) {
-				Camera.main.GetComponent<GameLogic> ().MoveCamera ();
-			}
+//			if (Camera.main != null) {
+//				Camera.main.GetComponent<GameLogic> ().MoveCamera ();
+//			}
 		}
 
 	}

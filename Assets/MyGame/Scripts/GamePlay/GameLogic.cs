@@ -151,17 +151,17 @@ namespace Game{
 
 			if (Input.GetKeyDown (KeyCode.Q)) {
 				monster.GetComponent<Monster>().Attack();
-//				playerScript.hp -= 10;
 			}
 
-			if (monster != null) {
-				if (monster.GetComponent<Monster> ().timer > 10) {
-					if (!UIOn)
-						monster.GetComponent<Monster> ().Attack ();
-
-					monster.GetComponent<Monster> ().timer = 0;
-				}
-			}
+//			//monsters attack
+//			if (monster != null) {
+//				if (monster.GetComponent<Monster> ().timer > 10) {
+//					if (!UIOn)
+//						monster.GetComponent<Monster> ().Attack ();
+//
+//					monster.GetComponent<Monster> ().timer = 0;
+//				}
+//			}
 
 			if (playerScript.hp <= 0) {
 				GameOver();
