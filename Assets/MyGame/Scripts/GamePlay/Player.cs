@@ -152,8 +152,9 @@ namespace Game{
 			Vector3 position = transform.position + transform.forward * 2;
 			GameObject[] monster = GameObject.FindGameObjectsWithTag("Monster");
 
-			if (monster [0] == null)
+			if (monster.Length == 0) {
 				return;
+			}
 
 			Vector3 toPosition = monster[0].transform.position;
 			

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <Spells SpellNums="8" Date="Monday, June 08, 2015" TimeOfDay="11:24:27 AM">
-  <Spell Name="SomeSpell1" Level="11" Damage="10240" Attribute="0" Gesture="hdel1" Number="0" Lock="0" />
+  <Spell Name="SomeSpell1" Level="12" Damage="20480" Attribute="0" Gesture="hdel1" Number="0" Lock="0" />
   <Spell Name="SomeSpell2" Level="13" Damage="81920" Attribute="1" Gesture="HD Pool Entry Dive" Number="1" Lock="0" />
   <Spell Name="SomeSpell3" Level="6" Damage="1280" Attribute="2" Gesture="High Dive Power-Up" Number="2" Lock="0" />
   <Spell Name="SomeSpell4" Level="4" Damage="800" Attribute="3" Gesture="hdel3" Number="3" Lock="0" />

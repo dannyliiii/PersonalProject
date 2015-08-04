@@ -233,9 +233,12 @@ namespace TemplateGesture{
 
 
 		public static List<MyMath.Vector3> DTWPack3D(List<MyMath.Vector3> pos, int sampleCount){
-			
-//			float I = PathLength3D(pos) / (sampleCount);
+
+//			UnityEngine.Debug.Log("$$$$$$$$$");
+//			UnityEngine.Debug.Log(pos.Count);
+//			float I = PathLength3D(pos) / (sampleCount - 1);
 //			List<MyMath.Vector3> localPoints = Resample(pos, I);
+//			UnityEngine.Debug.Log(localPoints.Count);
 			
 //			localPoints = Normalize3D (localPoints);
 
@@ -259,15 +262,15 @@ namespace TemplateGesture{
 			for(int i = 1; i < list.Count; i++){
 				float length = GetDistanceBetween2Vector3(list[i], list[i-1]);
 //				UnityEngine.Debug.Log(length);
-				if(length > 1){
-					UnityEngine.Debug.Log("~~~~~ERROR~~~~~");
-					UnityEngine.Debug.Log(list[i].x);
-					UnityEngine.Debug.Log(list[i].y);
-					UnityEngine.Debug.Log(list[i].z);
-					UnityEngine.Debug.Log(list[i-1].x);
-					UnityEngine.Debug.Log(list[i-1].y);
-					UnityEngine.Debug.Log(list[i-1].z);
-				}
+//				if(length > 1){
+//					UnityEngine.Debug.Log("~~~~~ERROR~~~~~");
+//					UnityEngine.Debug.Log(list[i].x);
+//					UnityEngine.Debug.Log(list[i].y);
+//					UnityEngine.Debug.Log(list[i].z);
+//					UnityEngine.Debug.Log(list[i-1].x);
+//					UnityEngine.Debug.Log(list[i-1].y);
+//					UnityEngine.Debug.Log(list[i-1].z);
+//				}
 				res += length;
 			}
 
@@ -286,14 +289,20 @@ namespace TemplateGesture{
 		}
 
 		static List<MyMath.Vector3> Resample(List<MyMath.Vector3> list, float I){
-			List<MyMath.Vector3> res = new List<MyMath.Vector3>(list);
+			List<MyMath.Vector3> res = new List<MyMath.Vector3>();
 
 			float D = 0;
 			MyMath.Vector3 point = list[0];
-			for(int i = 1; i < res.Count; i ++){
+			for(int i = 1; i < list.Count; i ++){
 				float d = GetDistanceBetween2Vector3(list[i], list[i-1]);
 				if((D + d) >= I){
-
+					MyMath.Vector3 temp = new MyMath.Vector3(list[i-1].x + ((I -D)/d) * (list[i].x - list[i-1].x),
+					                                         list[i-1].y + ((I -D)/d) * (list[i].y - list[i-1].y),
+					                                         list[i-1].z + ((I -D)/d) * (list[i].z - list[i-1].z));
+					res.Add(temp);
+					D = 0;
+				}else{
+					D += d;
 				}
 			}
 

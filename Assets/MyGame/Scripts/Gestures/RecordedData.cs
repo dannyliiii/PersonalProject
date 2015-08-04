@@ -482,9 +482,9 @@ namespace TemplateGesture{
 				
 				float[,] rMatrixL = DynamicTimeWraping.GetDTWMatrix(dMatrixL, packedL.Count, points_3D_L.Count);
 
-//				UnityEngine.Debug.Log(rMatrixL[packedL.Count - 1, points_3D_L.Count - 1]);
-//				UnityEngine.Debug.Log(rMatrixR[packedR.Count - 1, points_3D_R.Count - 1]);
-//				score = (rMatrixL[packedL.Count - 1, points_3D_L.Count - 1] + rMatrixR[packedR.Count - 1, points_3D_R.Count - 1] ) * 0.5f;
+				UnityEngine.Debug.Log(rMatrixL[points_3D_L.Count - 1, packedL.Count - 1]);
+				UnityEngine.Debug.Log(rMatrixR[points_3D_R.Count - 1, packedR.Count - 1]);
+//				score = (rMatrixL[points_3D_L.Count - 1, packedL.Count - 1] + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] ) * 0.5f;
 				score = (rMatrixL[points_3D_L.Count - 1, packedL.Count - 1] / (lengthL_3D + gesLenthL) 
 				         + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR) 
 				         ) * 0.5f;
@@ -492,7 +492,7 @@ namespace TemplateGesture{
 				return score;
 			}
 
-			score = rMatrixR[packedR.Count - 1, points_3D_R.Count - 1] / (lengthR_3D + gesLenthR);
+			score = rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR);
 
 //			if (gestureName == "hdel1") {
 //				Write2File (gestureName, dMatrixR, packedR.Count, points_3D_R.Count);

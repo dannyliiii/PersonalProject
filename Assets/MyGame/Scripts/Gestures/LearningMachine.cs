@@ -120,7 +120,6 @@ namespace TemplateGesture{
 					UnityEngine.Debug.Log(p.gestureName.ToString() + " " + score.ToString());
 					rl.UpdateResult(i++, p.gestureName, (float)score);
 				}else if(method == 3){
-					p.Match3D(l_3d, r_3d, oneHanded);
 					if(oneHanded && !p.OnaHanded){
 						score = -6;
 					}else if(!oneHanded && p.OnaHanded){
@@ -300,9 +299,9 @@ namespace TemplateGesture{
 				MyMath.Vector3 sizeL = DynamicTimeWraping.GetSize3D(rd.Points_3D_L);
 				MyMath.Vector3 sizeR = DynamicTimeWraping.GetSize3D(rd.Points_3D_R);
 
-//				UnityEngine.Debug.Log(rd.gestureName);	
-//				UnityEngine.Debug.Log(rd.LengthL_3D);
-//				UnityEngine.Debug.Log(rd.LengthR_3D);
+				UnityEngine.Debug.Log(rd.gestureName);	
+				UnityEngine.Debug.Log(rd.LengthL_3D);
+				UnityEngine.Debug.Log(rd.LengthR_3D);
 
 
 				rd.LP_DTW = DynamicTimeWraping.DTWPack(pl, LearningMachine.sampleCount);

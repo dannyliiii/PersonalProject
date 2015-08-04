@@ -15,6 +15,7 @@ using System.Xml;
 
 public class Detector : MonoBehaviour {
 
+	public GUITexture trackingSign;
 	public Player playerClass;
 	GameLogic gameLogic;
 //	public Text sign;
@@ -73,6 +74,8 @@ public class Detector : MonoBehaviour {
 	//gui scroll view
 	public bool gesScroll;
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
+
+	private bool tracked = false;
 //	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
 
 	enum TexArrEnum : int{
@@ -266,6 +269,8 @@ public class Detector : MonoBehaviour {
 			{
 				if (kinect.getSkeleton().SkeletonData[i].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
 				{
+					tracked = true;
+					trackingSign.color = Color.green;
 					for(int j = 0; j < (int)NuiSkeletonPositionIndex.Count; j ++){
 						joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
 					}
@@ -331,8 +336,11 @@ public class Detector : MonoBehaviour {
 					break;
 					
 				}
+				else{
+					tracked = false;
+					trackingSign.color = Color.red;
+				}
 			}
-			
 		}
 	}
 
@@ -586,7 +594,7 @@ public class Detector : MonoBehaviour {
 		if(gesText != "")
 			str = gesText;
 
-		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.01f , 200, 40), str, gs);	
+		GUI.Label(new Rect(screenWidth * 0.35f , screenHeight * 0.9f , 200, 40), str, gs);	
 
 //		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.5f,200,200),"Click"))
 //			Debug.Log("Button Clicked!");
