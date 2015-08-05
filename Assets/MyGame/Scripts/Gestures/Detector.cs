@@ -15,7 +15,7 @@ using System.Xml;
 
 public class Detector : MonoBehaviour {
 
-	public GUITexture trackingSign;
+	public GUITexture recordingSign;
 	public Player playerClass;
 	GameLogic gameLogic;
 //	public Text sign;
@@ -154,6 +154,12 @@ public class Detector : MonoBehaviour {
 
 	void Update () {
 
+		if (templateGestureDetector.record) {
+			recordingSign.color = Color.red;
+		}else{
+			recordingSign.color = Color.green;
+		}
+
 		if (timer < 40)
 			timer++;
 	
@@ -174,23 +180,19 @@ public class Detector : MonoBehaviour {
 			DrawRightHandTracksStartScreen();
 		}
 
-		if (!startScreen) {
-			if (templateGestureDetector.record) {
-				Status.text = "Recording";
-			} else {
-				Status.text = "Waiting";
-			}
-		} 
+//		if (!startScreen) {
+//			if (templateGestureDetector.record) {
+//				Status.text = "Recording";
+//			} else {
+//				Status.text = "Waiting";
+//			}
+//		} 
 //		else {
 //			if (templateGestureDetector.record) {
 //				sign.text = "Recording";
 //			} else {
 //				sign.text = "Waiting";
 //			}
-//		}
-
-//		if (Input.GetKeyDown (KeyCode.L) && startScreen) {
-//			Application.LoadLevel ("KinectSample");
 //		}
 
 	}
@@ -269,8 +271,9 @@ public class Detector : MonoBehaviour {
 			{
 				if (kinect.getSkeleton().SkeletonData[i].eTrackingState == Kinect.NuiSkeletonTrackingState.SkeletonTracked)
 				{
+
 					tracked = true;
-					trackingSign.color = Color.green;
+//					trackingSign.color = Color.green;
 					for(int j = 0; j < (int)NuiSkeletonPositionIndex.Count; j ++){
 						joints[j]= kinect.getSkeleton().SkeletonData[i].SkeletonPositions[j];
 					}
@@ -338,7 +341,7 @@ public class Detector : MonoBehaviour {
 				}
 				else{
 					tracked = false;
-					trackingSign.color = Color.red;
+//					trackingSign.color = Color.red;
 				}
 			}
 		}

@@ -53,6 +53,8 @@ namespace Game{
 		int terrain = 0;
 		int terrainOld = 0;
 
+		int monsterKillCount = 0;
+
 		public CametaClass cc;
 		// Use this for initialization
 		void Start () {
@@ -463,6 +465,14 @@ namespace Game{
 			cc.moving = true;
 
 			GameObject.Find ("KinectPrefab").GetComponent<Detector> ().templateGestureDetector.ClearData ();
+		}
+
+		public void MonsterKilled(){
+			monsterKillCount ++;
+			if (monsterKillCount >= 5) {
+				MoveCamera();
+				monsterKillCount = 0;
+			}
 		}
 	}
 }

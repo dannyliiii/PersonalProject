@@ -32,13 +32,6 @@ namespace Game{
 
 			GetSection();
 
-			if(Input.GetKeyDown(KeyCode.UpArrow)){
-				moveForward = true;
-	//			Camera.main.transform.position += Camera.main.transform.forward * 125;
-			}
-			if(Input.GetKeyDown(KeyCode.DownArrow)){
-				Camera.main.transform.position -= Camera.main.transform.forward * 125;
-			}
 			if(Input.GetKeyDown(KeyCode.RightArrow)){
 				rotate = true;
 				moveForward = true;
