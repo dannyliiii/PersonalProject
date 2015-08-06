@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 namespace Game{
 	public class GameLogic : MonoBehaviour {
+
+		public GameObject PointMan;
 		public Canvas UICanvas;
 		public Text lvUp;
 		Color lvUpColorO;
@@ -59,6 +61,9 @@ namespace Game{
 		// Use this for initialization
 		void Start () {
 
+			PointMan.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.7f, Screen.height * 0.8f, 20));
+			PointMan.SetActive(false);
+
 			playerScript = player.GetComponent<Player>() as Player;
 			LoadSaveData ();
 			SpawnMonster (level);
@@ -103,14 +108,17 @@ namespace Game{
 				MoveUI(1);
 			}
 			if(Input.GetKeyDown(KeyCode.UpArrow)){
-				if(currentButton > 0){
-					buttons[--currentButton].GetComponent<Button>().Select();
-				}
+				MoveFocus(0);
+//				if(currentButton > 0){
+//					buttons[--currentButton].GetComponent<Button>().Select();
+//				}
 			}
 			if(Input.GetKeyDown(KeyCode.DownArrow)){
-				if(currentButton < buttons.Count - 1){
-					buttons[++currentButton].GetComponent<Button>().Select();
-				}
+				MoveFocus(1);
+				
+//				if(currentButton < buttons.Count - 1){
+//					buttons[++currentButton].GetComponent<Button>().Select();
+//				}
 //				UnityEngine.Debug.Log(currentButton);
 			}
 
@@ -128,6 +136,8 @@ namespace Game{
 					rtContent.position = contentOnPosition;
 					UIOn = true;
 					UIMoveLeft = false;
+					PointMan.gameObject.SetActive(true);
+					PlayAnime(playerScript.spell[currentButton].spellName);
 				}
 //				UnityEngine.Debug.Log("moving left");
 			}
@@ -139,6 +149,7 @@ namespace Game{
 					rtContent.position = contentOffPosition;
 					UIOn = false;
 					UIMoveRight = false;
+					PointMan.SetActive(false);
 				}
 //				UnityEngine.Debug.Log("moving right");	
 			}
@@ -167,6 +178,10 @@ namespace Game{
 
 			if (playerScript.hp <= 0) {
 				GameOver();
+			}
+
+			if (Input.GetKeyDown (KeyCode.K)) {
+				PlayAnime("HDEL1");
 			}
 
 		}
@@ -414,6 +429,8 @@ namespace Game{
 			else{
 				UnityEngine.Debug.Log("Unknown diereciton");
 			}
+
+			PlayAnime (playerScript.spell [currentButton].spellName);
 		}
 
 		public void GameOver(){
@@ -473,6 +490,15 @@ namespace Game{
 				MoveCamera();
 				monsterKillCount = 0;
 			}
+		}
+
+		public void PlayAnime(string ges){
+
+			GameObject.Find ("ShoulderRight").transform.rotation = Quaternion.identity;
+			GameObject.Find ("ShoulderLeft").transform.rotation = Quaternion.identity;
+			GameObject.Find ("ElbowRight").transform.rotation = Quaternion.identity;
+			GameObject.Find ("ElbowLeft").transform.rotation = Quaternion.identity;
+			PointMan.GetComponent<PointMan> ().Play (ges);
 		}
 	}
 }

@@ -4,7 +4,7 @@
   <Spell Name="SomeSpell2" Level="13" Damage="81920" Attribute="1" Gesture="HD Pool Entry Dive" Number="1" Lock="0" />
   <Spell Name="SomeSpell3" Level="6" Damage="1280" Attribute="2" Gesture="High Dive Power-Up" Number="2" Lock="0" />
   <Spell Name="SomeSpell4" Level="4" Damage="800" Attribute="3" Gesture="hdel3" Number="3" Lock="0" />
-  <Spell Name="SomeSpell5" Level="2" Damage="2" Attribute="4" Gesture="hdel5" Number="0" Lock="0" />
+  <Spell Name="SomeSpell5" Level="2" Damage="2" Attribute="4" Gesture="hdel10" Number="0" Lock="0" />
   <Spell Name="SomeSpell6" Level="5" Damage="16" Attribute="5" Gesture="hdel6" Number="0" Lock="0" />
   <Spell Name="SomeSpell7" Level="12" Damage="2048" Attribute="7" Gesture="hdel8" Number="0" Lock="0" />
 </Spells>

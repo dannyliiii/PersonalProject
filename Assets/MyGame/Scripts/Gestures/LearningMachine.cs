@@ -299,16 +299,15 @@ namespace TemplateGesture{
 				MyMath.Vector3 sizeL = DynamicTimeWraping.GetSize3D(rd.Points_3D_L);
 				MyMath.Vector3 sizeR = DynamicTimeWraping.GetSize3D(rd.Points_3D_R);
 
-				UnityEngine.Debug.Log(rd.gestureName);	
-				UnityEngine.Debug.Log(rd.LengthL_3D);
-				UnityEngine.Debug.Log(rd.LengthR_3D);
+//				UnityEngine.Debug.Log(rd.gestureName);	
+//				UnityEngine.Debug.Log(rd.LengthL_3D);
+//				UnityEngine.Debug.Log(rd.LengthR_3D);
 
 
 				rd.LP_DTW = DynamicTimeWraping.DTWPack(pl, LearningMachine.sampleCount);
 				rd.RP_DTW = DynamicTimeWraping.DTWPack(pr, LearningMachine.sampleCount);
 //				rd.LP_DTW = DynamicTimeWraping.NormalizeDTW(pl);
 //				rd.RP_DTW = DynamicTimeWraping.NormalizeDTW(pr);
-
 
 				rd.LP = GoldenSection.DollarOnePack(pl, LearningMachine.sampleCount);
 				rd.RP = GoldenSection.DollarOnePack(pr, LearningMachine.sampleCount);
@@ -319,8 +318,6 @@ namespace TemplateGesture{
 				rd.ZX_LP = GoldenSection.DollarOnePack(zx_pl, LearningMachine.sampleCount);
 				rd.ZX_RP = GoldenSection.DollarOnePack(zx_pr, LearningMachine.sampleCount);
 			
-
-
 				rd.LengthL = DynamicTimeWraping.PathLength(rd.LP_DTW);
 				rd.LengthR = DynamicTimeWraping.PathLength(rd.RP_DTW);
 //				UnityEngine.Debug.Log(rd.gestureName);	
