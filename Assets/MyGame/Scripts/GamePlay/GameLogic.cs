@@ -144,12 +144,12 @@ namespace Game{
 			if (UIMoveRight && UIOn) {
 				rtPanel.position = Vector3.Lerp(rtPanel.position, panelOffPosition, 0.1f);
 				rtContent.position = Vector3.Lerp(rtContent.position, contentOffPosition, 0.1f);
+				PointMan.SetActive(false);
 				if(Mathf.Abs(rtPanel.position.x - panelOffPosition.x) < 5.0f && Mathf.Abs(rtContent.position.x - contentOffPosition.x) < 5.0f ){
 					rtPanel.position = panelOffPosition;
 					rtContent.position = contentOffPosition;
 					UIOn = false;
 					UIMoveRight = false;
-					PointMan.SetActive(false);
 				}
 //				UnityEngine.Debug.Log("moving right");	
 			}
@@ -166,15 +166,15 @@ namespace Game{
 				monster.GetComponent<Monster>().Attack();
 			}
 
-			//monsters attack
-			if (monster != null) {
-				if (monster.GetComponent<Monster> ().timer > 10) {
-					if (!UIOn)
-						monster.GetComponent<Monster> ().Attack ();
-
-					monster.GetComponent<Monster> ().timer = 0;
-				}
-			}
+//			//monsters attack
+//			if (monster != null) {
+//				if (monster.GetComponent<Monster> ().timer > 10) {
+//					if (!UIOn)
+//						monster.GetComponent<Monster> ().Attack ();
+//
+//					monster.GetComponent<Monster> ().timer = 0;
+//				}
+//			}
 
 			if (playerScript.hp <= 0) {
 				GameOver();
@@ -480,8 +480,9 @@ namespace Game{
 			cc.rotate = true;
 			cc.moveForward = true;
 			cc.moving = true;
-
-			GameObject.Find ("KinectPrefab").GetComponent<Detector> ().templateGestureDetector.ClearData ();
+			if (GameObject.Find ("KinectPrefab").GetComponent<Detector> () != null) {
+				GameObject.Find ("KinectPrefab").GetComponent<Detector> ().templateGestureDetector.ClearData ();
+			}
 		}
 
 		public void MonsterKilled(){

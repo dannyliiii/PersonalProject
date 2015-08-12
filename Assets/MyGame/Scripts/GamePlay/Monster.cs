@@ -60,25 +60,37 @@ namespace Game{
 			imageTransGreen.anchoredPosition = Vector2.Lerp (oldPos, newPos, 0.1f);
 			oldPos = imageTransGreen.anchoredPosition;
 			oldHp = (int)Mathf.Lerp (oldHp, newHp, 0.1f);
-			healthText.text = oldHp.ToString() + "/" + hpTotal;
+			healthText.text = oldHp.ToString () + "/" + hpTotal;
 //			Debug.Log("==========");
 //			Debug.Log (oldHp);
 //			Debug.Log (newHp);
 
 			if (oldHp <= 0 && flag) {
 				flag = false;
-				Destroy(gameObject.GetComponent<CapsuleCollider>());
+				Destroy (gameObject.GetComponent<CapsuleCollider> ());
 				
-				GameObject dim =  Instantiate(dimond, transform.position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
+				GameObject dim = Instantiate (dimond, transform.position, Quaternion.FromToRotation (UnityEngine.Vector3.forward, transform.forward)) as GameObject;
 				Rigidbody rb = dim.GetComponent<Rigidbody> ();
-				rb.velocity = (transform.up + new Vector3(Random.Range(-1.0f,1.0f),0,-0.3f)) * speed;
+				Vector3 front = Camera.main.transform.forward;
+//				rb.velocity = (transform.up + new Vector3 (Random.Range (-1.0f, 1.0f), 0, -0.3f)) * speed;
+//				rb.velocity = (transform.up + front *(Random.Range (-1.0f, 1.0f)) + new Vector3(0,0,-0.3f)) * speed;
+				rb.velocity = (transform.up + new Vector3 (Random.Range (-1.0f, 1.0f), 0, Random.Range (-1.0f, 1.0f))) * speed;		
 				
-				
-				anime.Play("monster1Die");
-				StartCoroutine(PlayAnimeAndWait(animeTime));
+				anime.Play ("monster1Die");
+				StartCoroutine (PlayAnimeAndWait (animeTime));
 			}
 
-			timer += Time.deltaTime;
+			if (!Camera.main.GetComponent<GameLogic> ().UIOn) {
+				timer += Time.deltaTime;
+			}
+
+			if (timer > 5 && newHp > 0) {
+				Attack ();
+				timer = 0;
+			} else {
+				timer = 0;
+			}
+
 		}
 
 		void LateUpdate(){
@@ -98,7 +110,7 @@ namespace Game{
 			imageTrans.position = new Vector3 (position.x, position.y + height , position.z);
 			//			imageTransGreen.position = new Vector3 (position.x, position.y + 1.0f * gameObject.transform.localScale.y , -1.0f);
 			//			imageTran.position = new Vector3 (position.x, position.y + Screen.height / 800 , -1);
-			hpTotal = 100 + level * 10;
+			hpTotal = 100 + level * 50;
 			newHp = oldHp = hp = hpTotal;
 			hpLength = imageTrans.rect.width;
 			oldPos = imageTransGreen.anchoredPosition;

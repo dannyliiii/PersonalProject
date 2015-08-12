@@ -68,6 +68,13 @@ namespace Game{
 					rotate = false;
 					Camera.main.transform.eulerAngles = targetRot;
 					flag2 = false;
+				
+					//collect diamond when moving camera
+					GameObject[] gos = GameObject.FindGameObjectsWithTag("Dimond");
+					foreach(var g in gos){
+						transform.Find("Player").GetComponent<Player>().diamond ++;
+						Destroy(g);
+					}
 				}
 			}
 
