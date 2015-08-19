@@ -81,7 +81,7 @@ namespace Game{
 			InitializeUI();
 			UnityEngine.Debug.Log(buttons[currentButton].transform.position);
 			UnityEngine.Debug.Log (buttons [currentButton].GetComponent<Button> ().transform.position); //.Select ();
-			buttons [currentButton].GetComponent<Button> ().Select ();
+			buttons [currentButton].GetComponent<Button> ().Select();
 
 			initilized = true;
 		}
