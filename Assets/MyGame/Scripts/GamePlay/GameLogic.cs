@@ -43,7 +43,7 @@ namespace Game{
 		Vector3 contentOnPosition;
 		Vector3 contentOffPosition;
 		List<GameObject> buttons;
-		int currentButton = 0;
+		int currentButton;
 
 		bool UIMoveLeft = false;
 		bool UIMoveRight = false;
@@ -60,7 +60,7 @@ namespace Game{
 		public CametaClass cc;
 		// Use this for initialization
 		void Start () {
-
+			currentButton = 0;
 			PointMan.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width * 0.7f, Screen.height * 0.8f, 20));
 			PointMan.SetActive(false);
 
@@ -79,12 +79,15 @@ namespace Game{
 			lvUpColorT = new Color (lvUpColorO.r, lvUpColorO.g, lvUpColorO.b, 0);
 
 			InitializeUI();
-			buttons[currentButton].GetComponent<Button>().Select();
+			UnityEngine.Debug.Log(buttons[currentButton].transform.position);
+			UnityEngine.Debug.Log (buttons [currentButton].GetComponent<Button> ().transform.position); //.Select ();
+			buttons [currentButton].GetComponent<Button> ().Select ();
+
 			initilized = true;
 		}
 		// Update is called once per frame
 		void Update () {
-
+		
 			MoveTerrain ();
 
 			Vector2 thisWindowSize = new Vector2 (Screen.width, Screen.height);
@@ -150,6 +153,7 @@ namespace Game{
 					rtContent.position = contentOffPosition;
 					UIOn = false;
 					UIMoveRight = false;
+					currentButton = 0;
 				}
 //				UnityEngine.Debug.Log("moving right");	
 			}
