@@ -199,9 +199,13 @@ namespace TemplateGesture{
 				}
 
 			} else if (method == 2 || method == 3) {
-				index = resList.IndexDTW;
-				RaiseGestureDetected (resList.GetName (index));
-				
+				if(resList.GetScore (index) > LearningMachine.MinScoreDTW){
+					index = resList.IndexDTW;
+					RaiseGestureDetected (resList.GetName (index));
+				}
+				else {
+					RaiseGestureDetected ("No Gesture Recognized");
+				}
 //				if (resList.GetScore (index) < 1.5f && resList.GetScore (index) > 0) {
 //					RaiseGestureDetected (resList.GetName (index));
 //				} else {

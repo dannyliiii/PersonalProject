@@ -79,8 +79,8 @@ namespace Game{
 			lvUpColorT = new Color (lvUpColorO.r, lvUpColorO.g, lvUpColorO.b, 0);
 
 			InitializeUI();
-			UnityEngine.Debug.Log(buttons[currentButton].transform.position);
-			UnityEngine.Debug.Log (buttons [currentButton].GetComponent<Button> ().transform.position); //.Select ();
+//			UnityEngine.Debug.Log(buttons[currentButton].transform.position);
+//			UnityEngine.Debug.Log (buttons [currentButton].GetComponent<Button> ().transform.position); //.Select ();
 			buttons [currentButton].GetComponent<Button> ().Select();
 
 			initilized = true;
@@ -99,6 +99,9 @@ namespace Game{
 			if (monster == null && !cc.moving) {
 //				UnityEngine.Debug.Log("a monster is destroied");
 				SpawnMonster(++level);
+//				UnityEngine.Debug.Log("xp gained");
+//				UnityEngine.Debug.Log( monster.GetComponent<Monster>().xp);
+				playerScript.xp += monster.GetComponent<Monster>().xp;
 			}
 
 			HitTest ();
@@ -170,15 +173,15 @@ namespace Game{
 				monster.GetComponent<Monster>().Attack();
 			}
 
-//			//monsters attack
-//			if (monster != null) {
-//				if (monster.GetComponent<Monster> ().timer > 10) {
-//					if (!UIOn)
-//						monster.GetComponent<Monster> ().Attack ();
-//
-//					monster.GetComponent<Monster> ().timer = 0;
-//				}
-//			}
+			//monsters attack
+			if (monster != null) {
+				if (monster.GetComponent<Monster> ().timer > 10) {
+					if (!UIOn)
+						monster.GetComponent<Monster> ().Attack ();
+
+					monster.GetComponent<Monster> ().timer = 0;
+				}
+			}
 
 			if (playerScript.hp <= 0) {
 				GameOver();

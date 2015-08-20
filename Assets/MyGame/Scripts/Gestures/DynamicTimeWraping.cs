@@ -16,6 +16,8 @@ namespace TemplateGesture{
 		static MyMath.Vector3 size3D = new MyMath.Vector3(1.0f, 1.0f, 1.0f);
 		private const float DX = 250f;
 		public static readonly SizeF SquareSize = new SizeF(1f, 1f);
+		public static float halfDiagnoal2D = Mathf.Sqrt(2f);
+		public static float halfDiagnoal3D = Mathf.Sqrt(3f);
 		
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{

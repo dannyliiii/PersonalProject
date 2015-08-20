@@ -30,7 +30,13 @@ namespace TemplateGesture{
 		private static double radiance45;
 		private static readonly float minScore = 0.8f;
 		private static readonly float minScoreOneHanded = 0.7f;
-
+		private static readonly float minScoreDTW = 0.7f;
+		
+		public static float MinScoreDTW{
+			get{
+				return minScoreDTW;
+			}
+		}
 		public static float MinScore{
 			get{
 				return minScore;

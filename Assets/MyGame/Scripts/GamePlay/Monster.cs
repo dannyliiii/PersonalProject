@@ -9,6 +9,7 @@ namespace Game{
 		int hp;
 		public int atk { get; set;}
 		int def;
+		public int xp;
 		Attribute attribute;
 		public RectTransform imageTrans;
 		public RectTransform imageTransGreen;
@@ -114,6 +115,7 @@ namespace Game{
 			newHp = oldHp = hp = hpTotal;
 			hpLength = imageTrans.rect.width;
 			oldPos = imageTransGreen.anchoredPosition;
+			xp = hp;
 //			Debug.Log (level);
 //			RectTransform rt = gameObject.GetComponent<RectTransform> ();
 //			Debug.Log (rt.localScale);

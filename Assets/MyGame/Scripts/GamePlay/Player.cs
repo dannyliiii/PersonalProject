@@ -12,6 +12,7 @@ namespace Game{
 		public GUIText dimondNum;
 		public int lv;
 		public int xp;
+		int lvlUpXp;
 		public int hp;
 		int mp;
 		int atk;
@@ -36,6 +37,7 @@ namespace Game{
 		void Start(){
 			lv = 1;
 			xp = 0;
+			lvlUpXp = 100;
 			hp = 100;
 			mp = 100;
 			atk = 1;
@@ -74,6 +76,9 @@ namespace Game{
 		}
 		
 		void Update(){
+
+			LvlUp();
+
 			//temp
 			if (Input.GetKeyDown (KeyCode.A)) {
 //				CastSpell();
@@ -193,5 +198,18 @@ namespace Game{
 				Destroy (collision.gameObject);
 			}
 		}	
+
+		void LvlUp(){
+
+			if(xp >= lvlUpXp){
+//				UnityEngine.Debug.Log("=========");
+//				UnityEngine.Debug.Log(xp);
+//				UnityEngine.Debug.Log(lvlUpXp);
+//				UnityEngine.Debug.Log(lv);
+				xp = xp - lvlUpXp;
+				lvlUpXp += 100;
+				lv++;
+			}
+		}
 	}
 }

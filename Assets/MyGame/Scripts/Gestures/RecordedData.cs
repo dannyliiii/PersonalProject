@@ -385,8 +385,9 @@ namespace TemplateGesture{
 				UnityEngine.Debug.Log(gesLengthR);
 //				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1] ) * 0.5f;
 //				return (rMatrixL[lengthBL - 1, lengthAL - 1] / cl + rMatrixR[lengthBR - 1, lengthAR - 1] / cr) * 0.5f;
-				return (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
-				
+				double res =  (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
+
+				return 1 - res / DynamicTimeWraping.halfDiagnoal2D;
 			}else{
 				return 0;
 			}
@@ -489,7 +490,7 @@ namespace TemplateGesture{
 				         + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR) 
 				         ) * 0.5f;
 
-				return score;
+				return 1 - score / DynamicTimeWraping.halfDiagnoal3D;
 			}
 
 			score = rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR);
