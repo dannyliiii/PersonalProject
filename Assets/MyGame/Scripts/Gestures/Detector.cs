@@ -70,12 +70,15 @@ public class Detector : MonoBehaviour {
 	Texture2D texture;
 	RawImage[] img;
 
+	public bool recSwitch = false;
+	float recTimer = 0;
+
 	public bool oneHanded;
 	//gui scroll view
 	public bool gesScroll;
 	UnityEngine.Vector2 scrollPosition = UnityEngine.Vector2.zero;
 
-	private bool tracked = false;
+	private bool tracked = true;
 //	UnityEngine.Vector2 scrollPositionText = UnityEngine.Vector2.zero;
 
 	enum TexArrEnum : int{
@@ -154,10 +157,14 @@ public class Detector : MonoBehaviour {
 
 	void Update () {
 
-		if (templateGestureDetector.record) {
-			recordingSign.color = Color.red;
-		}else{
-			recordingSign.color = Color.green;
+		if (recSwitch) {
+			if (templateGestureDetector.record) {
+				recordingSign.color = Color.red;
+			} else {
+				recordingSign.color = Color.blue;
+			}
+		} else {
+			recordingSign.color = Color.yellow;
 		}
 
 		if (timer < 40)
@@ -194,7 +201,14 @@ public class Detector : MonoBehaviour {
 //				sign.text = "Waiting";
 //			}
 //		}
-
+		if (!recSwitch) {
+			recTimer += Time.deltaTime;
+//			UnityEngine.Debug.Log(recTimer);
+			if(recTimer > 2.5){
+				recTimer = 0;
+				recSwitch = true;
+			}
+		}
 	}
 
 	void LoadTemplateGestureDetector()
@@ -208,6 +222,7 @@ public class Detector : MonoBehaviour {
 	{
 		gesText = gesture;
 
+		recSwitch = false;
 
 		switch (gesture){
 		case "s":
@@ -218,7 +233,7 @@ public class Detector : MonoBehaviour {
 			if(!startScreen)
 				playerClass.CastSpell("akdjjaslk");
 			break;
-		case "swipeRightTwoHands":
+		case "hdml10 rh":
 			if(!startScreen){
 				gameLogic.MoveUI(0);
 				GUIRH.gameObject.SetActive(false);
@@ -242,7 +257,7 @@ public class Detector : MonoBehaviour {
 				gameLogic.MoveFocus(0);
 			}
 			break;
-		case "tick":
+		case "SwipLeftOneHand":
 			if(!startScreen){
 				gameLogic.ButtonClick();
 			}
@@ -257,7 +272,7 @@ public class Detector : MonoBehaviour {
 	void ProcessFrame()
 	{
 		if (kinect == null) {
-			Debug.Log("kinect is null");
+//			Debug.Log("kinect is null");
 			return;
 		}
 
@@ -332,11 +347,12 @@ public class Detector : MonoBehaviour {
 //							timer = 0;
 //						}
 					}
-					
-//					Debug.Log("adding joints to entry");
-					templateGestureDetector.Add(joints);
-					templateGestureDetector.LookForGesture(method);
-					break;
+
+					if(recSwitch){
+						templateGestureDetector.Add(joints);
+						templateGestureDetector.LookForGesture(method);
+						break;
+					}
 					
 				}
 				else{
@@ -602,5 +618,6 @@ public class Detector : MonoBehaviour {
 //		if (GUI.Button(new Rect(screenWidth * 0.5f, screenHeight * 0.5f,200,200),"Click"))
 //			Debug.Log("Button Clicked!");
 	}
+
 }
 

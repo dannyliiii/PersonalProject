@@ -375,18 +375,20 @@ namespace TemplateGesture{
 				List<UnityEngine.Vector2> pathR = DynamicTimeWraping.GetOptimalPath(rMatrixR, lengthAR, lengthBR);
 
 //				float pathLengthR = DynamicTimeWraping.GetPathLength(dMatrixR, pathR);
-				UnityEngine.Debug.Log(gestureName);
-//				UnityEngine.Debug.Log(dMatrixL[lengthBL - 1, lengthAL - 1]);
-//				UnityEngine.Debug.Log(dMatrixR[lengthBR - 1, lengthAR - 1]);
+//				UnityEngine.Debug.Log(gestureName);
 				
-				UnityEngine.Debug.Log(rMatrixL[lengthBL - 1, lengthAL - 1]);
-				UnityEngine.Debug.Log(rMatrixR[lengthBR - 1, lengthAR - 1]);
-				UnityEngine.Debug.Log(gesLengthL);
-				UnityEngine.Debug.Log(gesLengthR);
+//				UnityEngine.Debug.Log(rMatrixL[lengthBL - 1, lengthAL - 1]);
+//				UnityEngine.Debug.Log(rMatrixR[lengthBR - 1, lengthAR - 1]);
+//				UnityEngine.Debug.Log(gesLengthL);
+//				UnityEngine.Debug.Log(gesLengthR);
+
 //				return (rMatrixL[lengthBL - 1, lengthAL - 1] + rMatrixR[lengthBR - 1, lengthAR - 1] ) * 0.5f;
 //				return (rMatrixL[lengthBL - 1, lengthAL - 1] / cl + rMatrixR[lengthBR - 1, lengthAR - 1] / cr) * 0.5f;
-				double res =  (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
+//				double res =  (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)) * 0.5f;
+				double res =  (rMatrixL[lengthBL - 1, lengthAL - 1] / (lengthL + gesLengthL) / (pathL.Count - 1) + rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR) / (pathR.Count-1)) * 0.5f;
 
+
+//				return 1 - res / DynamicTimeWraping.halfDiagnoal2D;
 				return 1 - res / DynamicTimeWraping.halfDiagnoal2D;
 			}else{
 				return 0;
@@ -430,6 +432,7 @@ namespace TemplateGesture{
 				);
 			
 				scorer = 1.0 - bestr [0] / GoldenSection.HalfDiagonal;
+				return scorer;
 
 			}else {
 
@@ -456,10 +459,13 @@ namespace TemplateGesture{
 				UnityEngine.Debug.Log(rMatrixR[lengthBR - 1, lengthAR - 1]);
 				UnityEngine.Debug.Log(lengthR);
 				UnityEngine.Debug.Log(gesLengthR);
-				scorer = rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR);
+				scorer = rMatrixR[lengthBR - 1, lengthAR - 1] / (lengthR + gesLengthR)/pathR.Count;
+
+//				return 1 - scorer / DynamicTimeWraping.halfDiagnoal2D;
+				return 1 - scorer / DynamicTimeWraping.halfDiagnoal2D;
 			}
 			
-			return scorer;
+
 		}
 
 		public double Match3D(List<MyMath.Vector3> listL, List<MyMath.Vector3> listR, bool oneHanded){
@@ -474,6 +480,8 @@ namespace TemplateGesture{
 			
 			float[,] rMatrixR = DynamicTimeWraping.GetDTWMatrix(dMatrixR, packedR.Count, points_3D_R.Count );
 
+			List<UnityEngine.Vector2> pathR = DynamicTimeWraping.GetOptimalPath(rMatrixR, packedR.Count, points_3D_R.Count);
+
 			if (!oneHanded) {
 				List<MyMath.Vector3> packedL = DynamicTimeWraping.DTWPack3D (listL, LearningMachine.sampleCount);
 
@@ -483,22 +491,29 @@ namespace TemplateGesture{
 				
 				float[,] rMatrixL = DynamicTimeWraping.GetDTWMatrix(dMatrixL, packedL.Count, points_3D_L.Count);
 
-				UnityEngine.Debug.Log(rMatrixL[points_3D_L.Count - 1, packedL.Count - 1]);
-				UnityEngine.Debug.Log(rMatrixR[points_3D_R.Count - 1, packedR.Count - 1]);
+				List<UnityEngine.Vector2> pathL = DynamicTimeWraping.GetOptimalPath(rMatrixR, packedL.Count, points_3D_L.Count);
+
+//				UnityEngine.Debug.Log(rMatrixL[points_3D_L.Count - 1, packedL.Count - 1]);
+//				UnityEngine.Debug.Log(rMatrixR[points_3D_R.Count - 1, packedR.Count - 1]);
+
 //				score = (rMatrixL[points_3D_L.Count - 1, packedL.Count - 1] + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] ) * 0.5f;
-				score = (rMatrixL[points_3D_L.Count - 1, packedL.Count - 1] / (lengthL_3D + gesLenthL) 
-				         + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR) 
+				score = (rMatrixL[points_3D_L.Count - 1, packedL.Count - 1] / (lengthL_3D + gesLenthL) / (pathL.Count - 1)
+				         + rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR) / (pathR.Count - 1) 
 				         ) * 0.5f;
 
-				return 1 - score / DynamicTimeWraping.halfDiagnoal3D;
+
 			}
 
-			score = rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR);
+			score = rMatrixR[points_3D_R.Count - 1, packedR.Count - 1] / (lengthR_3D + gesLenthR) / (pathR.Count - 1);
 
 //			if (gestureName == "hdel1") {
 //				Write2File (gestureName, dMatrixR, packedR.Count, points_3D_R.Count);
 //			}
-			return score;
+
+//			return 1 - score / DynamicTimeWraping.halfDiagnoal3D;
+			return 1 - score / DynamicTimeWraping.length3D;
+			
+//			return score;
 		}
 //		public double GetLength(List<PointF> list){
 //			double res = 0;

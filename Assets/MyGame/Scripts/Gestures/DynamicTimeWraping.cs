@@ -18,6 +18,9 @@ namespace TemplateGesture{
 		public static readonly SizeF SquareSize = new SizeF(1f, 1f);
 		public static float halfDiagnoal2D = Mathf.Sqrt(2f);
 		public static float halfDiagnoal3D = Mathf.Sqrt(3f);
+		public static float length2D = 0.5f;
+		public static float length3D = Mathf.Sqrt(3f) / 2f;
+		
 		
 		static public float DistanceBetween2Pointf(PointF a, PointF b)
 		{

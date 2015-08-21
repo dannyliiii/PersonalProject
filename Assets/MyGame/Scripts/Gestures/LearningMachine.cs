@@ -29,8 +29,8 @@ namespace TemplateGesture{
 		private static readonly double lineMin = 0.9;
 		private static double radiance45;
 		private static readonly float minScore = 0.8f;
-		private static readonly float minScoreOneHanded = 0.7f;
-		private static readonly float minScoreDTW = 0.7f;
+		private static readonly float minScoreOneHanded = 0.85f;
+		private static readonly float minScoreDTW = 0.85f;
 		
 		public static float MinScoreDTW{
 			get{
